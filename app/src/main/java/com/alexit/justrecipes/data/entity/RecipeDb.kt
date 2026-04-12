@@ -1,16 +1,16 @@
 package com.alexit.justrecipes.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "recipe")
+@Entity(tableName = "recipes")
 data class RecipeDb(
-    @PrimaryKey(autoGenerate = false)
-    val recipeId: Int,
+    @PrimaryKey val id: Int,
     val name: String,
     val portion: Int,
     val image: String,
     val details: String,
-    val detailImg: String,
+    @ColumnInfo(name = "details_img") val detailsImg: String,
     val duration: Int
 )

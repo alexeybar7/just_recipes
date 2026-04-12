@@ -1,12 +1,12 @@
 package com.alexit.justrecipes.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "ingredient")
+@Entity(tableName = "ingredients")
 data class IngredientDb(
-    @PrimaryKey(autoGenerate = false)
-    val ingredientId: Int,
+    @PrimaryKey val id: Int,
     val name: String,
     val energy: Float,
     val protein: Float,

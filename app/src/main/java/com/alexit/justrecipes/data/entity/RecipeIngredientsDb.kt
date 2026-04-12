@@ -1,5 +1,6 @@
 package com.alexit.justrecipes.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -7,10 +8,8 @@ import androidx.room.PrimaryKey
     primaryKeys = ["recipeId", "ingredientId"]
 )
 data class RecipeIngredientsDb(
-    @PrimaryKey(autoGenerate = false)
-    val id: Int,
-    val recipeId: Int,
-    val ingredientId: Int,
+    @ColumnInfo(name = "recipe_id") val recipeId: Int,
+    @ColumnInfo(name = "ingredient_id")val ingredientId: Int,
     val quantity: Float,
     val unit: String,
     val density: Float
