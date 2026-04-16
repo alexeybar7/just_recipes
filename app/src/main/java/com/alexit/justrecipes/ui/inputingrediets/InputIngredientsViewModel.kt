@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexit.justrecipes.data.model.IngredientModel
-import com.alexit.justrecipes.data.repository.IngredientRepository
+import com.alexit.justrecipes.data.repository.RecipesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,23 +17,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class InputIngredientsViewModel @Inject constructor(
-    private val ingredientRepository: IngredientRepository,
+    private val recipesRepository: RecipesRepository,
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(InputIngredientsUiState())
     val uiState: StateFlow<InputIngredientsUiState> = _uiState.asStateFlow()
 
-    val ingredients: StateFlow<List<IngredientModel>> = ingredientRepository.getIngredients().stateIn(
+    val ingredients: StateFlow<List<IngredientModel>> = recipesRepository.getIngredients().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         listOf()
     )
 
-    val inputtedIngredients: StateFlow<List<IngredientModel>> = ingredientRepository.getInputtedIngredients().stateIn(
+    val inputtedIngredients: StateFlow<List<InputtedIngredients>> = recipesRepository.getInputtedIngredients().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         listOf()
@@ -41,13 +42,14 @@ class InputIngredientsViewModel @Inject constructor(
 
     val inputTextStateIngredient = TextFieldState()
 
-    val addingIngredient: MutableState<IngredientModel> =
-        mutableStateOf(IngredientModel(id = 0, name = "", category = "", weight = null)
+    val addingIngredient: MutableState<OwnIngredient> =
+        mutableStateOf(OwnIngredient(id = -1, name = "", category = "")
         )
 
-    val deletingIngredient: MutableState<IngredientModel> =
-        mutableStateOf(IngredientModel(id = 0, name = "", category = "", weight = null)
+    val deletingIngredient: MutableState<InputtedIngredients> =
+        mutableStateOf(InputtedIngredients(id = -1, name = "", category = "", weight = null)
         )
+
     val selectedIndexCategory = mutableIntStateOf(-1)
 
     fun selectSuggestionIngredient(suggestion: String) {
@@ -59,7 +61,9 @@ class InputIngredientsViewModel @Inject constructor(
             !inputtedIngredients.value.any { it.name == ingredientName }
             ) {
             val addingIngredient = ingredients.value.find { it.name == ingredientName } !!
-            ingredientRepository.addInputtedIngredient(addingIngredient)
+            viewModelScope.launch {
+                recipesRepository.addInputtedIngredient(addingIngredient)
+            }
             inputTextStateIngredient.clearText()
         } else if (inputtedIngredients.value.any { it.name == ingredientName }) {
             addingIngredient.value = inputtedIngredients.value.find { it.name == ingredientName } !!
@@ -91,8 +95,8 @@ class InputIngredientsViewModel @Inject constructor(
             name = addingIngredient.value.name,
             category = category
         )
-        ingredientRepository.addIngredient(addingIngredient.value)
-        ingredientRepository.addInputtedIngredient(addingIngredient.value)
+        recipesRepository.addIngredient(addingIngredient.value)
+        recipesRepository.addInputtedIngredient(addingIngredient.value)
         selectedIndexCategory.intValue = -1
         updateIsIngredientNew()
     }
@@ -112,7 +116,7 @@ class InputIngredientsViewModel @Inject constructor(
     }
 
     fun deleteInputtedIngredient() {
-        ingredientRepository.deleteInputtedIngredient(deletingIngredient.value)
+        recipesRepository.deleteInputtedIngredient(deletingIngredient.value)
         _uiState.update { currentState ->
             currentState.copy(isDeleteIngredient = false)
         }
@@ -125,6 +129,6 @@ class InputIngredientsViewModel @Inject constructor(
     }
 
     fun updateWeightIngredient(id: Int, weight: Int) {
-        ingredientRepository.updateWeightIngredient(id, weight)
+        recipesRepository.updateWeightIngredient(id, weight)
     }
 }
