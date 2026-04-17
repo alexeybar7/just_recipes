@@ -8,10 +8,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import com.alexit.justrecipes.ui.systembarprotection.NavigationBarProtection
-import com.alexit.justrecipes.ui.RecipesScreen
-import com.alexit.justrecipes.ui.theme.JustRecipesTheme
-import com.alexit.justrecipes.ui.systembarprotection.StatusBarProtection
+import com.alexit.justrecipes.presentation.systembarprotection.NavigationBarProtection
+import com.alexit.justrecipes.presentation.feature.RecipesScreen
+import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
+import com.alexit.justrecipes.presentation.systembarprotection.StatusBarProtection
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,46 +1,73 @@
 package com.alexit.justrecipes.data.repository
 
-import com.alexit.justrecipes.data.model.IngredientModel
-import com.alexit.justrecipes.data.room.RecipesDao
+import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.data.local.room.dao.RecipesDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface RecipesRepository {
 
-    fun getIngredients(): Flow<List<InputtedIngredients>>
-    suspend fun addIngredient(ingredient: OwnIngredient)
-    fun getInputtedIngredients(): Flow<List<InputtedIngredients>>
-    suspend fun addInputtedIngredient(ingredient: InputtedIngredients)
-    suspend fun removeInputtedIngredient(ingredient: InputtedIngredients)
-    suspend fun changeWeightIngredient(id: Int, weight: Int?)
+    fun getIngredients(): Flow<ResourcesState<List<IngredientModel>>>
+    suspend fun addIngredient(ingredientName: String, ingredientCategory: String)
+    fun getInputtedIngredients(): Flow<ResourcesState<List<IngredientModel>>>
+    suspend fun addInputtedIngredient(ingredientId: Int)
+    suspend fun removeInputtedIngredient(ingredientId: Int)
+    suspend fun changeWeightIngredient(ingredientId: Int, ingredientWeight: Int)
 }
 
 class RecipesRepositoryImpl @Inject constructor(
     private val recipesDao: RecipesDao
 ) : RecipesRepository {
 
-    override fun getIngredients(): Flow<List<IngredientModel>> {
-        return recipesDao.getListIngredients()
+    override fun getIngredients(): Flow<ResourcesState<List<IngredientModel>>> = flow {
+        emit(ResourcesState.Loading)
+        recipesDao.getListIngredients().collect { ingredients ->
+            emit(ResourcesState.Success(ingredients))
+        }
+    }.catch { e ->
+        emit(ResourcesState.Error(e.localizedMessage ?: "Unknown error occurred"))
     }
 
-    override suspend fun addIngredient(ingredient: OwnIngredient) {
-        recipesDao.insertOwnIngredient(ingredient)
+    override suspend fun addIngredient(ingredientName: String, ingredientCategory: String) {
+        try {
+            recipesDao.insertOwnIngredient(ingredientName, ingredientCategory)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
-    override fun getInputtedIngredients(): Flow<List<InputtedIngredients>> {
-        return recipesDao.getListInputtedIngredients()
+    override fun getInputtedIngredients(): Flow<ResourcesState<List<IngredientModel>>> = flow {
+        emit(ResourcesState.Loading)
+        recipesDao.getListInputtedIngredients().collect { ingredients ->
+            emit(ResourcesState.Success(ingredients))
+        }
+    }.catch { e ->
+        emit(ResourcesState.Error(e.localizedMessage ?: "Unknown error occurred"))
     }
 
-    override suspend fun addInputtedIngredient(ingredient: InputtedIngredients) {
-        recipesDao.insertInputtedIngredient(ingredient)
+    override suspend fun addInputtedIngredient(ingredientId: Int) {
+        try {
+            recipesDao.insertInputtedIngredient(ingredientId)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
-    override suspend fun removeInputtedIngredient(ingredient: InputtedIngredients) {
-        recipesDao.deleteInputtedIngredient(ingredient)
+    override suspend fun removeInputtedIngredient(ingredientId: Int) {
+        try {
+            recipesDao.deleteInputtedIngredient(ingredientId)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
-    override suspend fun changeWeightIngredient(id: Int, weight: Int?) {
-        recipesDao.updateWeightIngredient(id, weight)
+    override suspend fun changeWeightIngredient(ingredientId: Int, ingredientWeight: Int) {
+        try {
+            recipesDao.updateWeightIngredient(ingredientId, ingredientWeight)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 }
