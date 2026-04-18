@@ -10,9 +10,9 @@ interface RecipesDao {
     @Query("SELECT id, name, category FROM ingredients")
     fun getListIngredients(): Flow<List<IngredientModel>>
 
-    @Query("INSERT INTO ingredients (name, category)" +
-            "VALUES (:ingredientName, :ingredientCategory)")
-    suspend fun insertOwnIngredient(ingredientName: String, ingredientCategory: String)
+    @Query("INSERT INTO ingredients (id, name, category)" +
+            "VALUES (:ingredientId, :ingredientName, :ingredientCategory)")
+    suspend fun insertOwnIngredient(ingredientId: Int, ingredientName: String, ingredientCategory: String)
 
     @Query("SELECT id, name, category, weight FROM ingredients WHERE is_inputted = 1")
     fun getListInputtedIngredients(): Flow<List<IngredientModel>>

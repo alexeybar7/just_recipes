@@ -10,7 +10,7 @@ import javax.inject.Inject
 interface RecipesRepository {
 
     fun getIngredients(): Flow<ResourcesState<List<IngredientModel>>>
-    suspend fun addIngredient(ingredientName: String, ingredientCategory: String)
+    suspend fun addNewIngredient(ingredientId: Int, ingredientName: String, ingredientCategory: String)
     fun getInputtedIngredients(): Flow<ResourcesState<List<IngredientModel>>>
     suspend fun addInputtedIngredient(ingredientId: Int)
     suspend fun removeInputtedIngredient(ingredientId: Int)
@@ -30,9 +30,9 @@ class RecipesRepositoryImpl @Inject constructor(
         emit(ResourcesState.Error(e.localizedMessage ?: "Unknown error occurred"))
     }
 
-    override suspend fun addIngredient(ingredientName: String, ingredientCategory: String) {
+    override suspend fun addNewIngredient(ingredientId: Int,ingredientName: String, ingredientCategory: String) {
         try {
-            recipesDao.insertOwnIngredient(ingredientName, ingredientCategory)
+            recipesDao.insertOwnIngredient(ingredientId, ingredientName, ingredientCategory)
         } catch (e: Exception) {
             throw e
         }

@@ -6,7 +6,7 @@ import javax.inject.Inject
 class AddIngredientUseCase @Inject constructor(
     private val recipesRepository: RecipesRepository
 ) {
-    suspend operator fun invoke(ingredientName: String, ingredientCategory: String) {
-        recipesRepository.addIngredient(ingredientName, ingredientCategory)
+    suspend operator fun invoke(ingredientId: Int,ingredientName: String, ingredientCategory: String) {
+        recipesRepository.addNewIngredient(ingredientId,ingredientName, ingredientCategory)
     }
 }

@@ -16,6 +16,7 @@ import com.alexit.justrecipes.domain.model.IngredientModel
 import com.alexit.justrecipes.presentation.components.CustomDialog
 import com.alexit.justrecipes.presentation.components.CustomPopup
 import com.alexit.justrecipes.presentation.components.CustomTextField
+import com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel.InputIngredientsViewModel
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.collections.immutable.toPersistentList
 
