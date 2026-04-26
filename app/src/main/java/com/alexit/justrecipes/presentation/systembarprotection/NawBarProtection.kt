@@ -17,7 +17,7 @@ fun NavigationBarProtection(
     color: Color = JustRecipesTheme.colors.bottomMenu,
     heightProvider: () -> Float = calculateBottomHeight(),
 ) {
-    val win = WindowInsets.navigationBars
+    //val win = WindowInsets.navigationBars
     Canvas(Modifier.fillMaxSize()) {
         val calculatedHeight = heightProvider()
 

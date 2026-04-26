@@ -3,9 +3,6 @@ package com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel
 import com.alexit.justrecipes.domain.model.IngredientModel
 
 data class InputIngredientsUiState(
-    val isLoading: Boolean = false,
-    val ingredients: List<IngredientModel> = listOf(),
-    val inputtedIngredients: List<IngredientModel> = listOf(),
     val isIngredientInputted: Boolean = false,
     val alreadyInputtedIngredientName: String = "",
     val isIngredientNew: Boolean = false,

@@ -1,6 +1,6 @@
 package com.alexit.justrecipes.domain.usecase
 
-import com.alexit.justrecipes.data.repository.RecipesRepository
+import com.alexit.justrecipes.domain.repository.RecipesRepository
 import javax.inject.Inject
 
 class AddInputtedIngredientUseCase @Inject constructor(

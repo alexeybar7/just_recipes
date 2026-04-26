@@ -1,20 +1,20 @@
 package com.alexit.justrecipes.data.local.room.entity
 
-import androidx.compose.ui.text.font.FontWeight
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "ingredients")
-data class Ingredient(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+data class IngredientEntity(
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
     val name: String,
     val energy: Float,
     val protein: Float,
     val fat: Float,
     val carbohydrate: Float,
-    val synonym: String?,
+    @ColumnInfo(defaultValue = "NULL") val synonym: String? = null,
     val category: String,
-    val weight: Int?,
-    @ColumnInfo(name = "is_inputted") val isInputted: Boolean
+    @ColumnInfo(defaultValue = "NULL") val weight: Int? = null,
+    @ColumnInfo(name = "is_inputted", defaultValue = "0") val isInputted: Boolean = false
 )
