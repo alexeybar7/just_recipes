@@ -29,7 +29,7 @@ fun InputIngredientsScreen(
 ) {
     val inputIngredientsUiState by inputIngredientsViewModel.uiState.collectAsStateWithLifecycle()
     val ingredients = inputIngredientsViewModel.ingredients.collectAsStateWithLifecycle()
-    //val inputtedIngredients = ingredients.filter { it.isInputted }
+    val inputtedIngredients = ingredients.value.filter { it.isInputted }
 
 
     Column(
@@ -43,16 +43,15 @@ fun InputIngredientsScreen(
             text = stringResource(R.string.title_input_ingredients),
             style = JustRecipesTheme.typography.title1
         )
-
-
-
+        /*
             BasicText(
                 text = ingredients.value.size.toString(),
                 style = JustRecipesTheme.typography.title1,
                 //color = JustRecipesTheme.colors.onTitlePanel
             )
 
-        /*
+         */
+
         Column(
             modifier = Modifier
                 .padding(vertical = JustRecipesTheme.dimensions.paddingFieldInput)
@@ -86,7 +85,7 @@ fun InputIngredientsScreen(
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isNotEmpty()){
                 SuggestionsIngredientsShow(
                     state = inputIngredientsViewModel.inputTextStateIngredient,
-                    ingredientsName = ingredients.map { it.name }.toPersistentList(),
+                    ingredientsName = ingredients.value.map { it.name }.toPersistentList(),
                     onSuggestionClick = { suggestion: String ->
                         inputIngredientsViewModel.handleIntent(
                         InputIngredientsIntent.SelectSuggestionIngredient(suggestion)
@@ -201,14 +200,11 @@ fun InputIngredientsScreen(
                     colorBackgroundCategory = JustRecipesTheme.colors.background2,
                     colorBorderCategory = JustRecipesTheme.colors.border2,
                     colorTextCategory = JustRecipesTheme.colors.text2,
-                    listCategory = ingredients.map { it.category }.distinct().sorted().toPersistentList(),
+                    listCategory = ingredients.value.map { it.category }.distinct().sorted().toPersistentList(),
                     colorBackgroundCategorySelected = JustRecipesTheme.colors.background3
                 )
             }
-
-
         }
-        */
     }
 }
 

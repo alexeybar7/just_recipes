@@ -1,6 +1,9 @@
 package com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexit.justrecipes.domain.usecase.AddNewIngredientUseCase
@@ -10,11 +13,14 @@ import com.alexit.justrecipes.domain.usecase.AddInputtedIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.ChangeWeightIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.RemoveInputtedIngredientUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,8 +43,6 @@ class InputIngredientsViewModel @Inject constructor(
     }
     val inputTextStateIngredient = TextFieldState()
 
-
-/*
     fun handleIntent(intent: InputIngredientsIntent) {
         when (intent) {
             is InputIngredientsIntent.SelectSuggestionIngredient -> selectSuggestionIngredient(intent.suggestion)
@@ -54,19 +58,19 @@ class InputIngredientsViewModel @Inject constructor(
     }
 
     private fun checkingSelectedIngredient(ingredientName: String) {
-        val addingIngredient = uiState.value.ingredients.find { it.name == ingredientName }
+        val addingIngredient = ingredients.value.find { it.name == ingredientName }
         if (
             addingIngredient != null &&
-            uiState.value.ingredients
+            ingredients.value
                 .filter { it.isInputted }
                 .any { it.name == ingredientName }
         ) {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 addInputtedIngredientUseCase(addingIngredient.id)
             }
             inputTextStateIngredient.clearText()
         } else if (
-            uiState.value.ingredients
+            ingredients.value
                 .filter { it.isInputted }
                 .any { it.name == ingredientName }
             ) {
@@ -82,7 +86,7 @@ class InputIngredientsViewModel @Inject constructor(
             ) {
             _uiState.update { currentState ->
                 currentState.copy(
-                    newIngredientId = uiState.value.ingredients.size + 1,
+                    newIngredientId = ingredients.value.size + 1,
                     newIngredientName = ingredientName,
                     isIngredientNew = true
                 )
@@ -98,7 +102,7 @@ class InputIngredientsViewModel @Inject constructor(
     }
     private fun addNewIngredient(ingredientCategory: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            addIngredientUseCase(
+            addNewIngredientUseCase(
                 uiState.value.newIngredientId,
                 uiState.value.newIngredientName,
                 ingredientCategory)
@@ -164,6 +168,4 @@ class InputIngredientsViewModel @Inject constructor(
     private fun selectSuggestionIngredient(suggestion: String) {
         inputTextStateIngredient.setTextAndPlaceCursorAtEnd(suggestion)
     }
-
- */
 }
