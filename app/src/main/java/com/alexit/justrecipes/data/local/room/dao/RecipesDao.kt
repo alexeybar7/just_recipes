@@ -25,6 +25,15 @@ interface RecipesDao {
     @Query("UPDATE ingredients SET weight = :ingredientWeight WHERE id = :ingredientId")
     suspend fun updateWeightIngredient(ingredientId: Int, ingredientWeight: Int)
 
-    @Query("SELECT AVG(DISTINCT :parameter) FROM ingredients WHERE category = :category")
-    fun getAVGParameter(parameter: String, category: String): Float
+    @Query("SELECT AVG(DISTINCT energy) FROM ingredients WHERE category = :category")
+    fun getAVGEnergy(category: String): Double
+
+    @Query("SELECT AVG(DISTINCT protein)FROM ingredients WHERE category = :category")
+    fun getAVGProtein(category: String): Double
+
+    @Query("SELECT AVG(DISTINCT fat)FROM ingredients WHERE category = :category")
+    fun getAVGFat(category: String): Double
+
+    @Query("SELECT AVG(DISTINCT carbohydrate)FROM ingredients WHERE category = :category")
+    fun getAVGCarbohydrate(category: String): Double
 }

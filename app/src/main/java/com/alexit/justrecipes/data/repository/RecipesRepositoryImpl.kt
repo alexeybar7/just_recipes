@@ -31,7 +31,19 @@ class RecipesRepositoryImpl @Inject constructor(
         recipesDao.updateWeightIngredient(ingredientId, ingredientWeight)
     }
 
-    override fun getAVGParameter(parameter: String, category: String): Float {
-        return recipesDao.getAVGParameter(parameter, category)
+    override fun getAVGEnergy(category: String): Double {
+        return recipesDao.getAVGEnergy(category)
+    }
+
+    override fun getAVGProtein(category: String): Double {
+        return recipesDao.getAVGProtein(category)
+    }
+
+    override fun getAVGFat(category: String): Double {
+        return recipesDao.getAVGFat(category)
+    }
+
+    override fun getAVGCarbohydrate(category: String): Double {
+        return recipesDao.getAVGCarbohydrate(category)
     }
 }

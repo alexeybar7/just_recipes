@@ -4,7 +4,11 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.alexit.justrecipes.domain.usecase.AddNewIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.GetIngredientsUseCase
@@ -18,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,8 +44,9 @@ class InputIngredientsViewModel @Inject constructor(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
         emptyList()
-    )
+        )
     }
+
     val inputTextStateIngredient = TextFieldState()
 
     fun handleIntent(intent: InputIngredientsIntent) {
@@ -57,22 +63,22 @@ class InputIngredientsViewModel @Inject constructor(
         }
     }
 
+    private fun selectSuggestionIngredient(suggestion: String) {
+        inputTextStateIngredient.setTextAndPlaceCursorAtEnd(suggestion)
+    }
+
     private fun checkingSelectedIngredient(ingredientName: String) {
-        val addingIngredient = ingredients.value.find { it.name == ingredientName }
+        val addingIngredient: IngredientModel? = ingredients.value.find { it.name == ingredientName }
         if (
             addingIngredient != null &&
-            ingredients.value
-                .filter { it.isInputted }
-                .any { it.name == ingredientName }
+            !addingIngredient.isInputted
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 addInputtedIngredientUseCase(addingIngredient.id)
             }
             inputTextStateIngredient.clearText()
         } else if (
-            ingredients.value
-                .filter { it.isInputted }
-                .any { it.name == ingredientName }
+            addingIngredient != null
             ) {
             inputTextStateIngredient.clearText()
             _uiState.update { currentState ->
@@ -81,17 +87,15 @@ class InputIngredientsViewModel @Inject constructor(
                     isIngredientInputted = true
                 )
             }
-        } else if (
-            addingIngredient == null
-            ) {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    newIngredientId = ingredients.value.size + 1,
-                    newIngredientName = ingredientName,
-                    isIngredientNew = true
-                )
-            }
+        } else {
+        _uiState.update { currentState ->
+            currentState.copy(
+                newIngredientId = ingredients.value.size + 1,
+                newIngredientName = ingredientName,
+                isIngredientNew = true
+            )
         }
+    }
     }
 
     private fun isIngredientInputted() {
@@ -100,6 +104,7 @@ class InputIngredientsViewModel @Inject constructor(
             alreadyInputtedIngredientName = ""
         ) }
     }
+
     private fun addNewIngredient(ingredientCategory: String) {
         viewModelScope.launch(Dispatchers.IO) {
             addNewIngredientUseCase(
@@ -114,6 +119,7 @@ class InputIngredientsViewModel @Inject constructor(
                     isIngredientNew = false
                 )
             }
+            inputTextStateIngredient.clearText()
         }
     }
 
@@ -164,8 +170,4 @@ class InputIngredientsViewModel @Inject constructor(
     }
 
     val selectedIndexCategory = mutableIntStateOf(-1)
-
-    private fun selectSuggestionIngredient(suggestion: String) {
-        inputTextStateIngredient.setTextAndPlaceCursorAtEnd(suggestion)
-    }
 }

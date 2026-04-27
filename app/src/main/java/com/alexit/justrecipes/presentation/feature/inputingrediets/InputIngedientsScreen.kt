@@ -4,9 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,14 +41,6 @@ fun InputIngredientsScreen(
             text = stringResource(R.string.title_input_ingredients),
             style = JustRecipesTheme.typography.title1
         )
-        /*
-            BasicText(
-                text = ingredients.value.size.toString(),
-                style = JustRecipesTheme.typography.title1,
-                //color = JustRecipesTheme.colors.onTitlePanel
-            )
-
-         */
 
         Column(
             modifier = Modifier
@@ -207,4 +197,3 @@ fun InputIngredientsScreen(
         }
     }
 }
-
