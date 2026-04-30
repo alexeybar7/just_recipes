@@ -1,12 +1,12 @@
 package com.alexit.justrecipes.domain.usecase
 
 import com.alexit.justrecipes.domain.repository.RecipesRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class RemoveInputtedIngredientUseCase @Inject constructor(
+class GetSuggestionsUseCase @Inject constructor(
     private val recipesRepository: RecipesRepository
 ) {
-    suspend operator fun invoke(ingredientId: Int) {
-        recipesRepository.removeInputtedIngredient(ingredientId)
-    }
+    operator fun invoke(): Flow<List<String>> =
+         recipesRepository.getSuggestions()
 }

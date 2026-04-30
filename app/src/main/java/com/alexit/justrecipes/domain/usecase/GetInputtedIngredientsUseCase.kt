@@ -5,9 +5,9 @@ import com.alexit.justrecipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetIngredientsUseCase @Inject constructor(
+class GetInputtedIngredientsUseCase @Inject constructor(
     private val recipesRepository: RecipesRepository
 ) {
     operator fun invoke(): Flow<List<IngredientModel>> =
-         recipesRepository.getIngredients()
+        recipesRepository.getInputtedIngredients()
 }

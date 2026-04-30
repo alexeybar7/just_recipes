@@ -20,7 +20,8 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.Dialog
+import com.alexit.justrecipes.domain.model.CategoryModel
 import com.alexit.justrecipes.presentation.components.CustomDivider
 import com.alexit.justrecipes.presentation.components.dpToPx
 import kotlinx.collections.immutable.PersistentList
@@ -37,7 +39,6 @@ import kotlinx.collections.immutable.PersistentList
 fun MakeNewIngredient(
     onDismissRequest: () -> Unit,
     onConfirmation: (String) -> Unit,
-    selectedIndex: MutableState<Int>,
     heightDialog: Dp,
     widthDialog: Dp,
     colorBackground: Color,
@@ -55,10 +56,11 @@ fun MakeNewIngredient(
     contentPadding: Dp,
     colorBackgroundCategory: Color,
     colorBorderCategory: Color,
-    listCategory: PersistentList<String>,
+    listCategory: PersistentList<CategoryModel>,
     colorTextCategory: Color,
     colorBackgroundCategorySelected: Color
 ) {
+    val selectedId = remember {  mutableIntStateOf(-1) }
     Dialog(onDismissRequest = onDismissRequest ) {
         Column(
             modifier = Modifier
@@ -106,25 +108,25 @@ fun MakeNewIngredient(
                     .padding(start = contentPadding, end = contentPadding),
                 verticalArrangement = Arrangement.Center
             ) {
-                items(items = listCategory) { category ->
+                items(items = listCategory, key = { it.id }) { category ->
                     BasicText(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = if (listCategory.indexOf(category) == selectedIndex.value)
+                                color = if (category.id == selectedId.intValue)
                                     colorBackgroundCategorySelected
                                 else colorBackgroundCategory
                             )
                             .selectable(
-                                selected = listCategory.indexOf(category) == selectedIndex.value,
+                                selected = category.id == selectedId.intValue,
                                 onClick = {
-                                    if (selectedIndex.value != listCategory.indexOf(category))
-                                    { selectedIndex.value = listCategory.indexOf(category) }
+                                    if (selectedId.intValue != category.id)
+                                    { selectedId.intValue = category.id }
                                     else
-                                    { selectedIndex.value = -1 }
+                                    { selectedId.intValue = -1 }
                                 })
                             .padding(contentPadding),
-                        text = category,
+                        text = category.category,
                         style = textStyleCategory,
                         color = { colorTextCategory }
                     )
@@ -180,11 +182,12 @@ fun MakeNewIngredient(
                 )
                 BasicText(
                     modifier = Modifier
-                        .alpha( if (selectedIndex.value > -1) 1f else 0.2f )
+                        .alpha( if (selectedId.intValue > -1) 1f else 0.2f )
                         .clickable(
                             enabled = true,
                             onClick = {
-                                if (selectedIndex.value > -1) onConfirmation(listCategory[selectedIndex.value])
+                                if (selectedId.intValue > -1) onConfirmation(listCategory.find {
+                                    it.id == selectedId.intValue }!!.category)
                             }
                         )
                         .width(widthDialog / 2)

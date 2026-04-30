@@ -10,8 +10,17 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipesDao {
-    @Query("SELECT id, name, category, weight, is_inputted FROM ingredients")
-    fun getListIngredients(): Flow<List<IngredientModel>>
+    @Query("SELECT id, name, category, weight FROM ingredients WHERE name = :ingredientName")
+    suspend fun getIngredient(ingredientName: String): IngredientModel?
+
+    @Query("SELECT name FROM ingredients")
+    fun getSuggestions(): Flow<List<String>>
+
+    @Query("SELECT id, name, category, weight FROM ingredients WHERE is_inputted = 1")
+    fun getInputtedIngredients(): Flow<List<IngredientModel>>
+
+    @Query("SELECT DISTINCT category FROM ingredients ORDER BY category")
+    suspend fun getCategories(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOwnIngredient(ingredient: IngredientEntity)
@@ -26,14 +35,16 @@ interface RecipesDao {
     suspend fun updateWeightIngredient(ingredientId: Int, ingredientWeight: Int)
 
     @Query("SELECT AVG(DISTINCT energy) FROM ingredients WHERE category = :category")
-    fun getAVGEnergy(category: String): Double
+    suspend fun getAVGEnergy(category: String): Double
 
     @Query("SELECT AVG(DISTINCT protein)FROM ingredients WHERE category = :category")
-    fun getAVGProtein(category: String): Double
+    suspend fun getAVGProtein(category: String): Double
 
     @Query("SELECT AVG(DISTINCT fat)FROM ingredients WHERE category = :category")
-    fun getAVGFat(category: String): Double
+    suspend fun getAVGFat(category: String): Double
 
     @Query("SELECT AVG(DISTINCT carbohydrate)FROM ingredients WHERE category = :category")
-    fun getAVGCarbohydrate(category: String): Double
+    suspend fun getAVGCarbohydrate(category: String): Double
+    @Query("SELECT MAX(id) FROM ingredients")
+    suspend fun getMAXIdIngredients(): Int
 }

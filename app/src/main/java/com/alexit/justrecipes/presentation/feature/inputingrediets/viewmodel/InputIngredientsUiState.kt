@@ -1,15 +1,14 @@
 package com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel
 
-import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.CategoryModel
 
 data class InputIngredientsUiState(
     val isIngredientInputted: Boolean = false,
     val alreadyInputtedIngredientName: String = "",
     val isIngredientNew: Boolean = false,
-    val newIngredientId: Int = -1,
     val newIngredientName: String = "",
-    val selectedIndexCategory: Int = -1,
     val isDeleteIngredient: Boolean = false,
     val deletingIngredientId: Int = -1,
-    val deletingIngredientName: String = ""
+    val deletingIngredientName: String = "",
+    val categories: List<CategoryModel> = emptyList()
 )

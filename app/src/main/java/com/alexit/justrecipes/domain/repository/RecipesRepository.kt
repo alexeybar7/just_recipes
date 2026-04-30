@@ -5,14 +5,17 @@ import com.alexit.justrecipes.domain.model.IngredientModel
 import kotlinx.coroutines.flow.Flow
 
 interface RecipesRepository {
-
-    fun getIngredients(): Flow<List<IngredientModel>>
+    suspend fun getIngredient(ingredientName: String): IngredientModel?
+    fun getSuggestions(): Flow<List<String>>
+    fun getInputtedIngredients(): Flow<List<IngredientModel>>
+    suspend fun getCategories(): List<String>
     suspend fun addNewIngredient(ingredient: IngredientEntity)
     suspend fun addInputtedIngredient(ingredientId: Int)
     suspend fun removeInputtedIngredient(ingredientId: Int)
     suspend fun changeWeightIngredient(ingredientId: Int, ingredientWeight: Int)
-    fun getAVGEnergy(category: String): Double
-    fun getAVGProtein(category: String): Double
-    fun getAVGFat(category: String): Double
-    fun getAVGCarbohydrate(category: String): Double
+    suspend fun getAVGEnergy(category: String): Double
+    suspend fun getAVGProtein(category: String): Double
+    suspend fun getAVGFat(category: String): Double
+    suspend fun getAVGCarbohydrate(category: String): Double
+    suspend fun getMAXIdIngredients(): Int
 }

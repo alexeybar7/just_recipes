@@ -3,10 +3,10 @@ package com.alexit.justrecipes.domain.usecase
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import javax.inject.Inject
 
-class RemoveInputtedIngredientUseCase @Inject constructor(
+class GetMAXIdIngredientsUseCase @Inject constructor(
     private val recipesRepository: RecipesRepository
 ) {
-    suspend operator fun invoke(ingredientId: Int) {
-        recipesRepository.removeInputtedIngredient(ingredientId)
+    suspend operator fun invoke(): Int {
+        return recipesRepository.getMAXIdIngredients()
     }
 }

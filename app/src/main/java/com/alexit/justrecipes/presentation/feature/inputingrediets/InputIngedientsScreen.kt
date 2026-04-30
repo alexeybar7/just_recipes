@@ -26,9 +26,8 @@ fun InputIngredientsScreen(
    inputIngredientsViewModel: InputIngredientsViewModel = hiltViewModel()
 ) {
     val inputIngredientsUiState by inputIngredientsViewModel.uiState.collectAsStateWithLifecycle()
-    val ingredients = inputIngredientsViewModel.ingredients.collectAsStateWithLifecycle()
-    val inputtedIngredients = ingredients.value.filter { it.isInputted }
-
+    val inputtedIngredients = inputIngredientsViewModel.inputtedIngredientsState.collectAsStateWithLifecycle()
+    val suggestions = inputIngredientsViewModel.suggestions.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -75,7 +74,7 @@ fun InputIngredientsScreen(
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isNotEmpty()){
                 SuggestionsIngredientsShow(
                     state = inputIngredientsViewModel.inputTextStateIngredient,
-                    ingredientsName = ingredients.value.map { it.name }.toPersistentList(),
+                    ingredientsName = suggestions.value.toPersistentList(),
                     onSuggestionClick = { suggestion: String ->
                         inputIngredientsViewModel.handleIntent(
                         InputIngredientsIntent.SelectSuggestionIngredient(suggestion)
@@ -94,7 +93,7 @@ fun InputIngredientsScreen(
             }
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isEmpty()) {
                 InputtedIngredientsShow(
-                    inputtedIngredients = inputtedIngredients.toPersistentList(),
+                    inputtedIngredients = inputtedIngredients.value.toPersistentList(),
                     onDeleteClick = { ingredient: IngredientModel ->
                         inputIngredientsViewModel.handleIntent(
                             InputIngredientsIntent.IsRemoveIngredient(ingredient)
@@ -160,7 +159,7 @@ fun InputIngredientsScreen(
                     textStyle = JustRecipesTheme.typography.title1,
                     textPopupPre = stringResource(R.string.ingredient),
                     textPopupAft = stringResource(R.string.already_exist),
-                    item = inputIngredientsUiState.newIngredientName
+                    item = inputIngredientsUiState.alreadyInputtedIngredientName
                 )
             }
             if (inputIngredientsUiState.isIngredientNew) {
@@ -171,7 +170,6 @@ fun InputIngredientsScreen(
                         inputIngredientsViewModel.handleIntent(
                             InputIngredientsIntent.AddNewIngredient(ingredientCategory)
                         ) },
-                    selectedIndex = inputIngredientsViewModel.selectedIndexCategory,
                     heightDialog = JustRecipesTheme.dimensions.heightNewIngredientDialog,
                     widthDialog = JustRecipesTheme.dimensions.widthNewIngredientDialog,
                     colorBackground = JustRecipesTheme.colors.background4,
@@ -190,7 +188,7 @@ fun InputIngredientsScreen(
                     colorBackgroundCategory = JustRecipesTheme.colors.background2,
                     colorBorderCategory = JustRecipesTheme.colors.border2,
                     colorTextCategory = JustRecipesTheme.colors.text2,
-                    listCategory = ingredients.value.map { it.category }.distinct().sorted().toPersistentList(),
+                    listCategory = inputIngredientsUiState.categories.toPersistentList(),
                     colorBackgroundCategorySelected = JustRecipesTheme.colors.background3
                 )
             }

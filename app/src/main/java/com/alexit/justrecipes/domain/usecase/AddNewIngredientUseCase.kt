@@ -8,14 +8,15 @@ import javax.inject.Inject
 class AddNewIngredientUseCase @Inject constructor(
     private val recipesRepository: RecipesRepository
 ) {
-    suspend operator fun invoke(ingredientId: Int, ingredientName: String, ingredientCategory: String) {
+    suspend operator fun invoke(ingredientName: String, ingredientCategory: String) {
+        val id = recipesRepository.getMAXIdIngredients() + 1
         val energy = recipesRepository.getAVGEnergy(ingredientCategory)
         val protein = recipesRepository.getAVGProtein(ingredientCategory)
         val fat = recipesRepository.getAVGFat(ingredientCategory)
         val carbohydrate = recipesRepository.getAVGCarbohydrate(ingredientCategory)
         recipesRepository.addNewIngredient(
             IngredientEntity(
-                id = ingredientId,
+                id = id,
                 name = ingredientName,
                 energy = energy.toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble(),
                 protein = protein.toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble(),
