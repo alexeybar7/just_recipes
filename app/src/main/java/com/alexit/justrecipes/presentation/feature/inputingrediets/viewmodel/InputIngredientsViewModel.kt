@@ -68,8 +68,6 @@ class InputIngredientsViewModel @Inject constructor(
 
     fun handleIntent(intent: InputIngredientsIntent) {
         when (intent) {
-            is InputIngredientsIntent.LoadIngredientsName -> loadIngredientsName()
-            is InputIngredientsIntent.LoadInputtedIngredients -> loadInputtedIngredients()
             is InputIngredientsIntent.SelectSuggestionIngredient -> selectSuggestionIngredient(intent.suggestion)
             is InputIngredientsIntent.CheckingSelectedIngredient -> checkingSelectedIngredient(intent.ingredientName)
             is InputIngredientsIntent.IsIngredientInputted -> isIngredientInputted()
@@ -79,70 +77,6 @@ class InputIngredientsViewModel @Inject constructor(
             is InputIngredientsIntent.RemoveInputtedIngredient -> removeInputtedIngredient()
             is InputIngredientsIntent.DismissRemoveIngredient -> dismissRemoveIngredient()
             is InputIngredientsIntent.ChangeWeightIngredient -> changeWeightIngredient(intent.ingredientId, intent.ingredientWeight)
-        }
-    }
-
-    private fun loadIngredientsName() {
-        viewModelScope.launch {
-            getIngredientsNameUseCase().collectLatest { sourceState ->
-                when(sourceState) {
-                    is SourceState.Loading ->
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isIngredientsNameLoading = true
-                            )
-                        }
-
-                    is SourceState.Success ->
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isIngredientsNameLoading = false,
-                                ingredientsName = sourceState.data
-                            )
-                        }
-
-                    is SourceState.Error -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isIngredientsNameLoading = true
-                            )
-                        }
-                        _sideEffect . send (InputIngredientsSideEffect.ShowToast(sourceState.message))
-                    }
-                }
-            }
-        }
-    }
-
-    private fun loadInputtedIngredients(){
-        viewModelScope.launch {
-            getInputtedIngredientsUseCase().collectLatest { sourceState ->
-                when(sourceState) {
-                    is SourceState.Loading ->
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isIngredientsNameLoading = true
-                            )
-                        }
-
-                    is SourceState.Success ->
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isInputtedIngredientsLoading = false,
-                                inputtedIngredients = sourceState.data
-                            )
-                        }
-
-                    is SourceState.Error -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isIngredientsNameLoading = true
-                            )
-                        }
-                        _sideEffect . send (InputIngredientsSideEffect.ShowToast(sourceState.message))
-                    }
-                }
-            }
         }
     }
 

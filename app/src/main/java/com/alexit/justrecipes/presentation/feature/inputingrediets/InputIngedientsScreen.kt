@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexit.justrecipes.R
+import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.domain.model.IngredientModel
 import com.alexit.justrecipes.presentation.components.CustomDialog
 import com.alexit.justrecipes.presentation.components.CustomPopup
@@ -26,13 +26,10 @@ import kotlinx.collections.immutable.toPersistentList
 fun InputIngredientsScreen(
    inputIngredientsViewModel: InputIngredientsViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(Unit) {
-        inputIngredientsViewModel.handleIntent(InputIngredientsIntent.LoadIngredientsName)
-        inputIngredientsViewModel.handleIntent(InputIngredientsIntent.LoadInputtedIngredients)
-    }
     val inputIngredientsUiState by inputIngredientsViewModel.uiState.collectAsStateWithLifecycle()
-    val ingredientsName: List<String> = inputIngredientsUiState.ingredientsName
-    val inputtedIngredients: List<IngredientModel> = inputIngredientsUiState.inputtedIngredients
+    val ingredientsNameState = inputIngredientsViewModel.ingredientsNameState.collectAsStateWithLifecycle()
+    val inputtedIngredientsState = inputIngredientsViewModel.inputtedIngredientsState.collectAsStateWithLifecycle()
+    //val inputtedIngredients: List<IngredientModel> = inputIngredientsUiState.inputtedIngredients
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -77,58 +74,72 @@ fun InputIngredientsScreen(
             )
 
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isNotEmpty()){
-                SuggestionsIngredientsShow(
-                    state = inputIngredientsViewModel.inputTextStateIngredient,
-                    ingredientsName = ingredientsName.toPersistentList(),
-                    onSuggestionClick = { suggestion: String ->
-                        inputIngredientsViewModel.handleIntent(
-                        InputIngredientsIntent.SelectSuggestionIngredient(suggestion)
-                        ) },
-                    width = JustRecipesTheme.dimensions.widthInputtedIngredient,
-                    textStyle = JustRecipesTheme.typography.input1,
-                    colorField = JustRecipesTheme.colors.background2,
-                    colorBorderField = JustRecipesTheme.colors.border2,
-                    colorText = JustRecipesTheme.colors.text2,
-                    colorSuggestion = JustRecipesTheme.colors.background3,
-                    contentPadding = JustRecipesTheme.dimensions.contentPaddingField,
-                    radiusShape = JustRecipesTheme.dimensions.radiusCornerField,
-                    borderThickness = JustRecipesTheme.dimensions.borderThickness,
-                    bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu,
-                )
+                when(val stateSource = ingredientsNameState.value) {
+                    is SourceState.Loading -> LoadingScreen()
+                    is SourceState.Success -> SuggestionsIngredientsShow(
+                        state = inputIngredientsViewModel.inputTextStateIngredient,
+                        ingredientsName = stateSource.data.toPersistentList(),
+                        onSuggestionClick = { suggestion: String ->
+                            inputIngredientsViewModel.handleIntent(
+                                InputIngredientsIntent.SelectSuggestionIngredient(suggestion)
+                            )
+                        },
+                        width = JustRecipesTheme.dimensions.widthInputtedIngredient,
+                        textStyle = JustRecipesTheme.typography.input1,
+                        colorField = JustRecipesTheme.colors.background2,
+                        colorBorderField = JustRecipesTheme.colors.border2,
+                        colorText = JustRecipesTheme.colors.text2,
+                        colorSuggestion = JustRecipesTheme.colors.background3,
+                        contentPadding = JustRecipesTheme.dimensions.contentPaddingField,
+                        radiusShape = JustRecipesTheme.dimensions.radiusCornerField,
+                        borderThickness = JustRecipesTheme.dimensions.borderThickness,
+                        bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu
+                    )
+                    is SourceState.Error -> ErrorScreen(stateSource.message)
+                }
             }
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isEmpty()) {
-                InputtedIngredientsShow(
-                    inputtedIngredients = inputtedIngredients.toPersistentList(),
-                    onDeleteClick = { ingredient: IngredientModel ->
-                        inputIngredientsViewModel.handleIntent(
-                            InputIngredientsIntent.IsRemoveIngredient(ingredient)
-                        ) },
-                    onWeightClick = { ingredientId: Int, ingredientWeight: Int ->
-                        inputIngredientsViewModel.handleIntent(
-                            InputIngredientsIntent.ChangeWeightIngredient(ingredientId, ingredientWeight)
-                        ) },
-                    iconDeleteIngredient = R.drawable.round_do_not_disturb_on_24,
-                    descriptionIconDeleteIngredient = R.string.delete_inputted_ingredient,
-                    colorIconDeleteIngredient = JustRecipesTheme.colors.iconDeleteIngredient,
-                    colorInputtedIngredientsField = JustRecipesTheme.colors.background4,
-                    colorInputtedIngredientText = JustRecipesTheme.colors.text4,
-                    textStyleInputtedIngredient = JustRecipesTheme.typography.title1,
-                    iconScale = R.drawable.outline_scale_24,
-                    descriptionIconScale = R.string.scale,
-                    colorBackgroundWeightIngredient = JustRecipesTheme.colors.background2,
-                    colorWeightIngredient = JustRecipesTheme.colors.text5,
-                    textStyleWeightIngredient = JustRecipesTheme.typography.input2,
-                    contentPadding = JustRecipesTheme.dimensions.contentPaddingField,
-                    width = JustRecipesTheme.dimensions.widthInputtedIngredient,
-                    bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu,
-                    widthInputtedIngredientField = JustRecipesTheme.dimensions.widthInputtedIngredientField,
-                    widthInputtedIngredientText = JustRecipesTheme.dimensions.widthInputtedIngredientText,
-                    widthInputtedIngredientWeight = JustRecipesTheme.dimensions.widthInputtedIngredientWeight,
-                    heightInputtedIngredientWeight = JustRecipesTheme.dimensions.heightInputtedIngredientWeight,
-                    sizeIcon = JustRecipesTheme.dimensions.sizeIcon1,
-                    sizeIconScale = JustRecipesTheme.dimensions.sizeIcon2,
-                    radiusShape = JustRecipesTheme.dimensions.radiusCornerField
-                )
+                when(val stateSource = inputtedIngredientsState.value) {
+                    is SourceState.Loading -> LoadingScreen()
+                    is SourceState.Success -> InputtedIngredientsShow(
+                        inputtedIngredients = stateSource.data.toPersistentList(),
+                        onDeleteClick = { ingredient: IngredientModel ->
+                            inputIngredientsViewModel.handleIntent(
+                                InputIngredientsIntent.IsRemoveIngredient(ingredient)
+                            )
+                        },
+                        onWeightClick = { ingredientId: Int, ingredientWeight: Int ->
+                            inputIngredientsViewModel.handleIntent(
+                                InputIngredientsIntent.ChangeWeightIngredient(
+                                    ingredientId,
+                                    ingredientWeight
+                                )
+                            )
+                        },
+                        iconDeleteIngredient = R.drawable.round_do_not_disturb_on_24,
+                        descriptionIconDeleteIngredient = R.string.delete_inputted_ingredient,
+                        colorIconDeleteIngredient = JustRecipesTheme.colors.iconDeleteIngredient,
+                        colorInputtedIngredientsField = JustRecipesTheme.colors.background4,
+                        colorInputtedIngredientText = JustRecipesTheme.colors.text4,
+                        textStyleInputtedIngredient = JustRecipesTheme.typography.title1,
+                        iconScale = R.drawable.outline_scale_24,
+                        descriptionIconScale = R.string.scale,
+                        colorBackgroundWeightIngredient = JustRecipesTheme.colors.background2,
+                        colorWeightIngredient = JustRecipesTheme.colors.text5,
+                        textStyleWeightIngredient = JustRecipesTheme.typography.input2,
+                        contentPadding = JustRecipesTheme.dimensions.contentPaddingField,
+                        width = JustRecipesTheme.dimensions.widthInputtedIngredient,
+                        bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu,
+                        widthInputtedIngredientField = JustRecipesTheme.dimensions.widthInputtedIngredientField,
+                        widthInputtedIngredientText = JustRecipesTheme.dimensions.widthInputtedIngredientText,
+                        widthInputtedIngredientWeight = JustRecipesTheme.dimensions.widthInputtedIngredientWeight,
+                        heightInputtedIngredientWeight = JustRecipesTheme.dimensions.heightInputtedIngredientWeight,
+                        sizeIcon = JustRecipesTheme.dimensions.sizeIcon1,
+                        sizeIconScale = JustRecipesTheme.dimensions.sizeIcon2,
+                        radiusShape = JustRecipesTheme.dimensions.radiusCornerField
+                    )
+                    is SourceState.Error -> ErrorScreen(stateSource.message)
+                }
             }
             if (inputIngredientsUiState.isDeleteIngredient) {
                 CustomDialog(
@@ -200,3 +211,9 @@ fun InputIngredientsScreen(
         }
     }
 }
+
+@Composable
+fun LoadingScreen() {}
+
+@Composable
+fun ErrorScreen(message: String) {}
