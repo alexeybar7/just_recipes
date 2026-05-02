@@ -1,13 +1,15 @@
 package com.alexit.justrecipes.domain.repository
 
+import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.ShortIngredientModel
 import kotlinx.coroutines.flow.Flow
 
 interface RecipesRepository {
-    suspend fun getIngredient(ingredientName: String): IngredientModel?
-    fun getSuggestions(): Flow<List<String>>
-    fun getInputtedIngredients(): Flow<List<IngredientModel>>
+    suspend fun getIngredient(ingredientName: String): ShortIngredientModel?
+    fun getIngredientsName(): Flow<SourceState<List<String>>>
+    fun getInputtedIngredients(): Flow<SourceState<List<IngredientModel>>>
     suspend fun getCategories(): List<String>
     suspend fun addNewIngredient(ingredient: IngredientEntity)
     suspend fun addInputtedIngredient(ingredientId: Int)

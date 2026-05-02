@@ -1,12 +1,12 @@
 package com.alexit.justrecipes.di
 
 import com.alexit.justrecipes.domain.usecase.AddNewIngredientUseCase
-import com.alexit.justrecipes.domain.usecase.GetSuggestionsUseCase
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import com.alexit.justrecipes.domain.usecase.AddInputtedIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.ChangeWeightIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.GetCategoriesUseCase
 import com.alexit.justrecipes.domain.usecase.GetIngredientUseCase
+import com.alexit.justrecipes.domain.usecase.GetIngredientsNameUseCase
 import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsUseCase
 import com.alexit.justrecipes.domain.usecase.GetMAXIdIngredientsUseCase
 import com.alexit.justrecipes.domain.usecase.RemoveInputtedIngredientUseCase
@@ -28,8 +28,8 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideGetSuggestionsUseCase(recipesRepository: RecipesRepository): GetSuggestionsUseCase {
-        return GetSuggestionsUseCase(recipesRepository)
+    fun provideGetIngredientsNameUseCase(recipesRepository: RecipesRepository): GetIngredientsNameUseCase {
+        return GetIngredientsNameUseCase(recipesRepository)
     }
 
     @Provides

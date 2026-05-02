@@ -4,5 +4,5 @@ data class IngredientModel(
     val id: Int,
     val name: String,
     val category: String,
-    val weight: Int? = null,
+    val weight: Int? = null
 )

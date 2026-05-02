@@ -1,12 +1,13 @@
 package com.alexit.justrecipes.domain.usecase
 
+import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetSuggestionsUseCase @Inject constructor(
+class GetIngredientsNameUseCase @Inject constructor(
     private val recipesRepository: RecipesRepository
 ) {
-    operator fun invoke(): Flow<List<String>> =
-         recipesRepository.getSuggestions()
+    operator fun invoke(): Flow<SourceState<List<String>>> =
+        recipesRepository.getIngredientsName()
 }

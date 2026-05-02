@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,9 +26,13 @@ import kotlinx.collections.immutable.toPersistentList
 fun InputIngredientsScreen(
    inputIngredientsViewModel: InputIngredientsViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(Unit) {
+        inputIngredientsViewModel.handleIntent(InputIngredientsIntent.LoadIngredientsName)
+        inputIngredientsViewModel.handleIntent(InputIngredientsIntent.LoadInputtedIngredients)
+    }
     val inputIngredientsUiState by inputIngredientsViewModel.uiState.collectAsStateWithLifecycle()
-    val inputtedIngredients = inputIngredientsViewModel.inputtedIngredientsState.collectAsStateWithLifecycle()
-    val suggestions = inputIngredientsViewModel.suggestions.collectAsStateWithLifecycle()
+    val ingredientsName: List<String> = inputIngredientsUiState.ingredientsName
+    val inputtedIngredients: List<IngredientModel> = inputIngredientsUiState.inputtedIngredients
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -74,7 +79,7 @@ fun InputIngredientsScreen(
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isNotEmpty()){
                 SuggestionsIngredientsShow(
                     state = inputIngredientsViewModel.inputTextStateIngredient,
-                    ingredientsName = suggestions.value.toPersistentList(),
+                    ingredientsName = ingredientsName.toPersistentList(),
                     onSuggestionClick = { suggestion: String ->
                         inputIngredientsViewModel.handleIntent(
                         InputIngredientsIntent.SelectSuggestionIngredient(suggestion)
@@ -93,7 +98,7 @@ fun InputIngredientsScreen(
             }
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isEmpty()) {
                 InputtedIngredientsShow(
-                    inputtedIngredients = inputtedIngredients.value.toPersistentList(),
+                    inputtedIngredients = inputtedIngredients.toPersistentList(),
                     onDeleteClick = { ingredient: IngredientModel ->
                         inputIngredientsViewModel.handleIntent(
                             InputIngredientsIntent.IsRemoveIngredient(ingredient)

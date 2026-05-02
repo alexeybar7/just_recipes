@@ -6,15 +6,16 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.ShortIngredientModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipesDao {
-    @Query("SELECT id, name, category, weight FROM ingredients WHERE name = :ingredientName")
-    suspend fun getIngredient(ingredientName: String): IngredientModel?
+    @Query("SELECT id, name, is_inputted FROM ingredients WHERE name = :ingredientName")
+    suspend fun getIngredient(ingredientName: String): ShortIngredientModel?
 
     @Query("SELECT name FROM ingredients")
-    fun getSuggestions(): Flow<List<String>>
+    fun getIngredientsName(): Flow<List<String>>
 
     @Query("SELECT id, name, category, weight FROM ingredients WHERE is_inputted = 1")
     fun getInputtedIngredients(): Flow<List<IngredientModel>>

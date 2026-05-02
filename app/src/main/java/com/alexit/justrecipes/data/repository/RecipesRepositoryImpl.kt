@@ -1,8 +1,11 @@
 package com.alexit.justrecipes.data.repository
 
+import com.alexit.justrecipes.common.SourceState
+import com.alexit.justrecipes.common.asSourceState
 import com.alexit.justrecipes.data.local.room.dao.RecipesDao
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.ShortIngredientModel
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -11,16 +14,16 @@ class RecipesRepositoryImpl @Inject constructor(
     private val recipesDao: RecipesDao
 ) : RecipesRepository {
 
-    override suspend fun getIngredient(ingredientName: String): IngredientModel? {
+    override suspend fun getIngredient(ingredientName: String): ShortIngredientModel? {
         return recipesDao.getIngredient(ingredientName)
     }
 
-    override fun getSuggestions(): Flow<List<String>> {
-        return recipesDao.getSuggestions()
+    override fun getIngredientsName(): Flow<SourceState<List<String>>> {
+        return recipesDao.getIngredientsName().asSourceState()
     }
 
-    override fun getInputtedIngredients(): Flow<List<IngredientModel>> {
-        return recipesDao.getInputtedIngredients()
+    override fun getInputtedIngredients(): Flow<SourceState<List<IngredientModel>>> {
+        return recipesDao.getInputtedIngredients().asSourceState()
     }
 
     override suspend fun getCategories(): List<String> {
