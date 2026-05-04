@@ -13,6 +13,7 @@ fun JustRecipesTheme(
         LocalCustomColors provides themeColors,
         LocalCustomDimension provides themeDimension,
         LocalCustomTypography provides themeTypography,
+        LocalCustomDuration provides themeDuration,
         content = content
     )
 }
@@ -32,4 +33,9 @@ object JustRecipesTheme {
         @ReadOnlyComposable
         @Composable
         get() = LocalCustomTypography.current
+
+    val duration: CustomDuration
+        @ReadOnlyComposable
+        @Composable
+        get() = LocalCustomDuration.current
 }

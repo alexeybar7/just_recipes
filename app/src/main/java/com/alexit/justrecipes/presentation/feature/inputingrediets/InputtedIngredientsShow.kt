@@ -55,7 +55,7 @@ import kotlinx.collections.immutable.PersistentList
 fun InputtedIngredientsShow(
     inputtedIngredients: PersistentList<IngredientModel>,
     onDeleteClick: (IngredientModel) -> Unit,
-    onWeightClick: (Int, Int) -> Unit,
+    onWeightClick: (Int, Int, String) -> Unit,
     iconDeleteIngredient: Int,
     descriptionIconDeleteIngredient: Int,
     colorIconDeleteIngredient: Color,
@@ -144,7 +144,7 @@ fun InputtedIngredientsShow(
                     ),
                     onKeyboardAction = KeyboardActionHandler {
                         if (state.text.isNotEmpty()) {
-                            onWeightClick(ingredient.id, state.text.toString().toInt())
+                            onWeightClick(ingredient.id, state.text.toString().toInt(), ingredient.name)
                             keyboardController?.hide()
                         }
                     },

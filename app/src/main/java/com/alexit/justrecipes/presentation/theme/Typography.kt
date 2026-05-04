@@ -23,26 +23,32 @@ val NunitoFont = FontFamily(
 )
 @Immutable
 data class CustomTypography(
-    val title1: TextStyle,
-    val input1: TextStyle,
-    val input2: TextStyle
+    val text1: TextStyle,
+    val text2: TextStyle,
+    val text3: TextStyle,
+    val text4: TextStyle
 )
 val themeTypography = CustomTypography(
-    title1 = TextStyle(
+    text1 = TextStyle(
         fontFamily = NunitoFont,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 16.sp
     ),
-    input1 = TextStyle(
+    text2 = TextStyle(
         fontFamily = NunitoFont,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp
     ),
-    input2 = TextStyle(
+    text3 = TextStyle(
         fontFamily = NunitoFont,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 18.sp,
         textDecoration = TextDecoration.Underline
+    ),
+    text4 = TextStyle(
+        fontFamily = NunitoFont,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp
     )
 
 )

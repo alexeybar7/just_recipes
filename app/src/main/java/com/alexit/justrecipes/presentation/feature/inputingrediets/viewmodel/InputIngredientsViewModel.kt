@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.domain.model.IngredientModel
 import com.alexit.justrecipes.domain.model.ShortIngredientModel
@@ -23,7 +24,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -45,8 +45,8 @@ class InputIngredientsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(InputIngredientsUiState())
     val uiState: StateFlow<InputIngredientsUiState> = _uiState.asStateFlow()
 
-    private val _sideEffect = Channel<InputIngredientsSideEffect>()
-    val sideEffect: Flow<InputIngredientsSideEffect> = _sideEffect.receiveAsFlow()
+    private val _sideEffect = Channel<NotifySideEffect>()
+    val sideEffect: Flow<NotifySideEffect> = _sideEffect.receiveAsFlow()
 
    val inputtedIngredientsState: StateFlow<SourceState<List<IngredientModel>>> by lazy {
        getInputtedIngredientsUseCase().stateIn(
@@ -76,7 +76,8 @@ class InputIngredientsViewModel @Inject constructor(
             is InputIngredientsIntent.IsRemoveIngredient -> isRemoveIngredient(intent.ingredient)
             is InputIngredientsIntent.RemoveInputtedIngredient -> removeInputtedIngredient()
             is InputIngredientsIntent.DismissRemoveIngredient -> dismissRemoveIngredient()
-            is InputIngredientsIntent.ChangeWeightIngredient -> changeWeightIngredient(intent.ingredientId, intent.ingredientWeight)
+            is InputIngredientsIntent.ChangeWeightIngredient -> changeWeightIngredient(
+                intent.ingredientId, intent.ingredientWeight, intent.ingredientName)
         }
     }
 
@@ -87,29 +88,56 @@ class InputIngredientsViewModel @Inject constructor(
                 addingIngredient != null &&
                 !addingIngredient.isInputted
             ) {
-                addInputtedIngredientUseCase(addingIngredient.id)
-                inputTextStateIngredient.clearText()
+                try {
+                    addInputtedIngredientUseCase(addingIngredient.id)
+                    inputTextStateIngredient.clearText()
+                    _sideEffect.send(
+                        NotifySideEffect.ShowNotify(
+                            message = "Добавлен ингредиент ${addingIngredient.name}",
+                            state = NotifyState.INFO
+                        )
+                    )
+                } catch (_: Exception) {
+                    _sideEffect.send(
+                        NotifySideEffect.ShowNotify(
+                            message = "Не удалось добавить ингредиент ${addingIngredient.name}." +
+                                    "Вероятно повреждена память устройства.",
+                            state = NotifyState.ALERT
+                        )
+                    )
+                }
             } else if (
                 addingIngredient != null
                 ) {
                 inputTextStateIngredient.clearText()
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isIngredientInputted = true,
-                        alreadyInputtedIngredientName = addingIngredient.name
+                _sideEffect.send(
+                    NotifySideEffect.ShowNotify(
+                        message = "Ингредиент ${addingIngredient.name}" +
+                                "уже есть в списке",
+                        state = NotifyState.WARNING
+                    )
+                )
+            } else {
+                try {
+                    val categories = getCategoriesUseCase()
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isIngredientNew = true,
+                            newIngredientName = ingredientName,
+                            categories = categories
+                        )
+                    }
+                } catch (_: Exception) {
+                    _sideEffect.send(
+                        NotifySideEffect.ShowNotify(
+                            message = "Не удалось получить список категорий продуктов." +
+                                    "Вероятно повреждена память устройства.",
+                            state = NotifyState.ALERT
+                        )
                     )
                 }
-            } else {
-                val categories = getCategoriesUseCase()
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isIngredientNew = true,
-                        newIngredientName = ingredientName,
-                        categories = categories
-                )
             }
         }
-    }
     }
 
     private fun isIngredientInputted() {
@@ -123,16 +151,39 @@ class InputIngredientsViewModel @Inject constructor(
 
     private fun addNewIngredient(ingredientCategory: String) {
         viewModelScope.launch {
-            addNewIngredientUseCase(
-                uiState.value.newIngredientName,
-                ingredientCategory)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    isIngredientNew = false,
-                    newIngredientName = ""
+            try {
+                addNewIngredientUseCase(
+                    ingredientName = uiState.value.newIngredientName,
+                    ingredientCategory = ingredientCategory
                 )
+                _sideEffect.send(
+                    NotifySideEffect.ShowNotify(
+                        message = "Добавлен новый ингредиент ${ uiState.value.newIngredientName }",
+                        state = NotifyState.INFO
+                    )
+                )
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isIngredientNew = false,
+                        newIngredientName = ""
+                    )
+                }
+                inputTextStateIngredient.clearText()
+            } catch (_: Exception) {
+                _sideEffect.send(
+                    NotifySideEffect.ShowNotify(
+                        message = "Не удалось добавить новый ингредиент ${ uiState.value.newIngredientName }" +
+                                "Вероятно повреждена память устройства.",
+                        state = NotifyState.ALERT
+                    )
+                )
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isIngredientNew = false,
+                        newIngredientName = ""
+                    )
+                }
             }
-            inputTextStateIngredient.clearText()
         }
     }
 
@@ -170,20 +221,59 @@ class InputIngredientsViewModel @Inject constructor(
     }
     private fun removeInputtedIngredient() {
         viewModelScope.launch {
-            removeInputtedIngredientUseCase(uiState.value.deletingIngredientId)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    isDeleteIngredient = false,
-                    deletingIngredientId = -1,
-                    deletingIngredientName = ""
+            try {
+                removeInputtedIngredientUseCase(uiState.value.deletingIngredientId)
+                _sideEffect.send(
+                    NotifySideEffect.ShowNotify(
+                        message = "Удален ингредиент ${ uiState.value.deletingIngredientName }",
+                        state = NotifyState.INFO
+                    )
                 )
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isDeleteIngredient = false,
+                        deletingIngredientId = -1,
+                        deletingIngredientName = ""
+                    )
+                }
+            } catch (_: Exception) {
+                _sideEffect.send(
+                    NotifySideEffect.ShowNotify(
+                        message = "Не удалось удалить ингредиент ${ uiState.value.newIngredientName }" +
+                                "Вероятно повреждена память устройства.",
+                        state = NotifyState.ALERT
+                    )
+                )
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isDeleteIngredient = false,
+                        deletingIngredientId = -1,
+                        deletingIngredientName = ""
+                    )
+                }
             }
         }
     }
 
-    private fun changeWeightIngredient(ingredientId: Int, ingredientWeight: Int) {
+    private fun changeWeightIngredient(ingredientId: Int, ingredientWeight: Int, ingredientName: String) {
         viewModelScope.launch {
-            changeWeightIngredientUseCase(ingredientId, ingredientWeight)
+            try {
+                changeWeightIngredientUseCase(ingredientId, ingredientWeight)
+                _sideEffect.send(
+                    NotifySideEffect.ShowNotify(
+                        message = "Вес ингредиента $ingredientName изменён",
+                        state = NotifyState.INFO
+                    )
+                )
+            } catch (_: Exception) {
+                _sideEffect.send(
+                    NotifySideEffect.ShowNotify(
+                        message = "Не удалось изменить вес ингредиента $ingredientName" +
+                                "Вероятно повреждена память устройства.",
+                        state = NotifyState.ALERT
+                    )
+                )
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ ksp = "2.3.5"
 immutableCollections = "0.4.0"
 room = "2.8.4"
 paging = "3.4.2"
+material3 = "1.4.0"
 
 
 [libraries]
@@ -49,6 +50,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 androidx-room-pagging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

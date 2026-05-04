@@ -19,7 +19,7 @@ fun RequestAiScreen() {
 
         BasicText(
             text = stringResource(R.string.title_request_ai),
-            style = JustRecipesTheme.typography.title1,
+            style = JustRecipesTheme.typography.text1,
             //color = JustRecipesTheme.colors.onTitlePanel
         )
     }

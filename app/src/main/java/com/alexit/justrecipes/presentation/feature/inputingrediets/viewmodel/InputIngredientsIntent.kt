@@ -11,5 +11,5 @@ sealed class InputIngredientsIntent {
     data class IsRemoveIngredient(val ingredient: IngredientModel) : InputIngredientsIntent()
     data object RemoveInputtedIngredient : InputIngredientsIntent()
     data object DismissRemoveIngredient : InputIngredientsIntent()
-    data class ChangeWeightIngredient(val ingredientId: Int, val ingredientWeight: Int) : InputIngredientsIntent()
+    data class ChangeWeightIngredient(val ingredientId: Int, val ingredientWeight: Int, val ingredientName: String) : InputIngredientsIntent()
 }

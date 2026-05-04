@@ -10,7 +10,7 @@ val green3 = Color(0xFF83A656)
 val green4 = Color(0x99DCEDD3)
 val green5 = Color(0xFFDCEDD3)
 val green6 = Color(0x33102107)
-val green7 = Color(0xFF9ADB46)
+val green7 = Color(0xF29ADB46)
 val green8 = Color(0xFF93A654)
 val green9 = Color(0xFFCBD8A9)
 val green10 = Color(0xFFB2C485)
@@ -22,7 +22,10 @@ val brown2 = Color(0x99AA9669)
 val brown3 = Color(0xFFE5E2CE)
 val brown4 = Color(0xFFAA9669)
 val brown5 = Color(0x88AA9669)
+val brown6 = Color(0xFF6B5B57)
 val red1 = Color(0xFFEE5C4C)
+val red2 = Color(0xF2FC746F)
+val yellow1 = Color(0xF2E8E348)
 
 @Immutable
 data class CustomColors(
@@ -45,7 +48,16 @@ data class CustomColors(
     val text4: Color,
     val text5: Color,
     val iconSearchIngredient: Color,
-    val iconDeleteIngredient: Color
+    val iconDeleteIngredient: Color,
+    val notifyBackgroundInfo: Color,
+    val notifyBorderInfo: Color,
+    val notifyTextInfo: Color,
+    val notifyBackgroundWarning: Color,
+    val notifyBorderWarning: Color,
+    val notifyTextWarning: Color,
+    val notifyBackgroundAlert: Color,
+    val notifyBorderAlert: Color,
+    val notifyTextAlert: Color,
 )
 
 val themeColors = CustomColors(
@@ -68,7 +80,16 @@ val themeColors = CustomColors(
     text4 = brown4,
     text5 = brown5,
     iconSearchIngredient = brown2,
-    iconDeleteIngredient = red1
+    iconDeleteIngredient = red1,
+    notifyBackgroundInfo = green7,
+    notifyBorderInfo = grey1,
+    notifyTextInfo = brown6,
+    notifyBackgroundWarning = yellow1,
+    notifyBorderWarning = grey1,
+    notifyTextWarning = brown6,
+    notifyBackgroundAlert = red2,
+    notifyBorderAlert = grey1,
+    notifyTextAlert = black1,
 )
 
 val LocalCustomColors = staticCompositionLocalOf {

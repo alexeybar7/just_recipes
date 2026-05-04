@@ -55,7 +55,7 @@ val themeDimension = CustomDimension(
     heightDialog = 200.dp,
     widthDialog = 300.dp,
     heightPopup = 150.dp,
-    widthPopup = 300.dp,
+    widthPopup = 360.dp,
     heightNewIngredientDialog = 500.dp,
     widthNewIngredientDialog = 300.dp
 )
