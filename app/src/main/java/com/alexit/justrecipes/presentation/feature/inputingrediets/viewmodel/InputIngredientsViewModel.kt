@@ -5,8 +5,10 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.SourceState
+import com.alexit.justrecipes.common.StringResourceHolder
 import com.alexit.justrecipes.domain.model.IngredientModel
 import com.alexit.justrecipes.domain.model.ShortIngredientModel
 import com.alexit.justrecipes.domain.usecase.AddInputtedIngredientUseCase
@@ -48,13 +50,13 @@ class InputIngredientsViewModel @Inject constructor(
     private val _sideEffect = Channel<NotifySideEffect>()
     val sideEffect: Flow<NotifySideEffect> = _sideEffect.receiveAsFlow()
 
-   val inputtedIngredientsState: StateFlow<SourceState<List<IngredientModel>>> by lazy {
-       getInputtedIngredientsUseCase().stateIn(
-           viewModelScope,
-           SharingStarted.WhileSubscribed(5000L),
-           SourceState.Loading
-       )
-   }
+    val inputtedIngredientsState: StateFlow<SourceState<List<IngredientModel>>> by lazy {
+        getInputtedIngredientsUseCase().stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            SourceState.Loading
+        )
+    }
 
     val ingredientsNameState: StateFlow<SourceState<List<String>>> by lazy {
         getIngredientsNameUseCase().stateIn(
@@ -70,14 +72,14 @@ class InputIngredientsViewModel @Inject constructor(
         when (intent) {
             is InputIngredientsIntent.SelectSuggestionIngredient -> selectSuggestionIngredient(intent.suggestion)
             is InputIngredientsIntent.CheckingSelectedIngredient -> checkingSelectedIngredient(intent.ingredientName)
-            is InputIngredientsIntent.IsIngredientInputted -> isIngredientInputted()
             is InputIngredientsIntent.AddNewIngredient -> addNewIngredient(intent.ingredientCategory)
             is InputIngredientsIntent.DismissNewIngredient -> dismissNewIngredient()
             is InputIngredientsIntent.IsRemoveIngredient -> isRemoveIngredient(intent.ingredient)
             is InputIngredientsIntent.RemoveInputtedIngredient -> removeInputtedIngredient()
             is InputIngredientsIntent.DismissRemoveIngredient -> dismissRemoveIngredient()
             is InputIngredientsIntent.ChangeWeightIngredient -> changeWeightIngredient(
-                intent.ingredientId, intent.ingredientWeight, intent.ingredientName)
+                intent.ingredientId, intent.ingredientWeight, intent.ingredientName
+            )
         }
     }
 
@@ -93,16 +95,17 @@ class InputIngredientsViewModel @Inject constructor(
                     inputTextStateIngredient.clearText()
                     _sideEffect.send(
                         NotifySideEffect.ShowNotify(
-                            message = "Добавлен ингредиент ${addingIngredient.name}",
+                            message = StringResourceHolder.StringResource(R.string.added_ingredient),
+                            addition = addingIngredient.name,
                             state = NotifyState.INFO
                         )
                     )
                 } catch (_: Exception) {
                     _sideEffect.send(
                         NotifySideEffect.ShowNotify(
-                            message = "Не удалось добавить ингредиент ${addingIngredient.name}." +
-                                    "Вероятно повреждена память устройства.",
-                            state = NotifyState.ALERT
+                            message = StringResourceHolder.StringResource(R.string.hardware_error_add_ing),
+                            addition = addingIngredient.name,
+                            state = NotifyState.DANGER
                         )
                     )
                 }
@@ -112,8 +115,8 @@ class InputIngredientsViewModel @Inject constructor(
                 inputTextStateIngredient.clearText()
                 _sideEffect.send(
                     NotifySideEffect.ShowNotify(
-                        message = "Ингредиент ${addingIngredient.name}" +
-                                "уже есть в списке",
+                        message = StringResourceHolder.StringResource(R.string.exist_ing),
+                        addition = addingIngredient.name,
                         state = NotifyState.WARNING
                     )
                 )
@@ -130,22 +133,12 @@ class InputIngredientsViewModel @Inject constructor(
                 } catch (_: Exception) {
                     _sideEffect.send(
                         NotifySideEffect.ShowNotify(
-                            message = "Не удалось получить список категорий продуктов." +
-                                    "Вероятно повреждена память устройства.",
-                            state = NotifyState.ALERT
+                            message = StringResourceHolder.StringResource(R.string.hardware_error_get_cat),
+                            state = NotifyState.DANGER
                         )
                     )
                 }
             }
-        }
-    }
-
-    private fun isIngredientInputted() {
-        _uiState.update { currentState ->
-            currentState.copy(
-            isIngredientInputted = false,
-            alreadyInputtedIngredientName = ""
-            )
         }
     }
 
@@ -158,7 +151,8 @@ class InputIngredientsViewModel @Inject constructor(
                 )
                 _sideEffect.send(
                     NotifySideEffect.ShowNotify(
-                        message = "Добавлен новый ингредиент ${ uiState.value.newIngredientName }",
+                        message = StringResourceHolder.StringResource(R.string.added_new_ingredient),
+                        addition = uiState.value.newIngredientName,
                         state = NotifyState.INFO
                     )
                 )
@@ -172,9 +166,9 @@ class InputIngredientsViewModel @Inject constructor(
             } catch (_: Exception) {
                 _sideEffect.send(
                     NotifySideEffect.ShowNotify(
-                        message = "Не удалось добавить новый ингредиент ${ uiState.value.newIngredientName }" +
-                                "Вероятно повреждена память устройства.",
-                        state = NotifyState.ALERT
+                        message = StringResourceHolder.StringResource(R.string.hardware_error_add_new_ing),
+                        addition = uiState.value.newIngredientName,
+                        state = NotifyState.DANGER
                     )
                 )
                 _uiState.update { currentState ->
@@ -225,7 +219,8 @@ class InputIngredientsViewModel @Inject constructor(
                 removeInputtedIngredientUseCase(uiState.value.deletingIngredientId)
                 _sideEffect.send(
                     NotifySideEffect.ShowNotify(
-                        message = "Удален ингредиент ${ uiState.value.deletingIngredientName }",
+                        message = StringResourceHolder.StringResource(R.string.remove_ingredient),
+                        addition = uiState.value.deletingIngredientName,
                         state = NotifyState.INFO
                     )
                 )
@@ -239,9 +234,9 @@ class InputIngredientsViewModel @Inject constructor(
             } catch (_: Exception) {
                 _sideEffect.send(
                     NotifySideEffect.ShowNotify(
-                        message = "Не удалось удалить ингредиент ${ uiState.value.newIngredientName }" +
-                                "Вероятно повреждена память устройства.",
-                        state = NotifyState.ALERT
+                        message = StringResourceHolder.StringResource(R.string.hardware_error_remove_ing),
+                        addition = uiState.value.newIngredientName,
+                        state = NotifyState.DANGER
                     )
                 )
                 _uiState.update { currentState ->
@@ -261,16 +256,16 @@ class InputIngredientsViewModel @Inject constructor(
                 changeWeightIngredientUseCase(ingredientId, ingredientWeight)
                 _sideEffect.send(
                     NotifySideEffect.ShowNotify(
-                        message = "Вес ингредиента $ingredientName изменён",
+                        message = StringResourceHolder.StringResource(R.string.change_weight_ingredient),
+                        addition = ingredientName,
                         state = NotifyState.INFO
                     )
                 )
             } catch (_: Exception) {
                 _sideEffect.send(
                     NotifySideEffect.ShowNotify(
-                        message = "Не удалось изменить вес ингредиента $ingredientName" +
-                                "Вероятно повреждена память устройства.",
-                        state = NotifyState.ALERT
+                        message = StringResourceHolder.StringResource(R.string.hardware_error_change_weight_ing),
+                        state = NotifyState.DANGER
                     )
                 )
             }

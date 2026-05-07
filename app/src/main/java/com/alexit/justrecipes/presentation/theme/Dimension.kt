@@ -30,7 +30,8 @@ data class CustomDimension(
     val heightPopup: Dp,
     val widthPopup: Dp,
     val heightNewIngredientDialog: Dp,
-    val widthNewIngredientDialog: Dp
+    val widthNewIngredientDialog: Dp,
+    val sizeCircleLoader: Dp
 )
 
 val themeDimension = CustomDimension(
@@ -57,7 +58,8 @@ val themeDimension = CustomDimension(
     heightPopup = 150.dp,
     widthPopup = 360.dp,
     heightNewIngredientDialog = 500.dp,
-    widthNewIngredientDialog = 300.dp
+    widthNewIngredientDialog = 300.dp,
+    sizeCircleLoader = 50.dp
 )
 
 val LocalCustomDimension = staticCompositionLocalOf {

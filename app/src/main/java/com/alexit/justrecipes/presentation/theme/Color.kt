@@ -58,6 +58,7 @@ data class CustomColors(
     val notifyBackgroundAlert: Color,
     val notifyBorderAlert: Color,
     val notifyTextAlert: Color,
+    val circleLoader: Color
 )
 
 val themeColors = CustomColors(
@@ -90,6 +91,7 @@ val themeColors = CustomColors(
     notifyBackgroundAlert = red2,
     notifyBorderAlert = grey1,
     notifyTextAlert = black1,
+    circleLoader = green7
 )
 
 val LocalCustomColors = staticCompositionLocalOf {

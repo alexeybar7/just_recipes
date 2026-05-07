@@ -1,5 +1,6 @@
 package com.alexit.justrecipes.presentation.feature.inputingrediets
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -105,10 +106,11 @@ fun MakeNewIngredient(
                             color = colorBorderCategory
                         )
                     )
-                    .padding(start = contentPadding, end = contentPadding),
+                    .padding(start = contentPadding, end = contentPadding)
+                    .animateContentSize(),
                 verticalArrangement = Arrangement.Center
             ) {
-                items(items = listCategory, key = { it.id }) { category ->
+                items(items = listCategory) { category ->
                     BasicText(
                         modifier = Modifier
                             .fillMaxWidth()

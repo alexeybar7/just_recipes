@@ -46,6 +46,7 @@ interface RecipesDao {
 
     @Query("SELECT AVG(DISTINCT carbohydrate)FROM ingredients WHERE category = :category")
     suspend fun getAVGCarbohydrate(category: String): Double
+
     @Query("SELECT MAX(id) FROM ingredients")
     suspend fun getMAXIdIngredients(): Int
 }

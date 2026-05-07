@@ -1,9 +1,11 @@
 package com.alexit.justrecipes.presentation.feature.inputingrediets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,6 +22,7 @@ import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.presentation.components.CircleLoader
 import com.alexit.justrecipes.presentation.components.CustomDialog
 import com.alexit.justrecipes.presentation.components.CustomPopup
 import com.alexit.justrecipes.presentation.components.CustomTextField
@@ -40,13 +44,14 @@ fun InputIngredientsScreen(
     var isNewNotify by remember { mutableStateOf(false) }
     var notifyMessage by remember { mutableStateOf("") }
     var notifyState by remember { mutableStateOf(NotifyState.INFO) }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         inputIngredientsViewModel.sideEffect.collectLatest { notify ->
             when (notify) {
                 is NotifySideEffect.ShowNotify -> {
                     isNewNotify = true
-                    notifyMessage = notify.message
+                    notifyMessage = "${ notify.message.asString(context) }\n${ notify.addition}".trimEnd()
                     notifyState = notify.state
                 }
             }
@@ -57,7 +62,7 @@ fun InputIngredientsScreen(
         CustomPopup(
             message = notifyMessage,
             state = notifyState,
-            onDismissRequest = { isNewNotify = false }
+            onDismissRequest = { isNewNotify = !isNewNotify }
         )
     }
 
@@ -125,7 +130,13 @@ fun InputIngredientsScreen(
                         borderThickness = JustRecipesTheme.dimensions.borderThickness,
                         bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu
                     )
-                    is SourceState.Error -> ErrorScreen(stateSource.message)
+                    is SourceState.Error -> {
+                        isNewNotify = true
+                        if (stateSource.message != null) { notifyMessage = "${ stringResource(R.string.hardware_error)}\n${ stateSource.message }" }
+                        else { notifyMessage = "${ stringResource(R.string.unknown_error_occurred) }" }
+                        notifyState = NotifyState.DANGER
+                    }
+
                 }
             }
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isEmpty()) {
@@ -154,7 +165,7 @@ fun InputIngredientsScreen(
                         colorInputtedIngredientText = JustRecipesTheme.colors.text4,
                         textStyleInputtedIngredient = JustRecipesTheme.typography.text1,
                         iconScale = R.drawable.outline_scale_24,
-                        descriptionIconScale = R.string.scale,
+                        descriptionIconScale = R.string.icon_scale,
                         colorBackgroundWeightIngredient = JustRecipesTheme.colors.background2,
                         colorWeightIngredient = JustRecipesTheme.colors.text5,
                         textStyleWeightIngredient = JustRecipesTheme.typography.text3,
@@ -169,7 +180,12 @@ fun InputIngredientsScreen(
                         sizeIconScale = JustRecipesTheme.dimensions.sizeIcon2,
                         radiusShape = JustRecipesTheme.dimensions.radiusCornerField
                     )
-                    is SourceState.Error -> ErrorScreen(stateSource.message)
+                    is SourceState.Error -> {
+                        isNewNotify = true
+                        if (stateSource.message != null) { notifyMessage = "${ stringResource(R.string.hardware_error)}\n${ stateSource.message }" }
+                        else { notifyMessage = "${ stringResource(R.string.unknown_error_occurred) }" }
+                        notifyState = NotifyState.DANGER
+                    }
                 }
             }
             if (inputIngredientsUiState.isDeleteIngredient) {
@@ -190,14 +206,6 @@ fun InputIngredientsScreen(
                     textStyle = JustRecipesTheme.typography.text1,
                     textConfirmation = stringResource(R.string.confirmation),
                     textDismiss = stringResource(R.string.dismiss)
-                )
-            }
-            if (inputIngredientsUiState.isIngredientInputted) {
-                CustomPopup(
-                    onDismissRequest = { },
-                    message = "Test message\n" +
-                            "items list",
-                    state = NotifyState.INFO
                 )
             }
             if (inputIngredientsUiState.isIngredientNew) {
@@ -234,9 +242,23 @@ fun InputIngredientsScreen(
     }
 }
 
-@Composable
-fun LoadingScreen() {}
 
 @Composable
-fun ErrorScreen(message: String) {}
+fun ErrorScreen() {}
 
+@Composable
+fun LoadingScreen() {
+    var isLoading by remember { mutableStateOf(true) }
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+            //.background(Color.Black.copy(alpha = 0.3f)),
+        contentAlignment = Alignment.Center
+    ) {
+        CircleLoader(
+            color = JustRecipesTheme.colors.circleLoader,
+            modifier = Modifier.size(JustRecipesTheme.dimensions.sizeCircleLoader),
+            isVisible = isLoading
+        )
+    }
+}

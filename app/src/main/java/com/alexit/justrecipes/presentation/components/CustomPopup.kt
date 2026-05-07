@@ -6,9 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,9 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
@@ -56,19 +54,22 @@ fun CustomPopup(
             colorBackground = JustRecipesTheme.colors.notifyBackgroundInfo,
             colorBorder = JustRecipesTheme.colors.notifyBackgroundInfo,
             colorText = JustRecipesTheme.colors.notifyTextInfo,
-            icon = R.drawable.info_24px
+            icon = R.drawable.info_24px,
+            contentDescription = R.string.icon_info
         )
         NotifyState.WARNING -> {NotifyAppearance(
             colorBackground = JustRecipesTheme.colors.notifyBackgroundWarning,
             colorBorder = JustRecipesTheme.colors.notifyBorderWarning,
             colorText = JustRecipesTheme.colors.notifyTextWarning,
-            icon = R.drawable.error_24px
+            icon = R.drawable.error_24px,
+            contentDescription = R.string.icon_error
         )}
-        NotifyState.ALERT -> NotifyAppearance(
+        NotifyState.DANGER -> NotifyAppearance(
             colorBackground = JustRecipesTheme.colors.notifyBackgroundAlert,
             colorBorder = JustRecipesTheme.colors.notifyBorderAlert,
             colorText = JustRecipesTheme.colors.notifyTextAlert,
-            icon = R.drawable.dangerous_24px
+            icon = R.drawable.dangerous_24px,
+            contentDescription = R.string.icon_dangerous
         )
     }
 
@@ -119,7 +120,7 @@ fun CustomPopup(
                 modifier = Modifier
                     .size(sizeIcon),
                 imageVector = ImageVector.vectorResource(appearance.icon),
-                contentDescription = null,
+                contentDescription = stringResource(appearance.contentDescription),
                 colorFilter = ColorFilter.tint(appearance.colorText)
             )
             BasicText(
@@ -143,4 +144,5 @@ private data class NotifyAppearance(
     val colorBorder: Color,
     val colorText: Color,
     val icon: Int,
+    val contentDescription: Int
 )

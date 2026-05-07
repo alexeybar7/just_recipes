@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.onStart
 sealed class SourceState<out T> {
     object Loading : SourceState<Nothing>()
     data class Success<out T>(val data: T) : SourceState<T>()
-    data class Error(val message: String) : SourceState<Nothing>()
+    data class Error(val message: String?) : SourceState<Nothing>()
 }
 fun <T> Flow<T>.asSourceState(): Flow<SourceState<T>> {
     return this
@@ -16,9 +16,10 @@ fun <T> Flow<T>.asSourceState(): Flow<SourceState<T>> {
             SourceState.Success(it)
         }
         .onStart {
+            //delay(3000L)
             emit(SourceState.Loading)
         }
         .catch {
-            emit(SourceState.Error(it.message ?: "Unknown error occurred"))
+            emit(SourceState.Error(it.message))
         }
 }
