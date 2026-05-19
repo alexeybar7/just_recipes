@@ -13,7 +13,7 @@ import com.alexit.justrecipes.R
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
-fun OwnRecipesScreen () {
+fun OwnRecipesScreen(onAddRecipeClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
@@ -23,17 +23,5 @@ fun OwnRecipesScreen () {
             style = JustRecipesTheme.typography.text1,
             //color = JustRecipesTheme.colors.onTitlePanel
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RecipesScreenPreview() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-            .background(color = JustRecipesTheme.colors.background0)
-        //.pointerInput(Unit){}
-    ) {
-        OwnRecipesScreen()
     }
 }

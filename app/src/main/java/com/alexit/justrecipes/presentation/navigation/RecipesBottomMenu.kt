@@ -1,4 +1,4 @@
-package com.alexit.justrecipes.presentation.feature.bottommenu
+package com.alexit.justrecipes.presentation.navigation
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
@@ -7,17 +7,15 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
-import com.alexit.justrecipes.presentation.navigation.RecipesDestinations
 import com.alexit.justrecipes.presentation.components.CustomButton
 import com.alexit.justrecipes.presentation.components.CustomButtonSelected
 import com.alexit.justrecipes.presentation.components.dpToPx
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
-fun BottomMenu(
-    recipesBottomMenuScreens: List<RecipesDestinations>,
-    buttonSelected: (RecipesDestinations) -> Unit,
-    currentScreen: RecipesDestinations
+fun RecipesBottomMenu(
+    navigationState: RecipesNavigationState,
+    navigator: RecipesNavigator,
 ) {
     val sizeWidth = sizeWidth()
     DrawBottonDividers(
@@ -28,11 +26,13 @@ fun BottomMenu(
         heightMenu = JustRecipesTheme.dimensions.heightBottomMenu.dpToPx()
     )
 
-    recipesBottomMenuScreens.forEach { screen ->
-        if (currentScreen == screen) {
+    val selectedTab = navigationState.currentTab
+
+    BOTTOM_MENU_ROUTES.forEach { (tab, items) ->
+        if (selectedTab == tab) {
             CustomButtonSelected(
-                iconResId = screen.icon,
-                iconDescription = screen.iconDescription,
+                iconResId = items.icon,
+                iconDescription = items.iconDescription,
                 sizeWidth = sizeWidth,
                 sizeHeight = JustRecipesTheme.dimensions.heightBottomMenu,
                 sizeIcon = JustRecipesTheme.dimensions.sizeIcon1,
@@ -43,13 +43,13 @@ fun BottomMenu(
             )
         } else {
             CustomButton(
-                iconResId = screen.icon,
-                iconDescription = screen.iconDescription,
+                iconResId = items.icon,
+                iconDescription = items.iconDescription,
                 sizeWidth = sizeWidth,
                 sizeHeight = JustRecipesTheme.dimensions.heightBottomMenu,
                 sizeIcon = JustRecipesTheme.dimensions.sizeIcon1,
                 colorOnBottomMenu = JustRecipesTheme.colors.onBottomMenu,
-                onClick = { buttonSelected(screen) }
+                onClick = { navigator.navigateTo(tab) }
             )
         }
     }

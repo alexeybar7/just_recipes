@@ -1,4 +1,4 @@
-package com.alexit.justrecipes.presentation.feature.requestai
+package com.alexit.justrecipes.presentation.feature.searchrecipes
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,13 +12,12 @@ import com.alexit.justrecipes.R
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
-fun RequestAiScreen(onPromptClick: (String) -> Unit) {
+fun SearchRecipeScreen(onRecipeClick: (Int) -> Unit) {
     Box(modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.BottomCenter
     ) {
-
         BasicText(
-            text = stringResource(R.string.title_request_ai),
+            text = stringResource(R.string.title_search_recipe),
             style = JustRecipesTheme.typography.text1,
             //color = JustRecipesTheme.colors.onTitlePanel
         )

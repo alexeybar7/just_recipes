@@ -51,7 +51,7 @@ fun InputIngredientsScreen(
             when (notify) {
                 is NotifySideEffect.ShowNotify -> {
                     isNewNotify = true
-                    notifyMessage = "${ notify.message.asString(context) }\n${ notify.addition}".trimEnd()
+                    notifyMessage = "${notify.message.asString(context)}\n${notify.addition}".trimEnd()
                     notifyState = notify.state
                 }
             }
@@ -69,13 +69,9 @@ fun InputIngredientsScreen(
     Column(
         modifier = Modifier.fillMaxSize()
         ) {
-        InputIngredientsTitlePanel(
-            height = JustRecipesTheme.dimensions.heightTitlePanel,
-            background = JustRecipesTheme.colors.background1,
-            color = JustRecipesTheme.colors.text1,
-            padding = JustRecipesTheme.dimensions.paddingTextTitlePanel,
+        TitlePanel(
             text = stringResource(R.string.title_input_ingredients),
-            style = JustRecipesTheme.typography.text1
+            //onLeftClick = {}
         )
 
         Column(
@@ -132,8 +128,11 @@ fun InputIngredientsScreen(
                     )
                     is SourceState.Error -> {
                         isNewNotify = true
-                        if (stateSource.message != null) { notifyMessage = "${ stringResource(R.string.hardware_error)}\n${ stateSource.message }" }
-                        else { notifyMessage = "${ stringResource(R.string.unknown_error_occurred) }" }
+                        notifyMessage = if (stateSource.message != null) {
+                            "${ stringResource(R.string.hardware_error)}\n${ stateSource.message }"
+                        } else {
+                            stringResource(R.string.unknown_error_occurred)
+                        }
                         notifyState = NotifyState.DANGER
                     }
 
@@ -142,7 +141,7 @@ fun InputIngredientsScreen(
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isEmpty()) {
                 when(val stateSource = inputtedIngredientsState.value) {
                     is SourceState.Loading -> LoadingScreen()
-                    is SourceState.Success -> InputtedIngredientsShow(
+                    is SourceState.Success -> ShowInputtedIngredients(
                         inputtedIngredients = stateSource.data.toPersistentList(),
                         onDeleteClick = { ingredient: IngredientModel ->
                             inputIngredientsViewModel.handleIntent(
@@ -182,8 +181,11 @@ fun InputIngredientsScreen(
                     )
                     is SourceState.Error -> {
                         isNewNotify = true
-                        if (stateSource.message != null) { notifyMessage = "${ stringResource(R.string.hardware_error)}\n${ stateSource.message }" }
-                        else { notifyMessage = "${ stringResource(R.string.unknown_error_occurred) }" }
+                        notifyMessage = if (stateSource.message != null) {
+                            "${ stringResource(R.string.hardware_error)}\n${ stateSource.message }"
+                        } else {
+                            stringResource(R.string.unknown_error_occurred)
+                        }
                         notifyState = NotifyState.DANGER
                     }
                 }
@@ -242,17 +244,12 @@ fun InputIngredientsScreen(
     }
 }
 
-
 @Composable
-fun ErrorScreen() {}
-
-@Composable
-fun LoadingScreen() {
+private fun LoadingScreen() {
     var isLoading by remember { mutableStateOf(true) }
     Box(
         modifier = Modifier
             .fillMaxSize(),
-            //.background(Color.Black.copy(alpha = 0.3f)),
         contentAlignment = Alignment.Center
     ) {
         CircleLoader(

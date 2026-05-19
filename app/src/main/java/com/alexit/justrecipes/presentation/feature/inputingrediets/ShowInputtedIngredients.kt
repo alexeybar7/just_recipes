@@ -52,7 +52,7 @@ import com.alexit.justrecipes.domain.model.IngredientModel
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
-fun InputtedIngredientsShow(
+fun ShowInputtedIngredients(
     inputtedIngredients: PersistentList<IngredientModel>,
     onDeleteClick: (IngredientModel) -> Unit,
     onWeightClick: (Int, Int, String) -> Unit,

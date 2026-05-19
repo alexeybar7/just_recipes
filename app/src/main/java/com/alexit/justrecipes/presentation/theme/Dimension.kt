@@ -25,13 +25,15 @@ data class CustomDimension(
     val borderThickness: Dp,
     val sizeIcon1: Dp,
     val sizeIcon2: Dp,
+    val sizeIcon3: Dp,
     val heightDialog: Dp,
     val widthDialog: Dp,
     val heightPopup: Dp,
     val widthPopup: Dp,
     val heightNewIngredientDialog: Dp,
     val widthNewIngredientDialog: Dp,
-    val sizeCircleLoader: Dp
+    val sizeCircleLoader: Dp,
+    val heightTitleField: Dp
 )
 
 val themeDimension = CustomDimension(
@@ -53,13 +55,15 @@ val themeDimension = CustomDimension(
     borderThickness = 1.dp,
     sizeIcon1 = 32.dp,
     sizeIcon2 = 24.dp,
+    sizeIcon3 = 36.dp,
     heightDialog = 200.dp,
     widthDialog = 300.dp,
     heightPopup = 150.dp,
     widthPopup = 360.dp,
     heightNewIngredientDialog = 500.dp,
     widthNewIngredientDialog = 300.dp,
-    sizeCircleLoader = 50.dp
+    sizeCircleLoader = 50.dp,
+    heightTitleField = 50.dp
 )
 
 val LocalCustomDimension = staticCompositionLocalOf {

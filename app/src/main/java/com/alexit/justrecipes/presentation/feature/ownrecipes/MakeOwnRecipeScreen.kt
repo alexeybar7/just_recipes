@@ -1,4 +1,5 @@
-package com.alexit.justrecipes.presentation.feature.requestai
+package com.alexit.justrecipes.presentation.feature.ownrecipes
+
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,17 +9,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.alexit.justrecipes.R
-//import com.alexit.justrecipes.ui.components.CustomText
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
-fun RequestAiScreen(onPromptClick: (String) -> Unit) {
+fun MakeOwnRecipeScreen(onBackClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
 
         BasicText(
-            text = stringResource(R.string.title_request_ai),
+            text = stringResource(R.string.title_make_own_recipes),
             style = JustRecipesTheme.typography.text1,
             //color = JustRecipesTheme.colors.onTitlePanel
         )

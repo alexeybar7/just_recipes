@@ -8,26 +8,48 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.alexit.justrecipes.presentation.feature.bottommenu.BottomMenu
-import com.alexit.justrecipes.presentation.navigation.InputIngredients
-import com.alexit.justrecipes.presentation.navigation.RecipesNavHost
-import com.alexit.justrecipes.presentation.navigation.navigateSingleTopTo
-import com.alexit.justrecipes.presentation.navigation.recipesBottomMenuScreens
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import com.alexit.justrecipes.presentation.navigation.AnswerAi
+import com.alexit.justrecipes.presentation.navigation.BOTTOM_MENU_ROUTES
+import com.alexit.justrecipes.presentation.navigation.InputIngredientsTab
+import com.alexit.justrecipes.presentation.navigation.MakeOwnRecipe
+import com.alexit.justrecipes.presentation.navigation.RecipesBottomMenu
+import com.alexit.justrecipes.presentation.navigation.RecipesNavigationState
+import com.alexit.justrecipes.presentation.navigation.RecipesNavigator
+import com.alexit.justrecipes.presentation.navigation.ShowRecipe
+import com.alexit.justrecipes.presentation.navigation.featureInputIngredients
+import com.alexit.justrecipes.presentation.navigation.featureOwnRecipes
+import com.alexit.justrecipes.presentation.navigation.featureRequestAi
+import com.alexit.justrecipes.presentation.navigation.featureSearchRecipes
+import com.alexit.justrecipes.presentation.navigation.rememberRecipesNavigationState
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
 fun RecipesScreen(
 ) {
-    val navController = rememberNavController()
-    val currentBackStack by navController.currentBackStackEntryAsState()
-    val currentDestination = currentBackStack?.destination
-    val currentScreen = recipesBottomMenuScreens.find {
-        it.route == currentDestination?.route } ?: InputIngredients
+    val navigationState: RecipesNavigationState = rememberRecipesNavigationState(
+        startTab = InputIngredientsTab,
+        tabs = BOTTOM_MENU_ROUTES.keys
+    )
+    val navigator: RecipesNavigator = remember { RecipesNavigator(navigationState) }
+    val entryProvider = entryProvider {
+        featureInputIngredients()
+        featureSearchRecipes(
+            onSubRouteClick = { id -> navigator.navigateTo(ShowRecipe(recipeId = id)) },
+            onBackClick = { navigator.navigationBack() })
+        featureRequestAi(
+            onSubRouteClick = { prompt -> navigator.navigateTo(AnswerAi(prompt = prompt)) },
+            onBackClick = { navigator.navigationBack() }
+        )
+        featureOwnRecipes(
+            onSubRouteClick = { navigator.navigateTo(MakeOwnRecipe) },
+            onBackClick = { navigator.navigationBack() }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -39,7 +61,10 @@ fun RecipesScreen(
                 .weight(1f)
                 .fillMaxSize()
         ) {
-            RecipesNavHost(navController = navController)
+            NavDisplay(
+                entries = navigationState.toDecoratedEntries(entryProvider),
+                onBack = { navigator.navigationBack() }
+            )
         }
         Row(
             modifier = Modifier
@@ -49,12 +74,9 @@ fun RecipesScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BottomMenu(
-                recipesBottomMenuScreens = recipesBottomMenuScreens,
-                buttonSelected = { newScreen ->
-                    navController.navigateSingleTopTo(newScreen.route)
-                                 },
-                currentScreen = currentScreen
+            RecipesBottomMenu(
+                navigationState = navigationState,
+                navigator = navigator
             )
         }
     }

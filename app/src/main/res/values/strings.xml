@@ -1,18 +1,22 @@
 <resources>
     <string name="app_name">Just Recipes</string>
     <string name="button_input_ingredients">Input Ingredients</string>
-    <string name="button_search_recipe">Search Recipe</string>
+    <string name="button_recipes">Recipes</string>
     <string name="button_request_ai">Request AI</string>
     <string name="button_own_recipes">Own Recipes</string>
     <string name="icon_search">Search</string>
     <string name="icon_add">Add</string>
-    <string name="icon_dangerous">Add</string>
+    <string name="icon_dangerous">Dangerous</string>
     <string name="icon_error">Error</string>
     <string name="icon_info">Info</string>
+    <string name="icon_arrow_back">Arrow back</string>
     <string name="title_input_ingredients">"Список Ингредиентов"</string>
     <string name="title_search_recipe">Поиск Рецепта</string>
+    <string name="title_show_recipe">Показ Рецепта</string>
     <string name="title_request_ai">Запрос ИИ</string>
+    <string name="title_answer_ai">Ответ ИИ</string>
     <string name="title_own_recipes">Свои Рецепты</string>
+    <string name="title_make_own_recipes">Создание Своего Рецепта</string>
     <string name="placeholder_input_ingredients">Добавить Ингредиент</string>
     <string name="delete_inputted_ingredient">Удалить Ингредиент</string>
     <string name="icon_scale">Scale</string>

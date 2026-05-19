@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
 import com.alexit.justrecipes.domain.model.ShortIngredientModel
@@ -49,4 +51,8 @@ interface RecipesDao {
 
     @Query("SELECT MAX(id) FROM ingredients")
     suspend fun getMAXIdIngredients(): Int
+
+    @Transaction
+    @Query("SELECT * From recipes")
+    fun getRecipesWithIngredients(): List<RecipeWithIngredients>
 }
