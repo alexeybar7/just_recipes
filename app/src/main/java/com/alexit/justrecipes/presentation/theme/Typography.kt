@@ -26,7 +26,8 @@ data class CustomTypography(
     val text1: TextStyle,
     val text2: TextStyle,
     val text3: TextStyle,
-    val text4: TextStyle
+    val text4: TextStyle,
+    val text5: TextStyle
 )
 val themeTypography = CustomTypography(
     text1 = TextStyle(
@@ -49,7 +50,12 @@ val themeTypography = CustomTypography(
         fontFamily = NunitoFont,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp
-    )
+    ),
+    text5 = TextStyle(
+        fontFamily = NunitoFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 12.sp
+    ),
 
 )
 

@@ -1,6 +1,5 @@
 package com.alexit.justrecipes.presentation.feature.inputingrediets
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +25,7 @@ import com.alexit.justrecipes.presentation.components.CircleLoader
 import com.alexit.justrecipes.presentation.components.CustomDialog
 import com.alexit.justrecipes.presentation.components.CustomPopup
 import com.alexit.justrecipes.presentation.components.CustomTextField
+import com.alexit.justrecipes.presentation.components.TitlePanel
 import com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel.InputIngredientsIntent
 import com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel.InputIngredientsViewModel
 import com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel.NotifySideEffect
@@ -77,7 +77,6 @@ fun InputIngredientsScreen(
         Column(
             modifier = Modifier
                 .padding(vertical = JustRecipesTheme.dimensions.paddingFieldInput)
-                .background(JustRecipesTheme.colors.background0)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -85,31 +84,20 @@ fun InputIngredientsScreen(
                 state = inputIngredientsViewModel.inputTextStateIngredient,
                 onDoneClick = { ingredientName: String ->
                     inputIngredientsViewModel.handleIntent(
-                    InputIngredientsIntent.CheckingSelectedIngredient(ingredientName)
-                    ) },
-                height = JustRecipesTheme.dimensions.heightFieldInput,
-                width = JustRecipesTheme.dimensions.widthInputtedIngredient,
-                textStyle = JustRecipesTheme.typography.text2,
+                        InputIngredientsIntent.CheckingSelectedIngredient(ingredientName)
+                    )
+                },
+                iconPlaceholder = R.drawable.add_24px,
+                iconDescriptionPlaceholder = R.string.icon_add,
                 placeholder = stringResource(R.string.placeholder_input_ingredients),
-                focusedField = JustRecipesTheme.colors.background2,
-                focusedBorderField = JustRecipesTheme.colors.border2,
-                focusedTextColor = JustRecipesTheme.colors.text2,
-                unfocusedField = JustRecipesTheme.colors.background3,
-                unfocusedBorderField = JustRecipesTheme.colors.border3,
-                unfocusedTextColor = JustRecipesTheme.colors.text3,
-                contentPadding = JustRecipesTheme.dimensions.contentPaddingField,
-                radiusShape = JustRecipesTheme.dimensions.radiusCornerField,
-                borderThickness = JustRecipesTheme.dimensions.borderThickness,
-                sizeIcon = JustRecipesTheme.dimensions.sizeIcon1,
-                colorIcon = JustRecipesTheme.colors.iconSearchIngredient
             )
 
             if (inputIngredientsViewModel.inputTextStateIngredient.text.isNotEmpty()){
-                when(val stateSource = ingredientsNameState.value) {
+                when(val sourceState = ingredientsNameState.value) {
                     is SourceState.Loading -> LoadingScreen()
-                    is SourceState.Success -> SuggestionsIngredientsShow(
+                    is SourceState.Success -> ShowSuggestionsIngredients(
                         state = inputIngredientsViewModel.inputTextStateIngredient,
-                        ingredientsName = stateSource.data.toPersistentList(),
+                        ingredientsName = sourceState.data.toPersistentList(),
                         onSuggestionClick = { suggestion: String ->
                             inputIngredientsViewModel.handleIntent(
                                 InputIngredientsIntent.SelectSuggestionIngredient(suggestion)
@@ -128,8 +116,8 @@ fun InputIngredientsScreen(
                     )
                     is SourceState.Error -> {
                         isNewNotify = true
-                        notifyMessage = if (stateSource.message != null) {
-                            "${ stringResource(R.string.hardware_error)}\n${ stateSource.message }"
+                        notifyMessage = if (sourceState.message != null) {
+                            "${ stringResource(R.string.hardware_error)}\n${ sourceState.message }"
                         } else {
                             stringResource(R.string.unknown_error_occurred)
                         }

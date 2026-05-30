@@ -1,9 +1,11 @@
 package com.alexit.justrecipes.domain.model
 
-data class RecipeModel(
+data class RecipeCardModel(
     val id: Int,
     val name: String,
-    val duration: Int?,
     val portion: Int?,
     val image: String?,
+    val duration: Int?,
+    val isHealthy: Boolean,
+    val numberIngredients: Int?
 )

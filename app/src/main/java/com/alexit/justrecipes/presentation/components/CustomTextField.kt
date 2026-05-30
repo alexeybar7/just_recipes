@@ -36,35 +36,38 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Dp
 import com.alexit.justrecipes.R
+import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
 fun CustomTextField (
     state: TextFieldState,
     onDoneClick: (String) -> Unit,
-    height: Dp,
-    width: Dp,
-    textStyle: TextStyle,
+    iconPlaceholder: Int,
+    iconDescriptionPlaceholder: Int,
     placeholder: String,
-    focusedField: Color,
-    focusedBorderField: Color,
-    focusedTextColor: Color,
-    unfocusedField: Color,
-    unfocusedBorderField: Color,
-    unfocusedTextColor: Color,
-    borderThickness: Dp,
-    contentPadding: Dp,
-    radiusShape:Dp,
-    sizeIcon:Dp,
-    colorIcon: Color,
 ) {
+    val height = JustRecipesTheme.dimensions.heightFieldInput
+    val width = JustRecipesTheme.dimensions.widthInputtedIngredient
+    val textStyle = JustRecipesTheme.typography.text2
     var isFocusedIngredient by remember { mutableStateOf(false) }
+    val focusedField = JustRecipesTheme.colors.background2
+    val focusedBorderField = JustRecipesTheme.colors.border2
+    val focusedTextColor = JustRecipesTheme.colors.text2
+    val unfocusedField = JustRecipesTheme.colors.background3
+    val unfocusedBorderField = JustRecipesTheme.colors.border3
+    val unfocusedTextColor = JustRecipesTheme.colors.text3
+    val contentPadding = JustRecipesTheme.dimensions.contentPaddingField
+    val radiusShape = JustRecipesTheme.dimensions.radiusCornerField
+    val borderThickness = JustRecipesTheme.dimensions.borderThickness
+    val sizeIcon = JustRecipesTheme.dimensions.sizeIcon1
+    val colorIcon = JustRecipesTheme.colors.iconSearchIngredient
+
     val colorField: Color
     val colorBorderField: Color
+
     if (state.text.isNotEmpty() || isFocusedIngredient) {
         colorField = focusedField
         colorBorderField = focusedBorderField
@@ -157,12 +160,13 @@ fun CustomTextField (
                         colorFilter = ColorFilter.tint(colorIcon)
                     )
                 } else {
+
                     Image(
                         modifier = Modifier
                             .size(sizeIcon)
                             .padding(start = contentPadding),
-                        imageVector = ImageVector.vectorResource(id = R.drawable.add_24px),
-                        contentDescription = stringResource(id = R.string.icon_add),
+                        imageVector = ImageVector.vectorResource(id = iconPlaceholder),
+                        contentDescription = stringResource(id = iconDescriptionPlaceholder),
                         colorFilter = ColorFilter.tint(unfocusedTextColor)
                     )
                     Box(

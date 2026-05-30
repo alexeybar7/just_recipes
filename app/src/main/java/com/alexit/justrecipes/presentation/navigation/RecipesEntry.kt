@@ -7,7 +7,7 @@ import com.alexit.justrecipes.presentation.feature.ownrecipes.MakeOwnRecipeScree
 import com.alexit.justrecipes.presentation.feature.ownrecipes.OwnRecipesScreen
 import com.alexit.justrecipes.presentation.feature.requestai.AnswerAiScreen
 import com.alexit.justrecipes.presentation.feature.requestai.RequestAiScreen
-import com.alexit.justrecipes.presentation.feature.searchrecipes.SearchRecipeScreen
+import com.alexit.justrecipes.presentation.feature.searchrecipes.SearchRecipesScreen
 import com.alexit.justrecipes.presentation.feature.searchrecipes.ShowRecipeScreen
 
 fun EntryProviderScope<NavKey>.featureInputIngredients(
@@ -22,7 +22,7 @@ fun EntryProviderScope<NavKey>.featureSearchRecipes(
     onBackClick: () -> Unit
 ) {
     entry<SearchRecipesTab> {
-        SearchRecipeScreen(
+        SearchRecipesScreen(
             onRecipeClick = { id: Int -> onSubRouteClick(id) }
         )
     }

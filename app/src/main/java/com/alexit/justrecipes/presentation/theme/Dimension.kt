@@ -26,6 +26,7 @@ data class CustomDimension(
     val sizeIcon1: Dp,
     val sizeIcon2: Dp,
     val sizeIcon3: Dp,
+    val sizeIcon4: Dp,
     val heightDialog: Dp,
     val widthDialog: Dp,
     val heightPopup: Dp,
@@ -33,7 +34,14 @@ data class CustomDimension(
     val heightNewIngredientDialog: Dp,
     val widthNewIngredientDialog: Dp,
     val sizeCircleLoader: Dp,
-    val heightTitleField: Dp
+    val heightTitleField: Dp,
+    val widthRecipeCard: Dp,
+    val heightRecipeCard: Dp,
+    val gap1: Dp,
+    val widthNameRecipeCard: Dp,
+    val heightNameRecipeCard: Dp,
+    val sizeImageRecipeCard: Dp,
+    val widthIconInfoRecipeCard: Dp
 )
 
 val themeDimension = CustomDimension(
@@ -44,7 +52,7 @@ val themeDimension = CustomDimension(
     heightTopBorderButtonSelected = 6.dp,
     paddingTextTitlePanel = 24.dp,
     heightFieldInput = 48.dp,
-    widthInputtedIngredient = 328.dp,
+    widthInputtedIngredient = 330.dp,
     widthInputtedIngredientText = 170.dp,
     widthInputtedIngredientField = 292.dp,
     widthInputtedIngredientWeight = 70.dp,
@@ -56,6 +64,7 @@ val themeDimension = CustomDimension(
     sizeIcon1 = 32.dp,
     sizeIcon2 = 24.dp,
     sizeIcon3 = 36.dp,
+    sizeIcon4 = 28.dp,
     heightDialog = 200.dp,
     widthDialog = 300.dp,
     heightPopup = 150.dp,
@@ -63,7 +72,14 @@ val themeDimension = CustomDimension(
     heightNewIngredientDialog = 500.dp,
     widthNewIngredientDialog = 300.dp,
     sizeCircleLoader = 50.dp,
-    heightTitleField = 50.dp
+    heightTitleField = 50.dp,
+    widthRecipeCard = 330.dp,
+    heightRecipeCard = 135.dp,
+    gap1 = 4.dp,
+    widthNameRecipeCard = 230.dp,
+    heightNameRecipeCard = 95.dp,
+    sizeImageRecipeCard = 80.dp,
+    widthIconInfoRecipeCard = 75.dp
 )
 
 val LocalCustomDimension = staticCompositionLocalOf {

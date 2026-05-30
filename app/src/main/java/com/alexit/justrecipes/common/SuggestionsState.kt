@@ -1,4 +1,4 @@
-package com.alexit.justrecipes.presentation.components
+package com.alexit.justrecipes.common
 
 import androidx.compose.ui.text.AnnotatedString
 import com.alexit.justrecipes.utility.GSuffArray

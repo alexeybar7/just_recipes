@@ -30,7 +30,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexit.justrecipes.presentation.components.CustomDivider
-import com.alexit.justrecipes.presentation.components.SuggestionsState
+import com.alexit.justrecipes.common.SuggestionsState
 import com.alexit.justrecipes.presentation.components.dpToPx
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun SuggestionsIngredientsShow(
+fun ShowSuggestionsIngredients(
     state: TextFieldState,
     ingredientsName: PersistentList<String>,
     onSuggestionClick: (String) -> Unit,
@@ -82,7 +82,7 @@ fun SuggestionsIngredientsShow(
             .animateContentSize(),
         verticalArrangement = Arrangement.Center
     ) {
-        items(items = suggestions.value, key = {it.text}) { suggestion ->
+        items(items = suggestions.value, key = { it.text }) { suggestion ->
             BasicText(
                 modifier = Modifier
                     .padding(top = contentPadding, bottom = contentPadding)

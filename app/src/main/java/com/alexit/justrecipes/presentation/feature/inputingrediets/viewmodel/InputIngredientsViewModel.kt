@@ -10,7 +10,7 @@ import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.common.StringResourceHolder
 import com.alexit.justrecipes.domain.model.IngredientModel
-import com.alexit.justrecipes.domain.model.ShortIngredientModel
+import com.alexit.justrecipes.domain.model.IngredientModelShort
 import com.alexit.justrecipes.domain.usecase.AddInputtedIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.AddNewIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.ChangeWeightIngredientUseCase
@@ -42,7 +42,7 @@ class InputIngredientsViewModel @Inject constructor(
     private val addInputtedIngredientUseCase: AddInputtedIngredientUseCase,
     private val removeInputtedIngredientUseCase: RemoveInputtedIngredientUseCase,
     private val changeWeightIngredientUseCase: ChangeWeightIngredientUseCase,
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InputIngredientsUiState())
     val uiState: StateFlow<InputIngredientsUiState> = _uiState.asStateFlow()
@@ -85,7 +85,7 @@ class InputIngredientsViewModel @Inject constructor(
 
     private fun checkingSelectedIngredient(ingredientName: String) {
         viewModelScope.launch {
-            val addingIngredient: ShortIngredientModel? = getIngredientUseCase(ingredientName)
+            val addingIngredient: IngredientModelShort? = getIngredientUseCase(ingredientName)
             if (
                 addingIngredient != null &&
                 !addingIngredient.isInputted

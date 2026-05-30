@@ -8,13 +8,15 @@ import androidx.room.Transaction
 import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
-import com.alexit.justrecipes.domain.model.ShortIngredientModel
+import com.alexit.justrecipes.domain.model.IngredientModelLong
+import com.alexit.justrecipes.domain.model.IngredientModelShort
+import com.alexit.justrecipes.domain.model.RecipeModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipesDao {
     @Query("SELECT id, name, is_inputted FROM ingredients WHERE name = :ingredientName")
-    suspend fun getIngredient(ingredientName: String): ShortIngredientModel?
+    suspend fun getIngredient(ingredientName: String): IngredientModelShort?
 
     @Query("SELECT name FROM ingredients")
     fun getIngredientsName(): Flow<List<String>>
@@ -53,6 +55,15 @@ interface RecipesDao {
     suspend fun getMAXIdIngredients(): Int
 
     @Transaction
-    @Query("SELECT * From recipes")
-    fun getRecipesWithIngredients(): List<RecipeWithIngredients>
+    @Query("SELECT * FROM recipes")
+    fun getRecipesWithIngredients(): Flow<List<RecipeWithIngredients>>
+
+    @Query("SELECT " +
+            "recipes.id, recipes.name, recipes.duration, recipes.portion, recipes.image, " +
+            "ingredients.id, ingredients.name, ingredients.energy, ingredients.protein, ingredients.fat, ingredients.carbohydrate, " +
+            "recipe_ingredients.quantity, recipe_ingredients.unit, recipe_ingredients.density " +
+            "FROM recipe_ingredients " +
+            "INNER JOIN recipes ON recipes.id = recipe_ingredients.recipe_id " +
+            "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id" )
+    fun getRecipesCardData(): Flow<Map<RecipeModel, List<IngredientModelLong>>>
 }

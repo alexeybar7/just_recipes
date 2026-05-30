@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +62,7 @@ fun MakeNewIngredient(
     colorTextCategory: Color,
     colorBackgroundCategorySelected: Color
 ) {
-    val selectedId = remember {  mutableIntStateOf(-1) }
+    val selectedCategory = remember {  mutableStateOf("") }
     Dialog(onDismissRequest = onDismissRequest ) {
         Column(
             modifier = Modifier
@@ -110,22 +111,22 @@ fun MakeNewIngredient(
                     .animateContentSize(),
                 verticalArrangement = Arrangement.Center
             ) {
-                items(items = listCategory) { category ->
+                items(items = listCategory, key = { it.id }) { category ->
                     BasicText(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = if (category.id == selectedId.intValue)
+                                color = if (category.category == selectedCategory.value)
                                     colorBackgroundCategorySelected
                                 else colorBackgroundCategory
                             )
                             .selectable(
-                                selected = category.id == selectedId.intValue,
+                                selected = category.category == selectedCategory.value,
                                 onClick = {
-                                    if (selectedId.intValue != category.id)
-                                    { selectedId.intValue = category.id }
+                                    if (selectedCategory.value != category.category)
+                                    { selectedCategory.value = category.category }
                                     else
-                                    { selectedId.intValue = -1 }
+                                    { selectedCategory.value = "" }
                                 })
                             .padding(contentPadding),
                         text = category.category,
@@ -184,12 +185,11 @@ fun MakeNewIngredient(
                 )
                 BasicText(
                     modifier = Modifier
-                        .alpha( if (selectedId.intValue > -1) 1f else 0.2f )
+                        .alpha( if (selectedCategory.value != "") 1f else 0.2f )
                         .clickable(
                             enabled = true,
                             onClick = {
-                                if (selectedId.intValue > -1) onConfirmation(listCategory.find {
-                                    it.id == selectedId.intValue }!!.category)
+                                if (selectedCategory.value != "") onConfirmation(selectedCategory.value)
                             }
                         )
                         .width(widthDialog / 2)

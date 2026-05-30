@@ -2,10 +2,13 @@ package com.alexit.justrecipes.data.repository
 
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.common.asSourceState
+import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.data.local.room.dao.RecipesDao
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
-import com.alexit.justrecipes.domain.model.ShortIngredientModel
+import com.alexit.justrecipes.domain.model.IngredientModelLong
+import com.alexit.justrecipes.domain.model.IngredientModelShort
+import com.alexit.justrecipes.domain.model.RecipeModel
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -14,7 +17,7 @@ class RecipesRepositoryImpl @Inject constructor(
     private val recipesDao: RecipesDao
 ) : RecipesRepository {
 
-    override suspend fun getIngredient(ingredientName: String): ShortIngredientModel? {
+    override suspend fun getIngredient(ingredientName: String): IngredientModelShort? {
         return recipesDao.getIngredient(ingredientName)
     }
 
@@ -64,5 +67,13 @@ class RecipesRepositoryImpl @Inject constructor(
 
     override suspend fun getMAXIdIngredients(): Int {
         return recipesDao.getMAXIdIngredients()
+    }
+
+    override fun getRecipesWithIngredients(): Flow<List<RecipeWithIngredients>> {
+        return recipesDao.getRecipesWithIngredients()
+    }
+
+    override fun getRecipesCardData(): Flow<Map<RecipeModel, List<IngredientModelLong>>> {
+        return recipesDao.getRecipesCardData()
     }
 }

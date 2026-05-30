@@ -17,8 +17,8 @@ import androidx.savedstate.compose.serialization.serializers.MutableStateSeriali
 
 @Composable
 fun rememberRecipesNavigationState(
-    startTab: NavKey = InputIngredientsTab,
-    tabs: Set<NavKey> = setOf(InputIngredientsTab, SearchRecipesTab, RequestAiTab, OwnRecipesTab)
+    startTab: NavKey,
+    tabs: Set<NavKey>
 ): RecipesNavigationState {
     val currentTab = rememberSerializable( startTab, tabs, serializer = MutableStateSerializer(
         NavKeySerializer())) {
