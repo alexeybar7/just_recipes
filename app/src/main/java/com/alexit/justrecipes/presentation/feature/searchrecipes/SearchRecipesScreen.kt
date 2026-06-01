@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +36,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.SourceState
-import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.domain.model.RecipeCardModel
 import com.alexit.justrecipes.presentation.components.CircleLoader
 import com.alexit.justrecipes.presentation.components.CustomDivider
@@ -54,7 +52,8 @@ fun SearchRecipesScreen(
     onRecipeClick: (Int) -> Unit
 ) {
     val recipesWithIngredients = searchRecipesViewModel.recipesWithIngredients.collectAsStateWithLifecycle()
-    val recipeCardData = searchRecipesViewModel.recipeCardData.collectAsStateWithLifecycle()
+    val recipeCardDataSource = searchRecipesViewModel.recipeCardData.collectAsStateWithLifecycle()
+    val inputtedIngredientsId = searchRecipesViewModel.inputtedIngredientsId.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxSize()
     ) {
@@ -79,11 +78,13 @@ fun SearchRecipesScreen(
                 placeholder = stringResource(R.string.placeholder_search_recipes),
             )
 
-            when (val sourceState = recipeCardData.value) {
+
+            when (val sourceState = recipeCardDataSource.value) {
                 is SourceState.Loading -> LoadingScreen()
                 is SourceState.Success -> ShowListRecipes(
                     //recipesDataCard.value,
                     recipeCardData = sourceState.data,
+                    inputtedIngredientsId = inputtedIngredientsId.value,
                     onRecipeClick
                 )
                 is SourceState.Error -> ErrorScreen()
@@ -93,7 +94,10 @@ fun SearchRecipesScreen(
 }
 
 @Composable
-fun ShowListRecipes(recipeCardData: List<RecipeCardModel>, onRecipeClick: (Int) -> Unit) {
+fun ShowListRecipes(
+    recipeCardData: List<RecipeCardModel>,
+    inputtedIngredientsId: List<Int>,
+    onRecipeClick: (Int) -> Unit) {
     val padding = JustRecipesTheme.dimensions.gap1
     val widthRecipeCard = JustRecipesTheme.dimensions.widthRecipeCard
     val heightRecipeCard = JustRecipesTheme.dimensions.heightRecipeCard
@@ -111,12 +115,13 @@ fun ShowListRecipes(recipeCardData: List<RecipeCardModel>, onRecipeClick: (Int) 
     val colorIconOk = JustRecipesTheme.colors.iconOk
     val widthIconInfo = JustRecipesTheme.dimensions.widthIconInfoRecipeCard
 
-    val ingredientsComplete = false
+    //val ingredientsComplete = false
     //val deltaIngredients = 4
-    val recipeHealthyEating = true
+    //val recipeHealthyEating = true
 
     LazyColumn() {
         items(items = recipeCardData, key = { it.id }) { recipe ->
+            val deltaIngredients = recipe.ingredients - inputtedIngredientsId.toSet()
             Column(
                 modifier = Modifier
                     .padding(padding)
@@ -227,7 +232,7 @@ fun ShowListRecipes(recipeCardData: List<RecipeCardModel>, onRecipeClick: (Int) 
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        if (ingredientsComplete) {
+                        if (deltaIngredients.isEmpty()) {
                             Image(
                                 modifier = Modifier
                                     .size(sizeIcon),
@@ -246,7 +251,7 @@ fun ShowListRecipes(recipeCardData: List<RecipeCardModel>, onRecipeClick: (Int) 
                             BasicText(
                                 style = textIconStyle,
                                 color = { colorText },
-                                text = "${recipe.numberIngredients} ${stringResource(R.string.ingredient)}"
+                                text = "${deltaIngredients.size} ${stringResource(R.string.ingredient)}"
                             )
                         }
                     }

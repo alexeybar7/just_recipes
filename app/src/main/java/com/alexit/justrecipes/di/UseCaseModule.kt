@@ -7,6 +7,7 @@ import com.alexit.justrecipes.domain.usecase.ChangeWeightIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.GetCategoriesUseCase
 import com.alexit.justrecipes.domain.usecase.GetIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.GetIngredientsNameUseCase
+import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsIdUseCase
 import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsUseCase
 import com.alexit.justrecipes.domain.usecase.GetMAXIdIngredientsUseCase
 import com.alexit.justrecipes.domain.usecase.GetRecipeCardDataUseCase
@@ -85,5 +86,11 @@ object UseCaseModule {
     @Singleton
     fun provideGetRecipeCardDataUseCase(recipesRepository: RecipesRepository): GetRecipeCardDataUseCase {
         return GetRecipeCardDataUseCase(recipesRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetInputtedIngredientsIdUseCase(recipesRepository: RecipesRepository): GetInputtedIngredientsIdUseCase {
+        return GetInputtedIngredientsIdUseCase(recipesRepository)
     }
 }

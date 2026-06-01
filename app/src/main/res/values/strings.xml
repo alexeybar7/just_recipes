@@ -14,8 +14,8 @@
     <string name="icon_scale">Scale</string>
     <string name="icon_duration">Duration</string>
     <string name="icon_portion">Portion</string>
-    <string name="icon_ingredient_data_not">Ingredient data</string>
-    <string name="icon_ingredient_data_ok">Scale</string>
+    <string name="icon_ingredient_data_not">Ingredient data not</string>
+    <string name="icon_ingredient_data_ok">Ingredient data OK</string>
     <string name="icon_healthy_eating">Healthy eating</string>
     <string name="title_input_ingredients">"Список Ингредиентов"</string>
     <string name="title_search_recipe">Список Рецептов</string>

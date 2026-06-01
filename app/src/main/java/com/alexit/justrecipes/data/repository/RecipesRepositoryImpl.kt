@@ -6,7 +6,7 @@ import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.data.local.room.dao.RecipesDao
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
-import com.alexit.justrecipes.domain.model.IngredientModelLong
+import com.alexit.justrecipes.domain.model.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.IngredientModelShort
 import com.alexit.justrecipes.domain.model.RecipeModel
 import com.alexit.justrecipes.domain.repository.RecipesRepository
@@ -73,7 +73,11 @@ class RecipesRepositoryImpl @Inject constructor(
         return recipesDao.getRecipesWithIngredients()
     }
 
-    override fun getRecipesCardData(): Flow<Map<RecipeModel, List<IngredientModelLong>>> {
+    override fun getRecipesCardData(): Flow<Map<RecipeModel, List<IngredientModelEnergy>>> {
         return recipesDao.getRecipesCardData()
+    }
+
+    override fun getInputtedIngredientsId(): Flow<List<Int>> {
+        return recipesDao.getInputtedIngredientsId()
     }
 }
