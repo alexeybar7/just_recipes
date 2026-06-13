@@ -73,8 +73,9 @@ class RecipesRepositoryImpl @Inject constructor(
         return recipesDao.getRecipesWithIngredients()
     }
 
-    override fun getRecipesCardData(): Flow<Map<RecipeModel, List<IngredientModelEnergy>>> {
-        return recipesDao.getRecipesCardData()
+    override fun getRecipesCardData(query: String): Flow<Map<RecipeModel, List<IngredientModelEnergy>>> {
+        val formattedQuery = "%$query%"
+        return recipesDao.getRecipesCardData(formattedQuery)
     }
 
     override fun getInputtedIngredientsId(): Flow<List<Int>> {

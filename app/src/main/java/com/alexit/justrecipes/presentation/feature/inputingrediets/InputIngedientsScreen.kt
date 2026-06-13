@@ -103,16 +103,6 @@ fun InputIngredientsScreen(
                                 InputIngredientsIntent.SelectSuggestionIngredient(suggestion)
                             )
                         },
-                        width = JustRecipesTheme.dimensions.widthInputtedIngredient,
-                        textStyle = JustRecipesTheme.typography.text2,
-                        colorField = JustRecipesTheme.colors.background2,
-                        colorBorderField = JustRecipesTheme.colors.border2,
-                        colorText = JustRecipesTheme.colors.text2,
-                        colorSuggestion = JustRecipesTheme.colors.background3,
-                        contentPadding = JustRecipesTheme.dimensions.contentPaddingField,
-                        radiusShape = JustRecipesTheme.dimensions.radiusCornerField,
-                        borderThickness = JustRecipesTheme.dimensions.borderThickness,
-                        bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu
                     )
                     is SourceState.Error -> {
                         isNewNotify = true
@@ -145,27 +135,6 @@ fun InputIngredientsScreen(
                                 )
                             )
                         },
-                        iconDeleteIngredient = R.drawable.round_do_not_disturb_on_24,
-                        descriptionIconDeleteIngredient = R.string.delete_inputted_ingredient,
-                        colorIconDeleteIngredient = JustRecipesTheme.colors.iconDeleteIngredient,
-                        colorInputtedIngredientsField = JustRecipesTheme.colors.background4,
-                        colorInputtedIngredientText = JustRecipesTheme.colors.text4,
-                        textStyleInputtedIngredient = JustRecipesTheme.typography.text1,
-                        iconScale = R.drawable.outline_scale_24,
-                        descriptionIconScale = R.string.icon_scale,
-                        colorBackgroundWeightIngredient = JustRecipesTheme.colors.background2,
-                        colorWeightIngredient = JustRecipesTheme.colors.text5,
-                        textStyleWeightIngredient = JustRecipesTheme.typography.text3,
-                        contentPadding = JustRecipesTheme.dimensions.contentPaddingField,
-                        width = JustRecipesTheme.dimensions.widthInputtedIngredient,
-                        bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu,
-                        widthInputtedIngredientField = JustRecipesTheme.dimensions.widthInputtedIngredientField,
-                        widthInputtedIngredientText = JustRecipesTheme.dimensions.widthInputtedIngredientText,
-                        widthInputtedIngredientWeight = JustRecipesTheme.dimensions.widthInputtedIngredientWeight,
-                        heightInputtedIngredientWeight = JustRecipesTheme.dimensions.heightInputtedIngredientWeight,
-                        sizeIcon = JustRecipesTheme.dimensions.sizeIcon1,
-                        sizeIconScale = JustRecipesTheme.dimensions.sizeIcon2,
-                        radiusShape = JustRecipesTheme.dimensions.radiusCornerField
                     )
                     is SourceState.Error -> {
                         isNewNotify = true
@@ -184,18 +153,8 @@ fun InputIngredientsScreen(
                         InputIngredientsIntent.DismissRemoveIngredient) },
                     onConfirmation = { inputIngredientsViewModel.handleIntent(
                         InputIngredientsIntent.RemoveInputtedIngredient) },
-                    heightDialog = JustRecipesTheme.dimensions.heightDialog,
-                    widthDialog = JustRecipesTheme.dimensions.widthDialog,
-                    colorBackground = JustRecipesTheme.colors.background4,
-                    colorBorder = JustRecipesTheme.colors.text4,
-                    colorText = JustRecipesTheme.colors.text4,
-                    radiusShape = JustRecipesTheme.dimensions.radiusCornerField,
-                    borderThickness = JustRecipesTheme.dimensions.borderThickness,
                     textDialog = stringResource(R.string.delete_ingredient),
                     item = inputIngredientsUiState.deletingIngredientName,
-                    textStyle = JustRecipesTheme.typography.text1,
-                    textConfirmation = stringResource(R.string.confirmation),
-                    textDismiss = stringResource(R.string.dismiss)
                 )
             }
             if (inputIngredientsUiState.isIngredientNew) {
@@ -206,26 +165,8 @@ fun InputIngredientsScreen(
                         inputIngredientsViewModel.handleIntent(
                             InputIngredientsIntent.AddNewIngredient(ingredientCategory)
                         ) },
-                    heightDialog = JustRecipesTheme.dimensions.heightNewIngredientDialog,
-                    widthDialog = JustRecipesTheme.dimensions.widthNewIngredientDialog,
-                    colorBackground = JustRecipesTheme.colors.background4,
-                    colorStroke = JustRecipesTheme.colors.text4,
-                    colorText = JustRecipesTheme.colors.text4,
-                    radiusShape = JustRecipesTheme.dimensions.radiusCornerField,
-                    borderThickness = JustRecipesTheme.dimensions.borderThickness,
-                    textDialogPre = stringResource(R.string.add_unknown_ingredient),
                     item = inputIngredientsUiState.newIngredientName,
-                    textDialogAft = stringResource(R.string.select_category_ingredient),
-                    textStyle = JustRecipesTheme.typography.text1,
-                    textStyleCategory = JustRecipesTheme.typography.text2,
-                    textConfirmation = stringResource(R.string.confirmation),
-                    textDismiss = stringResource(R.string.dismiss),
-                    contentPadding = JustRecipesTheme.dimensions.contentPaddingField,
-                    colorBackgroundCategory = JustRecipesTheme.colors.background2,
-                    colorBorderCategory = JustRecipesTheme.colors.border2,
-                    colorTextCategory = JustRecipesTheme.colors.text2,
                     listCategory = inputIngredientsUiState.categories.toPersistentList(),
-                    colorBackgroundCategorySelected = JustRecipesTheme.colors.background3
                 )
             }
         }

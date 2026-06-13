@@ -1,0 +1,241 @@
+package com.alexit.justrecipes.presentation.feature.searchrecipes
+
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
+import com.alexit.justrecipes.R
+import com.alexit.justrecipes.domain.model.RecipeCardModel
+import com.alexit.justrecipes.presentation.components.CustomDivider
+import com.alexit.justrecipes.presentation.components.CustomScrollBar
+import com.alexit.justrecipes.presentation.components.Direction
+import com.alexit.justrecipes.presentation.components.dpToPx
+import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
+
+@Composable
+fun ShowListRecipes(
+    recipesCardData: List<RecipeCardModel>,
+    onRecipeClick: (Int) -> Unit
+) {
+    val padding = JustRecipesTheme.dimensions.gap1
+    val widthRecipeCard = JustRecipesTheme.dimensions.widthRecipeCard
+    val heightRecipeCard = JustRecipesTheme.dimensions.heightRecipeCard
+    val backgroundRecipeCard = JustRecipesTheme.colors.background2
+    val roundedCorner = JustRecipesTheme.dimensions.radiusCornerField
+    val borderColor = JustRecipesTheme.colors.border2
+    val borderThickness = JustRecipesTheme.dimensions.borderThickness
+    val widthNameRecipeCard = JustRecipesTheme.dimensions.widthNameRecipeCard
+    val heightNameRecipeCard = JustRecipesTheme.dimensions.heightNameRecipeCard
+    val textNameStyle = JustRecipesTheme.typography.text1
+    val colorText = JustRecipesTheme.colors.text4
+    val sizeImage = JustRecipesTheme.dimensions.sizeImageRecipeCard
+    val sizeIcon = JustRecipesTheme.dimensions.sizeIcon4
+    val textIconStyle = JustRecipesTheme.typography.text5
+    val colorIconOk = JustRecipesTheme.colors.iconOk
+    val widthIconInfo = JustRecipesTheme.dimensions.widthIconInfoRecipeCard
+
+    val listCardState = rememberLazyListState()
+
+    Box(
+       modifier = Modifier
+           .fillMaxWidth()
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(start = 24.dp)
+                .animateContentSize(),
+            state = listCardState
+        ) {
+            items(items = recipesCardData, key = { "${it.id}_${it.name}_${it.image}" }) { recipe ->
+                Column(
+                    modifier = Modifier
+                        .padding(padding)
+                        .size(
+                            width = widthRecipeCard, height = heightRecipeCard
+                        )
+                        .background(
+                            color = backgroundRecipeCard, shape = RoundedCornerShape(
+                                size = roundedCorner
+                            )
+                        )
+                        .border(
+                            border = BorderStroke(
+                                width = borderThickness, color = borderColor
+                            ), shape = RoundedCornerShape(
+                                size = roundedCorner,
+                            )
+                        )
+                        .animateItem(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(start = padding, end = padding)
+                            .height(heightNameRecipeCard)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        BasicText(
+                            modifier = Modifier
+                                .padding(start = padding)
+                                .width(widthNameRecipeCard)
+                                .clickable(
+                                    enabled = true, onClick = { onRecipeClick(recipe.id) }),
+                            style = textNameStyle,
+                            color = { colorText },
+                            text = recipe.name
+                        )
+                        Image(
+                            modifier = Modifier
+                                .padding(end = padding)
+                                .size(sizeImage)
+                                .clip(
+                                    RoundedCornerShape(
+                                        roundedCorner
+                                    )
+                                ),
+                            painter = painterResource(R.drawable.logo),
+                            contentDescription = recipe.name
+                        )
+                    }
+                    CustomDivider(
+                        color = borderColor,
+                        thickness = borderThickness.dpToPx(),
+                        startX = padding.dpToPx(),
+                        endX = (widthRecipeCard - padding * 2).dpToPx(),
+                        startY = 0f,
+                        endY = 0f
+                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(start = padding, end = padding)
+                            .fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .width(widthIconInfo),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ) {
+                            if (recipe.duration != null) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(sizeIcon),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.nest_clock_farsight_analog_24px),
+                                    contentDescription = stringResource(id = R.string.icon_duration),
+                                    colorFilter = ColorFilter.tint(colorText)
+                                )
+                                BasicText(
+                                    style = textIconStyle,
+                                    color = { colorText },
+                                    text = "${recipe.duration} ${stringResource(R.string.minute)}"
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .width(widthIconInfo),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ) {
+                            if (recipe.portion != null) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(sizeIcon),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.group_24px),
+                                    contentDescription = stringResource(id = R.string.icon_portion),
+                                    colorFilter = ColorFilter.tint(colorText)
+                                )
+                                BasicText(
+                                    style = textIconStyle,
+                                    color = { colorText },
+                                    text = "${recipe.portion} ${stringResource(R.string.portion)}"
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .width(widthIconInfo),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ) {
+                            if (recipe.ingredientsNo == 0) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(sizeIcon),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.data_check_24px),
+                                    contentDescription = stringResource(id = R.string.icon_ingredient_data_ok),
+                                    colorFilter = ColorFilter.tint(colorIconOk)
+                                )
+                            } else {
+                                Image(
+                                    modifier = Modifier
+                                        .size(sizeIcon),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.data_info_alert_24px),
+                                    contentDescription = stringResource(id = R.string.icon_ingredient_data_not),
+                                    colorFilter = ColorFilter.tint(colorText)
+                                )
+                                BasicText(
+                                    style = textIconStyle,
+                                    color = { colorText },
+                                    text = "${recipe.ingredientsNo} ${stringResource(R.string.ingredient)}"
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .width(widthIconInfo),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            if (recipe.isHealthy) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(sizeIcon),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.nest_eco_leaf_24px),
+                                    contentDescription = stringResource(id = R.string.icon_healthy_eating),
+                                    colorFilter = ColorFilter.tint(colorIconOk)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        CustomScrollBar(
+            state = listCardState,
+            direction = Direction.Vertical
+        )
+    }
+}

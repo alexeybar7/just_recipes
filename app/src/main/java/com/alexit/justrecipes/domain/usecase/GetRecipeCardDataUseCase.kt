@@ -14,11 +14,10 @@ import javax.inject.Inject
 
 class GetRecipeCardDataUseCase @Inject constructor(
     private val recipesRepository: RecipesRepository
-) { operator fun invoke(): Flow<SourceState<List<RecipeCardModel>>> {
-        val flow: Flow<List<RecipeCardModel>> =
-            recipesRepository.getRecipesCardData().map { value ->
-                value.map {
-                    val recipeIngredientsId: List<Int> = it.value.map { ingredient -> ingredient.id }
+) { operator fun invoke(query: String): Flow<SourceState<List<RecipeCardModel>>> {
+        val recipesFlow: Flow<List<RecipeCardModel>> =
+            recipesRepository.getRecipesCardData(query).map { recipes ->
+                recipes.map {
                     RecipeCardModel(
                         id = it.key.id,
                         name = it.key.name,
@@ -26,11 +25,19 @@ class GetRecipeCardDataUseCase @Inject constructor(
                         portion = it.key.portion,
                         isHealthy = isHealthy(it.value, it.key.portion),
                         duration = it.key.duration,
-                        ingredients = recipeIngredientsId
+                        ingredientsOk = it.key.ingredientsOk,
+                        ingredientsNo = it.key.ingredientsNo
                     )
                 }
             }
-        return flow.asSourceState()
+    //val recipesSortFlow = recipesFlow.map { cardData ->
+    //    cardData.sortedWith(
+    //        compareByDescending<RecipeCardModel> { it.ingredientsOk }
+    //            .thenBy { it.ingredientsNo }
+    //            .thenBy { it.duration }
+    //    )
+    //}
+    return recipesFlow.asSourceState()
     }
 }
 
@@ -39,8 +46,8 @@ fun isHealthy(ingredients: List<IngredientModelEnergy>, portion: Int?): Boolean 
     val portionOk: Int = portion ?: 1
     val isHealthy =
         healthyFoodData.carbohydrate / healthyFoodData.fat > RATIO_CARBO_FAT_PROTEIN &&
-                healthyFoodData.carbohydrate / healthyFoodData.protein > RATIO_CARBO_FAT_PROTEIN &&
-                healthyFoodData.energy <= LIMIT_ENERGY * portionOk
+                healthyFoodData.carbohydrate / healthyFoodData.protein > RATIO_CARBO_FAT_PROTEIN //&&
+                //healthyFoodData.energy <= LIMIT_ENERGY * portionOk
     return isHealthy
 }
 

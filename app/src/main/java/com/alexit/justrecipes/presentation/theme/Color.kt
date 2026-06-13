@@ -59,7 +59,8 @@ data class CustomColors(
     val notifyBorderAlert: Color,
     val notifyTextAlert: Color,
     val circleLoader: Color,
-    val iconOk: Color
+    val iconOk: Color,
+    val scrollBarColor: Color
 )
 
 val themeColors = CustomColors(
@@ -93,7 +94,8 @@ val themeColors = CustomColors(
     notifyBorderAlert = grey1,
     notifyTextAlert = black1,
     circleLoader = green7,
-    iconOk = green7
+    iconOk = green7,
+    scrollBarColor = brown4
 )
 
 val LocalCustomColors = staticCompositionLocalOf {

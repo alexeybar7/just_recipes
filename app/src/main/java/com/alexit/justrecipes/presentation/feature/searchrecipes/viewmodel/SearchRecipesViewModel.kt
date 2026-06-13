@@ -1,59 +1,51 @@
 package com.alexit.justrecipes.presentation.feature.searchrecipes.viewmodel
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexit.justrecipes.common.SourceState
-import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
+import com.alexit.justrecipes.common.customDebounce
 import com.alexit.justrecipes.domain.model.RecipeCardModel
-import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsIdUseCase
 import com.alexit.justrecipes.domain.usecase.GetRecipeCardDataUseCase
-import com.alexit.justrecipes.domain.usecase.GetRecipesWithIngredientsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.String
 
 @HiltViewModel
 class SearchRecipesViewModel @Inject constructor (
-    private val getRecipesWithIngredientsUseCase: GetRecipesWithIngredientsUseCase,
     private val getRecipeCardDataUseCase: GetRecipeCardDataUseCase,
-    private val getInputtedIngredientsIdUseCase: GetInputtedIngredientsIdUseCase
 ) : ViewModel() {
 
-    val recipesWithIngredients: StateFlow<SourceState<List<RecipeWithIngredients>>> by lazy {
-        getRecipesWithIngredientsUseCase().stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            SourceState.Loading
-        )
-    }
+    val inputTextState = TextFieldState()
 
-    val recipeCardData: StateFlow<SourceState<List<RecipeCardModel>>> by lazy {
-        getRecipeCardDataUseCase().stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            SourceState.Loading
-        )
-    }
+    val recipeCardData: StateFlow<SourceState<List<RecipeCardModel>>>  =
+        snapshotFlow { inputTextState.text }
+            .customDebounce(300)
+            .distinctUntilChanged()
+            .customFlatMapLatest{ query ->
+                getRecipeCardDataUseCase(query.toString())
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000L),
+                SourceState.Loading
+            )
+}
 
-    val inputtedIngredientsId: StateFlow<List<Int>> by lazy {
-        getInputtedIngredientsIdUseCase().stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            emptyList<Int>()
-        )
-    }
-
-    val inputTextStateIngredient = TextFieldState()
-
-    fun handleIntent(intent: SearchRecipeIntent) {
-        when (intent) {
-            is SearchRecipeIntent.SelectRecipe -> selectRecipe(intent.recipeName)
+fun <T, R> Flow<T>.customFlatMapLatest(transform: suspend (T) -> Flow<R>): Flow<R> = channelFlow {
+    var previousJob: Job? = null
+    collect { value ->
+        previousJob?.cancel()
+        previousJob = launch {
+            transform(value).collect { send(it) }
         }
     }
-
-    private fun selectRecipe(recipeName: String) {}
 }

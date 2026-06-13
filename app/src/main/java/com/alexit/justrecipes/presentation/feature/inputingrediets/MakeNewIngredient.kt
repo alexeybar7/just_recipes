@@ -28,40 +28,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.Dialog
+import com.alexit.justrecipes.R
 import com.alexit.justrecipes.domain.model.CategoryModel
 import com.alexit.justrecipes.presentation.components.CustomDivider
 import com.alexit.justrecipes.presentation.components.dpToPx
+import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun MakeNewIngredient(
     onDismissRequest: () -> Unit,
     onConfirmation: (String) -> Unit,
-    heightDialog: Dp,
-    widthDialog: Dp,
-    colorBackground: Color,
-    colorStroke: Color,
-    colorText: Color,
-    radiusShape: Dp,
-    borderThickness: Dp,
-    textDialogPre: String,
     item: String,
-    textDialogAft: String,
-    textStyle: TextStyle,
-    textStyleCategory: TextStyle,
-    textConfirmation: String,
-    textDismiss: String,
-    contentPadding: Dp,
-    colorBackgroundCategory: Color,
-    colorBorderCategory: Color,
     listCategory: PersistentList<CategoryModel>,
-    colorTextCategory: Color,
-    colorBackgroundCategorySelected: Color
 ) {
+    val heightDialog = JustRecipesTheme.dimensions.heightNewIngredientDialog
+    val widthDialog = JustRecipesTheme.dimensions.widthNewIngredientDialog
+    val colorBackground = JustRecipesTheme.colors.background4
+    val colorStroke = JustRecipesTheme.colors.text4
+    val colorText = JustRecipesTheme.colors.text4
+    val radiusShape = JustRecipesTheme.dimensions.radiusCornerField
+    val borderThickness = JustRecipesTheme.dimensions.borderThickness
+    val textDialogPre = stringResource(R.string.add_unknown_ingredient)
+    val textDialogAft = stringResource(R.string.select_category_ingredient)
+    val textStyle = JustRecipesTheme.typography.text1
+    val textStyleCategory = JustRecipesTheme.typography.text2
+    val textConfirmation = stringResource(R.string.confirmation)
+    val textDismiss = stringResource(R.string.dismiss)
+    val contentPadding = JustRecipesTheme.dimensions.contentPaddingField
+    val colorBackgroundCategory = JustRecipesTheme.colors.background2
+    val colorBorderCategory = JustRecipesTheme.colors.border2
+    val colorTextCategory = JustRecipesTheme.colors.text2
+    val colorBackgroundCategorySelected = JustRecipesTheme.colors.background3
+
     val selectedCategory = remember {  mutableStateOf("") }
     Dialog(onDismissRequest = onDismissRequest ) {
         Column(

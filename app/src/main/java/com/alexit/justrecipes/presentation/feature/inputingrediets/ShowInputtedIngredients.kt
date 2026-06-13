@@ -42,13 +42,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
@@ -56,28 +55,29 @@ fun ShowInputtedIngredients(
     inputtedIngredients: PersistentList<IngredientModel>,
     onDeleteClick: (IngredientModel) -> Unit,
     onWeightClick: (Int, Int, String) -> Unit,
-    iconDeleteIngredient: Int,
-    descriptionIconDeleteIngredient: Int,
-    colorIconDeleteIngredient: Color,
-    colorInputtedIngredientsField: Color,
-    colorInputtedIngredientText: Color,
-    textStyleInputtedIngredient: TextStyle,
-    iconScale: Int,
-    descriptionIconScale: Int,
-    colorBackgroundWeightIngredient: Color,
-    colorWeightIngredient: Color,
-    textStyleWeightIngredient: TextStyle,
-    width: Dp,
-    bottomMenuHeight: Dp,
-    widthInputtedIngredientField: Dp,
-    widthInputtedIngredientText: Dp,
-    widthInputtedIngredientWeight: Dp,
-    heightInputtedIngredientWeight:Dp,
-    contentPadding: Dp,
-    sizeIcon: Dp,
-    sizeIconScale: Dp,
-    radiusShape: Dp,
 ) {
+    val iconDeleteIngredient = R.drawable.round_do_not_disturb_on_24
+    val descriptionIconDeleteIngredient = R.string.delete_inputted_ingredient
+    val colorIconDeleteIngredient = JustRecipesTheme.colors.iconDeleteIngredient
+    val colorInputtedIngredientsField = JustRecipesTheme.colors.background4
+    val colorInputtedIngredientText = JustRecipesTheme.colors.text4
+    val textStyleInputtedIngredient = JustRecipesTheme.typography.text1
+    val iconScale = R.drawable.outline_scale_24
+    val descriptionIconScale = R.string.icon_scale
+    val colorBackgroundWeightIngredient = JustRecipesTheme.colors.background2
+    val colorWeightIngredient = JustRecipesTheme.colors.text5
+    val textStyleWeightIngredient = JustRecipesTheme.typography.text3
+    val contentPadding = JustRecipesTheme.dimensions.contentPaddingField
+    val width = JustRecipesTheme.dimensions.widthInputTextField
+    val bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu
+    val widthInputtedIngredientField = JustRecipesTheme.dimensions.widthInputtedIngredientField
+    val widthInputtedIngredientText = JustRecipesTheme.dimensions.widthInputtedIngredientText
+    val widthInputtedIngredientWeight = JustRecipesTheme.dimensions.widthInputtedIngredientWeight
+    val heightInputtedIngredientWeight = JustRecipesTheme.dimensions.heightInputtedIngredientWeight
+    val sizeIcon = JustRecipesTheme.dimensions.sizeIcon1
+    val sizeIconScale = JustRecipesTheme.dimensions.sizeIcon2
+    val radiusShape = JustRecipesTheme.dimensions.radiusCornerField
+
     val keyboardController = LocalSoftwareKeyboardController.current
     val liquid = stringArrayResource(R.array.liquid_foodstuff)
     val piece = stringArrayResource(R.array.piece_foodstuff)
@@ -100,7 +100,8 @@ fun ShowInputtedIngredients(
             Row(
                 modifier = Modifier
                     .width(width)
-                    .padding(top = contentPadding),
+                    .padding(top = contentPadding)
+                    .animateItem(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {

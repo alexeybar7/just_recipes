@@ -44,15 +44,14 @@ import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 @Composable
 fun CustomTextField (
     state: TextFieldState,
-    onDoneClick: (String) -> Unit,
+    onDoneClick: ((String) -> Unit)? = null,
     iconPlaceholder: Int,
     iconDescriptionPlaceholder: Int,
     placeholder: String,
 ) {
-    val height = JustRecipesTheme.dimensions.heightFieldInput
-    val width = JustRecipesTheme.dimensions.widthInputtedIngredient
+    val height = JustRecipesTheme.dimensions.heightInputTextField
+    val width = JustRecipesTheme.dimensions.widthInputTextField
     val textStyle = JustRecipesTheme.typography.text2
-    var isFocusedIngredient by remember { mutableStateOf(false) }
     val focusedField = JustRecipesTheme.colors.background2
     val focusedBorderField = JustRecipesTheme.colors.border2
     val focusedTextColor = JustRecipesTheme.colors.text2
@@ -65,10 +64,12 @@ fun CustomTextField (
     val sizeIcon = JustRecipesTheme.dimensions.sizeIcon1
     val colorIcon = JustRecipesTheme.colors.iconSearchIngredient
 
+    var isFocused by remember { mutableStateOf(false) }
+
     val colorField: Color
     val colorBorderField: Color
 
-    if (state.text.isNotEmpty() || isFocusedIngredient) {
+    if (state.text.isNotEmpty() || isFocused) {
         colorField = focusedField
         colorBorderField = focusedBorderField
     } else {
@@ -80,7 +81,7 @@ fun CustomTextField (
     BasicTextField(
         state = state,
         modifier = Modifier
-            .onFocusChanged { isFocusedIngredient = it.isFocused }
+            .onFocusChanged { isFocused = it.isFocused }
             .height(height)
             .width(width),
         enabled = true,
@@ -96,7 +97,7 @@ fun CustomTextField (
         ),
         onKeyboardAction = KeyboardActionHandler {
             if (state.text.isNotEmpty()) {
-                onDoneClick(state.text.toString().trim())
+                if (onDoneClick != null) onDoneClick(state.text.toString().trim())
                 keyboardController?.hide()
             }
         },
@@ -126,7 +127,7 @@ fun CustomTextField (
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (state.text.isNotEmpty() || isFocusedIngredient) {
+                if (state.text.isNotEmpty() || isFocused) {
                     Image(
                         modifier = Modifier
                             .size(sizeIcon)

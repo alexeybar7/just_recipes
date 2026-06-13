@@ -60,12 +60,18 @@ interface RecipesDao {
 
     @Query("SELECT " +
             "recipes.id, recipes.name, recipes.duration, recipes.portion, recipes.image, " +
-            "ingredients.id, ingredients.energy, ingredients.protein, ingredients.fat, ingredients.carbohydrate, " +
-            "recipe_ingredients.quantity, recipe_ingredients.density " +
+            "ingredients.id, ingredients.energy, ingredients.protein, ingredients.fat, " +
+            "ingredients.carbohydrate, " +
+            "recipe_ingredients.quantity, recipe_ingredients.density, " +
+            "SUM(ingredients.is_inputted) AS ingredientsOk, " +
+            "SUM(NOT ingredients.is_inputted) AS ingredientsNo " +
             "FROM recipe_ingredients " +
             "INNER JOIN recipes ON recipes.id = recipe_ingredients.recipe_id " +
-            "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id" )
-    fun getRecipesCardData(): Flow<Map<RecipeModel, List<IngredientModelEnergy>>>
+            "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id " +
+            "WHERE recipes.name LIKE :query " +
+            "GROUP BY recipes.id " +
+            "ORDER BY ingredientsOk DESC, ingredientsNo ASC, recipes.duration" )
+    fun getRecipesCardData(query: String): Flow<Map<RecipeModel, List<IngredientModelEnergy>>>
 
     @Query("SELECT id FROM ingredients WHERE is_inputted = 1")
     fun getInputtedIngredientsId(): Flow<List<Int>>

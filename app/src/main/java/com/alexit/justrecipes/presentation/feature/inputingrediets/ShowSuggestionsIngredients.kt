@@ -25,23 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alexit.justrecipes.presentation.components.CustomDivider
 import com.alexit.justrecipes.common.SuggestionsState
+import com.alexit.justrecipes.common.customDebounce
+import com.alexit.justrecipes.presentation.components.CustomDivider
 import com.alexit.justrecipes.presentation.components.dpToPx
+import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -49,19 +44,21 @@ fun ShowSuggestionsIngredients(
     state: TextFieldState,
     ingredientsName: PersistentList<String>,
     onSuggestionClick: (String) -> Unit,
-    width: Dp,
-    textStyle: TextStyle,
-    colorField: Color,
-    colorBorderField: Color,
-    colorText: Color,
-    colorSuggestion: Color,
-    borderThickness: Dp,
-    contentPadding: Dp,
-    radiusShape:Dp,
-    bottomMenuHeight: Dp,
 ){
+    val width = JustRecipesTheme.dimensions.widthInputTextField
+    val textStyle = JustRecipesTheme.typography.text2
+    val colorField = JustRecipesTheme.colors.background2
+    val colorBorderField = JustRecipesTheme.colors.border2
+    val colorText = JustRecipesTheme.colors.text2
+    val colorSuggestion = JustRecipesTheme.colors.background3
+    val contentPadding = JustRecipesTheme.dimensions.contentPaddingField
+    val radiusShape = JustRecipesTheme.dimensions.radiusCornerField
+    val borderThickness = JustRecipesTheme.dimensions.borderThickness
+    val bottomMenuHeight = JustRecipesTheme.dimensions.heightBottomMenu
+
     val suggestionsState = rememberSuggestionsState(ingredientsName)
     val suggestions = suggestionsState.suggestions.collectAsStateWithLifecycle()
+
     LazyColumn(
         modifier = Modifier
             .consumeWindowInsets(paddingValues = PaddingValues(bottomMenuHeight))
@@ -152,15 +149,4 @@ private fun highlight(
                 }
             }
         }
-}
-
-private fun <T> Flow<T>.customDebounce(timeMillis: Long): Flow<T> = channelFlow {
-    var queryJob: Job? = null
-    collect { value ->
-        queryJob?.cancel()
-        queryJob = launch {
-            delay(timeMillis)
-            send(value)
-        }
-    }
 }

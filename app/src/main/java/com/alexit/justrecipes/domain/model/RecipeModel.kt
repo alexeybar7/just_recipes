@@ -6,4 +6,6 @@ data class RecipeModel(
     val duration: Int?,
     val portion: Int?,
     val image: String?,
+    val ingredientsOk: Int,
+    val ingredientsNo: Int
 )

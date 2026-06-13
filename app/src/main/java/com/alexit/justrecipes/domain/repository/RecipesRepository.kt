@@ -24,6 +24,6 @@ interface RecipesRepository {
     suspend fun getAVGCarbohydrate(category: String): Double
     suspend fun getMAXIdIngredients(): Int
     fun getRecipesWithIngredients(): Flow<List<RecipeWithIngredients>>
-    fun getRecipesCardData(): Flow<Map<RecipeModel, List<IngredientModelEnergy>>>
+    fun getRecipesCardData(query: String): Flow<Map<RecipeModel, List<IngredientModelEnergy>>>
     fun getInputtedIngredientsId(): Flow<List<Int>>
 }

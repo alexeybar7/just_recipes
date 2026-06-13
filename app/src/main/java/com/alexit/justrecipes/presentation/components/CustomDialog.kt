@@ -19,28 +19,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.Dialog
+import com.alexit.justrecipes.R
+import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
 fun CustomDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
-    heightDialog: Dp,
-    widthDialog: Dp,
-    colorBackground: Color,
-    colorBorder: Color,
-    colorText: Color,
-    radiusShape: Dp,
-    borderThickness: Dp,
     textDialog: String,
     item: String,
-    textStyle: TextStyle,
-    textConfirmation: String,
-    textDismiss: String
 ) {
+    val heightDialog = JustRecipesTheme.dimensions.heightDialog
+    val widthDialog = JustRecipesTheme.dimensions.widthDialog
+    val colorBackground = JustRecipesTheme.colors.background4
+    val colorBorder = JustRecipesTheme.colors.text4
+    val colorText = JustRecipesTheme.colors.text4
+    val radiusShape = JustRecipesTheme.dimensions.radiusCornerField
+    val borderThickness = JustRecipesTheme.dimensions.borderThickness
+    val textStyle = JustRecipesTheme.typography.text1
+    val textConfirmation = stringResource(R.string.confirmation)
+    val textDismiss = stringResource(R.string.dismiss)
+
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
