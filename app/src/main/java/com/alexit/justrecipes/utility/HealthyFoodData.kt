@@ -3,9 +3,6 @@ package com.alexit.justrecipes.utility
 import com.alexit.justrecipes.domain.model.HealthyFoodModel
 import com.alexit.justrecipes.domain.model.IngredientModelEnergy
 
-const val LIMIT_ENERGY = 600
-const val RATIO_CARBO_FAT_PROTEIN = 3.5
-
 fun getHealthyFoodData(ingredients: List<IngredientModelEnergy>): HealthyFoodModel {
     val healthyFoodModel = HealthyFoodModel(0.0, 0.0, 0.0, 0.0)
     val ingredientTotal = ingredients.fold(healthyFoodModel) { acc, entity ->
