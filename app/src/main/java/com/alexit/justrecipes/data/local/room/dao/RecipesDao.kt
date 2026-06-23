@@ -1,5 +1,6 @@
 package com.alexit.justrecipes.data.local.room.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -60,9 +61,6 @@ interface RecipesDao {
 
     @Query("SELECT " +
             "recipes.id, recipes.name, recipes.duration, recipes.portion, recipes.image, " +
-            "ingredients.id, ingredients.energy, ingredients.protein, ingredients.fat, " +
-            "ingredients.carbohydrate, " +
-            "recipe_ingredients.quantity, recipe_ingredients.density, " +
             "SUM(ingredients.is_inputted) AS ingredientsOk, " +
             "SUM(NOT ingredients.is_inputted) AS ingredientsNo " +
             "FROM recipe_ingredients " +
@@ -70,9 +68,16 @@ interface RecipesDao {
             "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id " +
             "WHERE recipes.name LIKE :query " +
             "GROUP BY recipes.id " +
-            "ORDER BY ingredientsOk DESC, ingredientsNo ASC, recipes.duration" )
-    fun getRecipesCardData(query: String): Flow<Map<RecipeModel, List<IngredientModelEnergy>>>
+            "ORDER BY ingredientsOk DESC, ingredientsNo ASC, recipes.duration")
+    fun getRecipesCardData(query: String): PagingSource<Int, RecipeModel>
 
-    @Query("SELECT id FROM ingredients WHERE is_inputted = 1")
-    fun getInputtedIngredientsId(): Flow<List<Int>>
+    @Query("SELECT " +
+            "ingredients.id, ingredients.energy, ingredients.protein, ingredients.fat, " +
+            "ingredients.carbohydrate, " +
+            "recipe_ingredients.quantity, recipe_ingredients.density " +
+            "FROM recipe_ingredients " +
+            "INNER JOIN recipes ON recipes.id = recipe_ingredients.recipe_id " +
+            "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id " +
+            "WHERE recipe_ingredients.recipe_id = :recipeId")
+    suspend fun getIngredientsEnergy(recipeId: Int): List<IngredientModelEnergy>
 }

@@ -1,7 +1,5 @@
 package com.alexit.justrecipes.domain.model
 
-import androidx.room.ColumnInfo
-
 data class IngredientModelEnergy(
     val id: Int,
     val energy: Double,
