@@ -16,7 +16,7 @@ import com.alexit.justrecipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-const val PAGE_SIZE = 30
+const val PAGE_SIZE = 15
 
 class RecipesRepositoryImpl @Inject constructor(
     private val recipesDao: RecipesDao

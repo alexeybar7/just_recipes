@@ -1,7 +1,6 @@
 package com.alexit.justrecipes.domain.repository
 
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity

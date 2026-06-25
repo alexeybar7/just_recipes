@@ -107,7 +107,7 @@ fun InputIngredientsScreen(
                     is SourceState.Error -> {
                         isNewNotify = true
                         notifyMessage = if (sourceState.message != null) {
-                            "${ stringResource(R.string.hardware_error)}\n${ sourceState.message }"
+                            "${stringResource(R.string.hardware_error)}\n${sourceState.message}"
                         } else {
                             stringResource(R.string.unknown_error_occurred)
                         }
@@ -139,7 +139,7 @@ fun InputIngredientsScreen(
                     is SourceState.Error -> {
                         isNewNotify = true
                         notifyMessage = if (stateSource.message != null) {
-                            "${ stringResource(R.string.hardware_error)}\n${ stateSource.message }"
+                            "${stringResource(R.string.hardware_error)}\n${stateSource.message}"
                         } else {
                             stringResource(R.string.unknown_error_occurred)
                         }

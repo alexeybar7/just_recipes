@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun BoxScope.CustomScrollBar(
-    state: LazyListState,
+    listState: LazyListState,
 ) {
     val thickness: Dp = JustRecipesTheme.dimensions.scrollBarThickness
     val minLength: Dp = JustRecipesTheme.dimensions.scrollBarMinLength
@@ -43,17 +43,14 @@ fun BoxScope.CustomScrollBar(
         var isDraggingScrollbar by remember { mutableStateOf(false) }
 
         val alpha by animateFloatAsState(
-            targetValue = if (state.isScrollInProgress || isDraggingScrollbar) 1f else 0f,
-            animationSpec = tween(400, delayMillis = if (state.isScrollInProgress || isDraggingScrollbar) 0 else 700),
+            targetValue = if (listState.isScrollInProgress || isDraggingScrollbar) 1f else 0f,
+            animationSpec = tween(400, delayMillis = if (listState.isScrollInProgress || isDraggingScrollbar) 0 else 700),
             label = "ScrollBarAlpha"
         )
 
-        //val layoutInfo = state.layoutInfo
-        //val visibleItems = state.layoutInfo.visibleItemsInfo
-
         val listIsEmpty by remember {
             derivedStateOf {
-                state.layoutInfo.totalItemsCount == 0 || state.layoutInfo.visibleItemsInfo.isEmpty()
+                listState.layoutInfo.totalItemsCount == 0 || listState.layoutInfo.visibleItemsInfo.isEmpty()
             }
         }
         if (listIsEmpty) return
@@ -65,32 +62,32 @@ fun BoxScope.CustomScrollBar(
 
             val averageItemSize by remember {
                 derivedStateOf {
-                    state.layoutInfo.visibleItemsInfo.sumOf { it.size }.toFloat() /
-                            state.layoutInfo.visibleItemsInfo.size
+                    listState.layoutInfo.visibleItemsInfo.sumOf { it.size }.toFloat() /
+                            listState.layoutInfo.visibleItemsInfo.size
                 }
             }
 
             val firstVisiblyItemOffset by remember {
                 derivedStateOf {
-                    state.firstVisibleItemScrollOffset
+                    listState.firstVisibleItemScrollOffset
                 }
             }
 
             val firstVisiblyItemIndex by remember {
                 derivedStateOf {
-                    state.firstVisibleItemIndex
+                    listState.firstVisibleItemIndex
                 }
             }
 
             val visibleHeightPx by remember {
                 derivedStateOf {
-                    (state.layoutInfo.viewportEndOffset - state.layoutInfo.viewportStartOffset).toFloat()
+                    (listState.layoutInfo.viewportEndOffset - listState.layoutInfo.viewportStartOffset).toFloat()
                 }
             }
 
             val totalItemsCount by remember {
                 derivedStateOf {
-                    state.layoutInfo.totalItemsCount
+                    listState.layoutInfo.totalItemsCount
                 }
             }
             val totalContentHeightPx = averageItemSize * totalItemsCount
@@ -126,7 +123,7 @@ fun BoxScope.CustomScrollBar(
                                     (scrolledPx + scrollDeltaPx).coerceIn(0f, totalScrollableRange)
                                 // Compute how many pixels we need to scroll now
                                 val deltaToScroll = desiredScrolled - scrolledPx
-                                state.scrollBy(deltaToScroll)
+                                listState.scrollBy(deltaToScroll)
                             }
                         },
                         onDragStarted = { isDraggingScrollbar = true },
