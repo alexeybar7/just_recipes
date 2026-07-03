@@ -5,13 +5,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.common.asSourceState
-import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.data.local.room.dao.RecipesDao
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
 import com.alexit.justrecipes.domain.model.IngredientModelEnergy
+import com.alexit.justrecipes.domain.model.IngredientModelFull
 import com.alexit.justrecipes.domain.model.IngredientModelShort
-import com.alexit.justrecipes.domain.model.RecipeModel
+import com.alexit.justrecipes.domain.model.RecipeCardModel
+import com.alexit.justrecipes.domain.model.RecipeDataModel
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -74,11 +75,7 @@ class RecipesRepositoryImpl @Inject constructor(
         return recipesDao.getMAXIdIngredients()
     }
 
-    override fun getRecipesWithIngredients(): Flow<List<RecipeWithIngredients>> {
-        return recipesDao.getRecipesWithIngredients()
-    }
-
-    override fun getRecipesCardData(query: String): Flow<PagingData<RecipeModel>> {
+    override fun getRecipesCardData(query: String): Flow<PagingData<RecipeCardModel>> {
         val formattedQuery = "%$query%"
         return Pager(
             config = PagingConfig(
@@ -93,5 +90,13 @@ class RecipesRepositoryImpl @Inject constructor(
 
     override suspend fun getIngredientsEnergy(recipeId: Int): List<IngredientModelEnergy> {
         return recipesDao.getIngredientsEnergy(recipeId)
+    }
+
+    override suspend fun getRecipeData(recipeId: Int): RecipeDataModel {
+        return recipesDao.getRecipeData(recipeId)
+    }
+
+    override suspend fun getIngredientsData(recipeId: Int): List<IngredientModelFull> {
+        return recipesDao.getIngredientsData(recipeId)
     }
 }

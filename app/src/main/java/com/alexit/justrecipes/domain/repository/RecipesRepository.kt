@@ -2,12 +2,13 @@ package com.alexit.justrecipes.domain.repository
 
 import androidx.paging.PagingData
 import com.alexit.justrecipes.common.SourceState
-import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
 import com.alexit.justrecipes.domain.model.IngredientModelEnergy
+import com.alexit.justrecipes.domain.model.IngredientModelFull
 import com.alexit.justrecipes.domain.model.IngredientModelShort
-import com.alexit.justrecipes.domain.model.RecipeModel
+import com.alexit.justrecipes.domain.model.RecipeCardModel
+import com.alexit.justrecipes.domain.model.RecipeDataModel
 import kotlinx.coroutines.flow.Flow
 
 interface RecipesRepository {
@@ -24,7 +25,8 @@ interface RecipesRepository {
     suspend fun getAVGFat(category: String): Double
     suspend fun getAVGCarbohydrate(category: String): Double
     suspend fun getMAXIdIngredients(): Int
-    fun getRecipesWithIngredients(): Flow<List<RecipeWithIngredients>>
-    fun getRecipesCardData(query: String): Flow<PagingData<RecipeModel>>
+    fun getRecipesCardData(query: String): Flow<PagingData<RecipeCardModel>>
     suspend fun getIngredientsEnergy(recipeId: Int): List<IngredientModelEnergy>
+    suspend fun getRecipeData(recipeId: Int): RecipeDataModel
+    suspend fun getIngredientsData(recipeId: Int): List<IngredientModelFull>
 }

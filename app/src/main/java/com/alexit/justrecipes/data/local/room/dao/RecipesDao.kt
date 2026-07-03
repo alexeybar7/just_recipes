@@ -5,13 +5,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
-import com.alexit.justrecipes.data.local.room.Relations.RecipeWithIngredients
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.domain.model.IngredientModel
 import com.alexit.justrecipes.domain.model.IngredientModelEnergy
+import com.alexit.justrecipes.domain.model.IngredientModelFull
 import com.alexit.justrecipes.domain.model.IngredientModelShort
-import com.alexit.justrecipes.domain.model.RecipeModel
+import com.alexit.justrecipes.domain.model.RecipeCardModel
+import com.alexit.justrecipes.domain.model.RecipeDataModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -55,21 +55,18 @@ interface RecipesDao {
     @Query("SELECT MAX(id) FROM ingredients")
     suspend fun getMAXIdIngredients(): Int
 
-    @Transaction
-    @Query("SELECT * FROM recipes")
-    fun getRecipesWithIngredients(): Flow<List<RecipeWithIngredients>>
-
     @Query("SELECT " +
             "recipes.id, recipes.name, recipes.duration, recipes.portion, recipes.image, " +
             "SUM(ingredients.is_inputted) AS ingredientsOk, " +
-            "SUM(NOT ingredients.is_inputted) AS ingredientsNo " +
+            "SUM(NOT ingredients.is_inputted) AS ingredientsNo, " +
+            "(0) AS isHealthy " +
             "FROM recipe_ingredients " +
             "INNER JOIN recipes ON recipes.id = recipe_ingredients.recipe_id " +
             "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id " +
             "WHERE recipes.name LIKE :query " +
             "GROUP BY recipes.id " +
             "ORDER BY ingredientsOk DESC, ingredientsNo ASC, recipes.duration")
-    fun getRecipesCardData(query: String): PagingSource<Int, RecipeModel>
+    fun getRecipesCardData(query: String): PagingSource<Int, RecipeCardModel>
 
     @Query("SELECT " +
             "ingredients.id, ingredients.energy, ingredients.protein, ingredients.fat, " +
@@ -80,4 +77,21 @@ interface RecipesDao {
             "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id " +
             "WHERE recipe_ingredients.recipe_id = :recipeId")
     suspend fun getIngredientsEnergy(recipeId: Int): List<IngredientModelEnergy>
+
+    @Query("SELECT " +
+            "id, name, image, duration, portion, details, details_img AS detailsImage " +
+            "FROM recipes " +
+            "WHERE id = :recipeId")
+    suspend fun getRecipeData(recipeId: Int): RecipeDataModel
+
+    @Query("SELECT " +
+            "ingredients.id, ingredients.name, ingredients.energy, recipes.portion, recipes.image, " +
+            "ingredients.protein, ingredients.fat, ingredients.carbohydrate, ingredients.weight, " +
+            "ingredients.is_inputted AS isInputted, " +
+            "recipe_ingredients.quantity, recipe_ingredients.unit, recipe_ingredients.density " +
+            "FROM recipe_ingredients " +
+            "INNER JOIN recipes ON recipes.id = recipe_ingredients.recipe_id " +
+            "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id " +
+            "WHERE recipe_ingredients.recipe_id = :recipeId")
+    suspend fun getIngredientsData(recipeId: Int): List<IngredientModelFull>
 }

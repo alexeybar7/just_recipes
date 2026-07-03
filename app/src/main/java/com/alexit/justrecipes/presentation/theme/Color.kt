@@ -14,6 +14,8 @@ val green7 = Color(0xF29ADB46)
 val green8 = Color(0xFF93A654)
 val green9 = Color(0xFFCBD8A9)
 val green10 = Color(0xFFB2C485)
+val green11 = Color(0xFF658454)
+val green12 = Color(0xFF70BB0E)
 val grey1 = Color(0x1A3E5134)
 val black1 = Color(0xFF323230)
 val black2 = Color(0xCCFFFFFF)
@@ -47,6 +49,7 @@ data class CustomColors(
     val background4: Color,
     val text4: Color,
     val text5: Color,
+    val text6: Color,
     val iconSearchIngredient: Color,
     val iconDeleteIngredient: Color,
     val notifyBackgroundInfo: Color,
@@ -60,7 +63,8 @@ data class CustomColors(
     val notifyTextAlert: Color,
     val circleLoader: Color,
     val iconOk: Color,
-    val scrollBarColor: Color
+    val scrollBarColor: Color,
+    val inputtedIngredients: Color
 )
 
 val themeColors = CustomColors(
@@ -82,6 +86,7 @@ val themeColors = CustomColors(
     background4 = brown3,
     text4 = brown4,
     text5 = brown5,
+    text6 = green11,
     iconSearchIngredient = brown2,
     iconDeleteIngredient = red1,
     notifyBackgroundInfo = green7,
@@ -95,7 +100,8 @@ val themeColors = CustomColors(
     notifyTextAlert = black1,
     circleLoader = green7,
     iconOk = green7,
-    scrollBarColor = brown4
+    scrollBarColor = brown4,
+    inputtedIngredients = green12
 )
 
 val LocalCustomColors = staticCompositionLocalOf {

@@ -44,7 +44,9 @@ data class CustomDimension(
     val widthIconInfoRecipeCard: Dp,
     val innerPaddingCard: Dp,
     val scrollBarThickness: Dp,
-    val scrollBarMinLength: Dp
+    val scrollBarMinLength: Dp,
+    val sizeImageRecipe: Dp,
+    val widthIngredientName: Dp
 )
 
 val themeDimension = CustomDimension(
@@ -85,7 +87,9 @@ val themeDimension = CustomDimension(
     widthIconInfoRecipeCard = 75.dp,
     innerPaddingCard = 24.dp,
     scrollBarThickness = 4.dp,
-    scrollBarMinLength = 44.dp
+    scrollBarMinLength = 44.dp,
+    sizeImageRecipe = 330.dp,
+    widthIngredientName = 250.dp
 )
 
 val LocalCustomDimension = staticCompositionLocalOf {

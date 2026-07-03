@@ -19,16 +19,16 @@ class GetRecipeCardDataUseCase @Inject constructor(
     val recipesFlow: Flow<PagingData<RecipeCardModel>> =
         recipesRepository.getRecipesCardData(query).map { recipesData ->
             recipesData.map {
-                val ingredientsData = recipesRepository.getIngredientsEnergy(it.id)
+                val ingredientsEnergyData = recipesRepository.getIngredientsEnergy(it.id)
                 RecipeCardModel(
                     id = it.id,
                     name = it.name,
                     image = it.image,
                     portion = it.portion,
-                    isHealthy = isHealthy(ingredientsData, it.portion),
                     duration = it.duration,
                     ingredientsOk = it.ingredientsOk,
-                    ingredientsNo = it.ingredientsNo
+                    ingredientsNo = it.ingredientsNo,
+                    isHealthy = isHealthy(ingredientsEnergyData, it.portion)
                 )
             }
         }
@@ -38,11 +38,11 @@ class GetRecipeCardDataUseCase @Inject constructor(
 
 fun isHealthy(ingredients: List<IngredientModelEnergy>, portion: Int?): Boolean {
     val healthyFoodData = getHealthyFoodData(ingredients)
-    //val portionOk: Int = portion ?: 1
+    val portionOk: Int = portion ?: 1
     val isHealthy =
         healthyFoodData.carbohydrate / healthyFoodData.fat > RATIO_CARBO_FAT_PROTEIN &&
-                healthyFoodData.carbohydrate / healthyFoodData.protein > RATIO_CARBO_FAT_PROTEIN //&&
-                //healthyFoodData.energy <= LIMIT_ENERGY * portionOk
+                healthyFoodData.carbohydrate / healthyFoodData.protein > RATIO_CARBO_FAT_PROTEIN &&
+                healthyFoodData.energy / portionOk <= LIMIT_ENERGY
     return isHealthy
 }
 

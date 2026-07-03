@@ -34,9 +34,10 @@
     <string name="add_unknown_ingredient">Добавить неизвестный ингредиент</string>
     <string name="select_category_ingredient">Веберите категорию продукта:</string>
     <string name="g">г</string>
+    <string name="kcal">ккал</string>
     <string name="ml">мл</string>
     <string name="minute">мин</string>
-    <string name="portion">чел</string>
+    <string name="person">чел</string>
     <string name="piece">шт.</string>
     <string name="ingredient">инг</string>
     <string name="added_ingredient">Добавлен ингредиент</string>
@@ -51,4 +52,13 @@
     <string name="hardware_error_change_weight_ing">Аппаратная ошибка.\nНе удалось изменить вес ингредиента</string>
     <string name="hardware_error">Аппаратная ошибка.</string>
     <string name="unknown_error_occurred">Произошла неизвестная ошибка</string>
+    <string name="for_one_portion">На одну порцию</string>
+    <string name="energy">Калорийность</string>
+    <string name="protein">Белки</string>
+    <string name="fat">Жиры</string>
+    <string name="carbohydrate">Углеводы</string>
+    <string name="portion">Количество порций</string>
+    <string name="duration">Время приготовления</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="to_taste">по вкусу</string>
 </resources>

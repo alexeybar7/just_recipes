@@ -7,6 +7,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import com.alexit.justrecipes.R
@@ -27,7 +28,10 @@ data class CustomTypography(
     val text2: TextStyle,
     val text3: TextStyle,
     val text4: TextStyle,
-    val text5: TextStyle
+    val text5: TextStyle,
+    val text6: TextStyle,
+    val text7: TextStyle,
+    val text8: TextStyle
 )
 val themeTypography = CustomTypography(
     text1 = TextStyle(
@@ -55,6 +59,25 @@ val themeTypography = CustomTypography(
         fontFamily = NunitoFont,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp
+    ),
+    text6 = TextStyle(
+        fontFamily = NunitoFont,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 20.sp,
+        textAlign = TextAlign.Center
+    ),
+    text7 = TextStyle(
+        fontFamily = NunitoFont,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 12.sp,
+        textAlign = TextAlign.Left
+    ),
+    text8 = TextStyle(
+        fontFamily = NunitoFont,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 16.sp,
+        textDecoration = TextDecoration.Underline,
+        textAlign = TextAlign.Right
     ),
 
 )

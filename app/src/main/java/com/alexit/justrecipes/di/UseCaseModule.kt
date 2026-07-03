@@ -10,7 +10,7 @@ import com.alexit.justrecipes.domain.usecase.GetIngredientsNameUseCase
 import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsUseCase
 import com.alexit.justrecipes.domain.usecase.GetMAXIdIngredientsUseCase
 import com.alexit.justrecipes.domain.usecase.GetRecipeCardDataUseCase
-import com.alexit.justrecipes.domain.usecase.GetRecipesWithIngredientsUseCase
+import com.alexit.justrecipes.domain.usecase.GetRecipeFullDataUseCase
 import com.alexit.justrecipes.domain.usecase.RemoveInputtedIngredientUseCase
 import dagger.Module
 import dagger.Provides
@@ -78,12 +78,13 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideGetRecipesWithIngredientsUseCase(recipesRepository: RecipesRepository): GetRecipesWithIngredientsUseCase {
-        return GetRecipesWithIngredientsUseCase(recipesRepository)
-    }
-    @Provides
-    @Singleton
     fun provideGetRecipeCardDataUseCase(recipesRepository: RecipesRepository): GetRecipeCardDataUseCase {
         return GetRecipeCardDataUseCase(recipesRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetRecipeFullDataUseCase(recipesRepository: RecipesRepository): GetRecipeFullDataUseCase {
+        return GetRecipeFullDataUseCase(recipesRepository)
     }
 }

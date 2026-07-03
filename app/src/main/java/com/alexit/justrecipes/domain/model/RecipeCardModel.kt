@@ -6,7 +6,7 @@ data class RecipeCardModel(
     val portion: Int?,
     val image: String?,
     val duration: Int?,
-    val isHealthy: Boolean,
     val ingredientsOk: Int,
-    val ingredientsNo: Int
+    val ingredientsNo: Int,
+    val isHealthy: Boolean
 )

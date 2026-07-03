@@ -16,17 +16,17 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchRecipesViewModel @Inject constructor (
+class SearchRecipesViewModel @Inject constructor(
     private val getRecipeCardDataUseCase: GetRecipeCardDataUseCase,
 ) : ViewModel() {
 
     val inputTextState = TextFieldState()
 
-    val recipeCardData: Flow<PagingData<RecipeCardModel>>  =
+    val recipeCardData: Flow<PagingData<RecipeCardModel>> =
         snapshotFlow { inputTextState.text }
             .customDebounce(300)
             .distinctUntilChanged()
-            .customFlatMapLatest{ query ->
+            .customFlatMapLatest { query ->
                 getRecipeCardDataUseCase(query.toString())
             }.cachedIn(viewModelScope)
 }

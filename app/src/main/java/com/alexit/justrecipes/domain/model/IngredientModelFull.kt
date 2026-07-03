@@ -1,11 +1,15 @@
 package com.alexit.justrecipes.domain.model
 
-data class IngredientModelEnergy(
+data class IngredientModelFull(
     val id: Int,
+    val name: String,
     val energy: Double,
     val protein: Double,
     val fat: Double,
     val carbohydrate: Double,
     val quantity: Double?,
+    val unit: String,
     val density: Double?,
+    val weight: Int?,
+    val isInputted: Boolean
 )

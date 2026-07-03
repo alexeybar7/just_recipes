@@ -131,7 +131,7 @@ private fun LoadingScreen() {
 }
 
 @Composable
-fun ErrorScreen(message: String) {
+private fun ErrorScreen(message: String) {
     CustomPopup(
         message = message,
         state = NotifyState.DANGER,

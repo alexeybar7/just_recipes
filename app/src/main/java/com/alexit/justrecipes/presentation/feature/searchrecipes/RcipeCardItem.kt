@@ -157,7 +157,7 @@ fun RecipeCardItem (
                     BasicText(
                         style = textIconStyle,
                         color = { colorText },
-                        text = "${recipe.portion} ${stringResource(R.string.portion)}"
+                        text = "${recipe.portion} ${stringResource(R.string.person)}"
                     )
                 }
             }
