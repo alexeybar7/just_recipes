@@ -9,7 +9,7 @@ fun getHealthyFoodData(ingredients: List<IngredientModelEnergy>): HealthyFoodMod
         val amount = if (entity.quantity == null || entity.density == null) 1.0
         else {
             (entity.quantity * entity.density) / 100
-        }.toDouble()
+        }
         HealthyFoodModel(
             energy = acc.energy + (entity.energy * amount),
             protein = acc.protein + (entity.protein * amount),

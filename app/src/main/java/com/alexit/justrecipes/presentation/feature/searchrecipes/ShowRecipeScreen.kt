@@ -222,6 +222,7 @@ fun ShowRecipeScreen(
                         val stepImg = stepsImg.getOrNull(i)
                         if (stepText != null) {
                             BasicText(
+                                modifier = Modifier.padding(top = padding),
                                 text = "${i + 1}. $stepText",
                                 style = styleText.copy(textAlign = TextAlign.Justify),
                                 color = { colorText },
@@ -278,13 +279,15 @@ fun ImageWithTextView(imageName: String) {
     val sizeImage = JustRecipesTheme.dimensions.sizeImageRecipe
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .padding(top = padding, bottom = padding)
+            .fillMaxSize(),
         contentAlignment = Alignment.Center // Расположение текста
     ) {
         // Фоновое изображение
         Image(
             modifier = Modifier
-                .padding(top = padding, bottom = padding)
+                .padding(bottom = padding)
                 .size(sizeImage)
                 .clip(
                     RoundedCornerShape(

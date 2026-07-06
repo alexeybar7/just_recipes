@@ -1,5 +1,7 @@
 package com.alexit.justrecipes.presentation.feature.searchrecipes
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,11 +19,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -30,6 +39,8 @@ import com.alexit.justrecipes.domain.model.RecipeCardModel
 import com.alexit.justrecipes.presentation.components.CustomDivider
 import com.alexit.justrecipes.presentation.components.dpToPx
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
+import java.io.File
+import java.io.IOException
 
 @Composable
 fun RecipeCardItem (
@@ -91,18 +102,30 @@ fun RecipeCardItem (
                 color = { colorText },
                 text = recipe.name
             )
-            Image(
-                modifier = Modifier
-                    .padding(end = padding)
-                    .size(sizeImage)
-                    .clip(
-                        RoundedCornerShape(
-                            roundedCorner
-                        )
-                    ),
-                painter = painterResource(R.drawable.logo),
-                contentDescription = recipe.name
-            )
+            var bitmapState by remember { mutableStateOf<Bitmap?>(null) }
+            val context = LocalContext.current
+
+            LaunchedEffect(Unit) {
+                bitmapState =
+                    BitmapFactory.decodeStream(context.assets.open("recipeimg/${recipe.image}"))
+            }
+
+            if (null != bitmapState) {
+                val bitmap = bitmapState!!.asImageBitmap()
+                Image(
+                    modifier = Modifier
+                        .padding(end = padding)
+                        .size(sizeImage)
+                        .clip(
+                            RoundedCornerShape(
+                                roundedCorner
+                            )
+                        ),
+                    bitmap = bitmap,
+                    //painter = painterResource(R.drawable.logo),
+                    contentDescription = recipe.name
+                )
+            }
         }
         CustomDivider(
             color = borderColor,
@@ -162,23 +185,20 @@ fun RecipeCardItem (
                 }
             }
             Row(
-                modifier = Modifier
-                    .width(widthIconInfo),
+                modifier = Modifier.width(widthIconInfo),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 if (recipe.ingredientsNo == 0) {
                     Image(
-                        modifier = Modifier
-                            .size(sizeIcon),
+                        modifier = Modifier.size(sizeIcon),
                         imageVector = ImageVector.vectorResource(id = R.drawable.data_check_24px),
                         contentDescription = stringResource(id = R.string.icon_ingredient_data_ok),
                         colorFilter = ColorFilter.tint(colorIconOk)
                     )
                 } else {
                     Image(
-                        modifier = Modifier
-                            .size(sizeIcon),
+                        modifier = Modifier.size(sizeIcon),
                         imageVector = ImageVector.vectorResource(id = R.drawable.data_info_alert_24px),
                         contentDescription = stringResource(id = R.string.icon_ingredient_data_not),
                         colorFilter = ColorFilter.tint(colorText)
@@ -191,15 +211,13 @@ fun RecipeCardItem (
                 }
             }
             Row(
-                modifier = Modifier
-                    .width(widthIconInfo),
+                modifier = Modifier.width(widthIconInfo),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
                 if (recipe.isHealthy) {
                     Image(
-                        modifier = Modifier
-                            .size(sizeIcon),
+                        modifier = Modifier.size(sizeIcon),
                         imageVector = ImageVector.vectorResource(id = R.drawable.nest_eco_leaf_24px),
                         contentDescription = stringResource(id = R.string.icon_healthy_eating),
                         colorFilter = ColorFilter.tint(colorIconOk)
@@ -209,3 +227,4 @@ fun RecipeCardItem (
         }
     }
 }
+
