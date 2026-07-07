@@ -30,8 +30,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.alexit.justrecipes.R
@@ -39,8 +39,6 @@ import com.alexit.justrecipes.domain.model.RecipeCardModel
 import com.alexit.justrecipes.presentation.components.CustomDivider
 import com.alexit.justrecipes.presentation.components.dpToPx
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
-import java.io.File
-import java.io.IOException
 
 @Composable
 fun RecipeCardItem (
@@ -63,6 +61,14 @@ fun RecipeCardItem (
     val textIconStyle = JustRecipesTheme.typography.text5
     val colorIconOk = JustRecipesTheme.colors.iconOk
     val widthIconInfo = JustRecipesTheme.dimensions.widthIconInfoRecipeCard
+
+    var bitmapState by remember { mutableStateOf<Bitmap?>(null) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        bitmapState =
+            BitmapFactory.decodeStream(context.assets.open("recipeimg/${recipe.image}"))
+    }
 
     Column(
         modifier = Modifier
@@ -102,15 +108,8 @@ fun RecipeCardItem (
                 color = { colorText },
                 text = recipe.name
             )
-            var bitmapState by remember { mutableStateOf<Bitmap?>(null) }
-            val context = LocalContext.current
 
-            LaunchedEffect(Unit) {
-                bitmapState =
-                    BitmapFactory.decodeStream(context.assets.open("recipeimg/${recipe.image}"))
-            }
-
-            if (null != bitmapState) {
+            if (bitmapState != null) {
                 val bitmap = bitmapState!!.asImageBitmap()
                 Image(
                     modifier = Modifier
@@ -122,7 +121,7 @@ fun RecipeCardItem (
                             )
                         ),
                     bitmap = bitmap,
-                    //painter = painterResource(R.drawable.logo),
+                    contentScale = ContentScale.Crop,
                     contentDescription = recipe.name
                 )
             }

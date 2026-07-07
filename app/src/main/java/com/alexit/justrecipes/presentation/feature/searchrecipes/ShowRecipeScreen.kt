@@ -1,5 +1,7 @@
 package com.alexit.justrecipes.presentation.feature.searchrecipes
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +26,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -56,8 +61,6 @@ fun ShowRecipeScreen(
     val padding = JustRecipesTheme.dimensions.gap1
     val colorInputtedIngredients = JustRecipesTheme.colors.inputtedIngredients
     val widthIngredientName = JustRecipesTheme.dimensions.widthIngredientName
-    //val roundedCorner = JustRecipesTheme.dimensions.radiusCornerField
-    //val sizeImage = JustRecipesTheme.dimensions.sizeImageRecipe
 
     Column(
         modifier = Modifier
@@ -272,8 +275,6 @@ private fun Divider() {
 
 @Composable
 fun ImageWithTextView(imageName: String) {
-    val colorText = JustRecipesTheme.colors.text4
-    val styleName = JustRecipesTheme.typography.text6
     val padding = JustRecipesTheme.dimensions.gap1
     val roundedCorner = JustRecipesTheme.dimensions.radiusCornerField
     val sizeImage = JustRecipesTheme.dimensions.sizeImageRecipe
@@ -284,25 +285,29 @@ fun ImageWithTextView(imageName: String) {
             .fillMaxSize(),
         contentAlignment = Alignment.Center // Расположение текста
     ) {
-        // Фоновое изображение
-        Image(
-            modifier = Modifier
-                .padding(bottom = padding)
-                .size(sizeImage)
-                .clip(
-                    RoundedCornerShape(
-                        roundedCorner
-                    )
-                ),
-            painter = painterResource(R.drawable.logo),
-            contentDescription = imageName
-        )
+        var bitmapState by remember { mutableStateOf<Bitmap?>(null) }
+        val context = LocalContext.current
 
-        // Текст поверх изображения
-        BasicText(
-            text = imageName,
-            style = styleName,
-            color = { colorText },
-        )
+        LaunchedEffect(Unit) {
+            bitmapState =
+                BitmapFactory.decodeStream(context.assets.open("recipeimg/${imageName}"))
+        }
+
+        if (bitmapState != null) {
+            val bitmap = bitmapState!!.asImageBitmap()
+            Image(
+                modifier = Modifier
+                    .padding(end = padding)
+                    .size(sizeImage)
+                    .clip(
+                        RoundedCornerShape(
+                            roundedCorner
+                        )
+                    ),
+                bitmap = bitmap,
+                contentScale = ContentScale.Crop,
+                contentDescription = imageName
+            )
+        }
     }
 }
