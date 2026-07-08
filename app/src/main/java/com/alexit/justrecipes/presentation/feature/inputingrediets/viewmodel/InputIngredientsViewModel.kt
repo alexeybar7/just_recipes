@@ -91,7 +91,7 @@ class InputIngredientsViewModel @Inject constructor(
                 !addingIngredient.isInputted
             ) {
                 try {
-                    addInputtedIngredientUseCase(addingIngredient.id)
+                    addInputtedIngredientUseCase(addingIngredient.id, addingIngredient.synonym)
                     inputTextStateIngredient.clearText()
                     _sideEffect.send(
                         NotifySideEffect.ShowNotify(

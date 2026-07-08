@@ -48,7 +48,7 @@ class GetRecipeFullDataUseCase @Inject constructor(
                     unit = it.unit,
                     density = it.density,
                     weight = it.weight,
-                    isInputted = it.isInputted
+                    isSynonym = it.isSynonym
                 )
             }
         )

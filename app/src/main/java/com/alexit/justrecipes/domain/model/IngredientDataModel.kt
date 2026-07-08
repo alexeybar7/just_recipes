@@ -7,5 +7,5 @@ data class IngredientDataModel(
     val unit: String,
     val density: Double?,
     val weight: Int?,
-    val isInputted: Boolean
+    val isSynonym: Boolean
 )

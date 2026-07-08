@@ -17,7 +17,7 @@ interface RecipesRepository {
     fun getInputtedIngredients(): Flow<SourceState<List<IngredientModel>>>
     suspend fun getCategories(): List<String>
     suspend fun addNewIngredient(ingredient: IngredientEntity)
-    suspend fun addInputtedIngredient(ingredientId: Int)
+    suspend fun addInputtedIngredient(ingredientId: Int, synonym: String)
     suspend fun removeInputtedIngredient(ingredientId: Int)
     suspend fun changeWeightIngredient(ingredientId: Int, ingredientWeight: Int)
     suspend fun getAVGEnergy(category: String): Double

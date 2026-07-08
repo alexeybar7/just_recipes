@@ -181,7 +181,7 @@ fun ShowRecipeScreen(
                                 .padding(start = padding)
                             ) {
                                 val colorName =
-                                    if (!it.isInputted) colorText else colorInputtedIngredients
+                                    if (!it.isSynonym) colorText else colorInputtedIngredients
                                 BasicText(
                                     text = it.name,
                                     style = styleText.copy(textAlign = TextAlign.Left),

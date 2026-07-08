@@ -16,13 +16,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipesDao {
-    @Query("SELECT id, name, is_inputted FROM ingredients WHERE name = :ingredientName")
+    @Query("SELECT id, name, synonym, is_inputted FROM ingredients WHERE name = :ingredientName")
     suspend fun getIngredient(ingredientName: String): IngredientModelShort?
 
     @Query("SELECT name FROM ingredients")
     fun getIngredientsName(): Flow<List<String>>
 
-    @Query("SELECT id, name, category, weight FROM ingredients WHERE is_inputted = 1")
+    @Query("SELECT id, name, category, weight FROM ingredients WHERE is_inputted = 1 " +
+            "ORDER BY name")
     fun getInputtedIngredients(): Flow<List<IngredientModel>>
 
     @Query("SELECT DISTINCT category FROM ingredients ORDER BY category")
@@ -31,8 +32,16 @@ interface RecipesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOwnIngredient(ingredient: IngredientEntity)
 
-    @Query("UPDATE ingredients SET is_inputted = 1 WHERE id = :ingredientId")
-    suspend fun insertInputtedIngredient(ingredientId: Int)
+    @Query("UPDATE ingredients " +
+            "SET " +
+            "is_inputted = CASE WHEN id = :ingredientId THEN 1 " +
+            "ELSE is_inputted " +
+            "END, " +
+            "is_synonym = CASE WHEN synonym = :synonym THEN 1 " +
+            "ELSE is_synonym " +
+            "END " +
+            "WHERE (id = :ingredientId OR synonym = :synonym)")
+    suspend fun insertInputtedIngredient(ingredientId: Int, synonym: String)
 
     @Query("UPDATE ingredients SET weight = NULL, is_inputted = 0 WHERE id = :ingredientId")
     suspend fun deleteInputtedIngredient(ingredientId: Int)
@@ -57,8 +66,8 @@ interface RecipesDao {
 
     @Query("SELECT " +
             "recipes.id, recipes.name, recipes.duration, recipes.portion, recipes.image, " +
-            "SUM(ingredients.is_inputted) AS ingredientsOk, " +
-            "SUM(NOT ingredients.is_inputted) AS ingredientsNo, " +
+            "SUM(ingredients.is_synonym) AS ingredientsOk, " +
+            "SUM(NOT ingredients.is_synonym) AS ingredientsNo, " +
             "(0) AS isHealthy " +
             "FROM recipe_ingredients " +
             "INNER JOIN recipes ON recipes.id = recipe_ingredients.recipe_id " +
@@ -87,7 +96,7 @@ interface RecipesDao {
     @Query("SELECT " +
             "ingredients.id, ingredients.name, ingredients.energy, recipes.portion, recipes.image, " +
             "ingredients.protein, ingredients.fat, ingredients.carbohydrate, ingredients.weight, " +
-            "ingredients.is_inputted AS isInputted, " +
+            "ingredients.is_synonym AS isSynonym, " +
             "recipe_ingredients.quantity, recipe_ingredients.unit, recipe_ingredients.density " +
             "FROM recipe_ingredients " +
             "INNER JOIN recipes ON recipes.id = recipe_ingredients.recipe_id " +
