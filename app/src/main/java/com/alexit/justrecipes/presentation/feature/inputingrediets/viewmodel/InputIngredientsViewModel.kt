@@ -9,7 +9,7 @@ import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.common.StringResourceHolder
-import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.IngredientModelShort
 import com.alexit.justrecipes.domain.usecase.AddInputtedIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.AddNewIngredientUseCase
@@ -50,7 +50,7 @@ class InputIngredientsViewModel @Inject constructor(
     private val _sideEffect = Channel<NotifySideEffect>()
     val sideEffect: Flow<NotifySideEffect> = _sideEffect.receiveAsFlow()
 
-    val inputtedIngredientsState: StateFlow<SourceState<List<IngredientModel>>> by lazy {
+    val inputtedIngredientsState: StateFlow<SourceState<List<IngredientInputedModel>>> by lazy {
         getInputtedIngredientsUseCase().stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
@@ -194,7 +194,7 @@ class InputIngredientsViewModel @Inject constructor(
         }
     }
 
-    private fun isRemoveIngredient(ingredient: IngredientModel) {
+    private fun isRemoveIngredient(ingredient: IngredientInputedModel) {
         _uiState.update { currentState ->
             currentState.copy(
                 isDeleteIngredient = true,

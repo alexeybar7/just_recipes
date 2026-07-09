@@ -200,7 +200,10 @@ fun RecipeCardItem (
                         modifier = Modifier.size(sizeIcon),
                         imageVector = ImageVector.vectorResource(id = R.drawable.data_info_alert_24px),
                         contentDescription = stringResource(id = R.string.icon_ingredient_data_not),
-                        colorFilter = ColorFilter.tint(colorText)
+                        colorFilter = ColorFilter.tint(
+                            color = if (recipe.ingredientsOk > 0) colorIconOk
+                            else colorText
+                        )
                     )
                     BasicText(
                         style = textIconStyle,

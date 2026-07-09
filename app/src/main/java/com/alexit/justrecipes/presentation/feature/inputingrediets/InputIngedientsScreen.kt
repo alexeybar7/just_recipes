@@ -20,7 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.SourceState
-import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.IngredientInputedModel
 import com.alexit.justrecipes.presentation.components.CircleLoader
 import com.alexit.justrecipes.presentation.components.CustomDialog
 import com.alexit.justrecipes.presentation.components.CustomPopup
@@ -121,7 +121,7 @@ fun InputIngredientsScreen(
                     is SourceState.Loading -> LoadingScreen()
                     is SourceState.Success -> ShowInputtedIngredients(
                         inputtedIngredients = stateSource.data.toPersistentList(),
-                        onDeleteClick = { ingredient: IngredientModel ->
+                        onDeleteClick = { ingredient: IngredientInputedModel ->
                             inputIngredientsViewModel.handleIntent(
                                 InputIngredientsIntent.IsRemoveIngredient(ingredient)
                             )

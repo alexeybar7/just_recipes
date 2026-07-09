@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
-import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.IngredientModelFull
 import com.alexit.justrecipes.domain.model.IngredientModelShort
@@ -24,7 +24,7 @@ interface RecipesDao {
 
     @Query("SELECT id, name, category, weight FROM ingredients WHERE is_inputted = 1 " +
             "ORDER BY name")
-    fun getInputtedIngredients(): Flow<List<IngredientModel>>
+    fun getInputtedIngredients(): Flow<List<IngredientInputedModel>>
 
     @Query("SELECT DISTINCT category FROM ingredients ORDER BY category")
     suspend fun getCategories(): List<String>
@@ -37,13 +37,28 @@ interface RecipesDao {
             "is_inputted = CASE WHEN id = :ingredientId THEN 1 " +
             "ELSE is_inputted " +
             "END, " +
-            "is_synonym = CASE WHEN synonym = :synonym THEN 1 " +
+            "is_synonym = CASE WHEN synonym = :synonym THEN is_synonym + 1 " +
             "ELSE is_synonym " +
             "END " +
             "WHERE (id = :ingredientId OR synonym = :synonym)")
     suspend fun insertInputtedIngredient(ingredientId: Int, synonym: String)
 
-    @Query("UPDATE ingredients SET weight = NULL, is_inputted = 0 WHERE id = :ingredientId")
+    @Query("UPDATE ingredients " +
+            "SET " +
+            "weight = CASE WHEN id = :ingredientId " +
+            "THEN NULL " +
+            "ELSE weight " +
+            "END, " +
+            "is_inputted = CASE WHEN id = :ingredientId " +
+            "THEN 0 " +
+            "ELSE is_inputted " +
+            "END, " +
+            "is_synonym = CASE WHEN synonym = (SELECT synonym FROM ingredients WHERE id = :ingredientId) " +
+            "THEN is_synonym - 1 " +
+            "ELSE is_synonym " +
+            "END " +
+            "WHERE (" +
+            "id = :ingredientId OR synonym = (SELECT synonym FROM ingredients WHERE id = :ingredientId))")
     suspend fun deleteInputtedIngredient(ingredientId: Int)
 
     @Query("UPDATE ingredients SET weight = :ingredientWeight WHERE id = :ingredientId")
@@ -74,7 +89,7 @@ interface RecipesDao {
             "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id " +
             "WHERE recipes.name LIKE :query " +
             "GROUP BY recipes.id " +
-            "ORDER BY ingredientsOk DESC, ingredientsNo ASC, recipes.duration")
+            "ORDER BY ingredientsNo ASC, ingredientsOk DESC, recipes.duration")
     fun getRecipesCardData(query: String): PagingSource<Int, RecipeCardModel>
 
     @Query("SELECT " +

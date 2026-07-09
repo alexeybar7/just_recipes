@@ -7,7 +7,7 @@ import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.common.asSourceState
 import com.alexit.justrecipes.data.local.room.dao.RecipesDao
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
-import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.IngredientModelFull
 import com.alexit.justrecipes.domain.model.IngredientModelShort
@@ -31,7 +31,7 @@ class RecipesRepositoryImpl @Inject constructor(
         return recipesDao.getIngredientsName().asSourceState()
     }
 
-    override fun getInputtedIngredients(): Flow<SourceState<List<IngredientModel>>> {
+    override fun getInputtedIngredients(): Flow<SourceState<List<IngredientInputedModel>>> {
         return recipesDao.getInputtedIngredients().asSourceState()
     }
 

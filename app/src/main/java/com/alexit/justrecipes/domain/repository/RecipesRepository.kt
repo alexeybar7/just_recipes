@@ -3,7 +3,7 @@ package com.alexit.justrecipes.domain.repository
 import androidx.paging.PagingData
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
-import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.IngredientModelFull
 import com.alexit.justrecipes.domain.model.IngredientModelShort
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 interface RecipesRepository {
     suspend fun getIngredient(ingredientName: String): IngredientModelShort?
     fun getIngredientsName(): Flow<SourceState<List<String>>>
-    fun getInputtedIngredients(): Flow<SourceState<List<IngredientModel>>>
+    fun getInputtedIngredients(): Flow<SourceState<List<IngredientInputedModel>>>
     suspend fun getCategories(): List<String>
     suspend fun addNewIngredient(ingredient: IngredientEntity)
     suspend fun addInputtedIngredient(ingredientId: Int, synonym: String)

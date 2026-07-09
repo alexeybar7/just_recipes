@@ -17,5 +17,5 @@ data class IngredientEntity(
     val category: String,
     @ColumnInfo(defaultValue = "NULL") val weight: Int? = null,
     @ColumnInfo(name = "is_inputted", defaultValue = "0") val isInputted: Boolean = false,
-    @ColumnInfo(name = "is_synonym", defaultValue = "0") val isSynonym: Boolean = false
+    @ColumnInfo(name = "is_synonym", defaultValue = "0") val isSynonym: Int = 0
 )

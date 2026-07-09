@@ -46,14 +46,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.alexit.justrecipes.R
-import com.alexit.justrecipes.domain.model.IngredientModel
+import com.alexit.justrecipes.domain.model.IngredientInputedModel
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
 fun ShowInputtedIngredients(
-    inputtedIngredients: PersistentList<IngredientModel>,
-    onDeleteClick: (IngredientModel) -> Unit,
+    inputtedIngredients: PersistentList<IngredientInputedModel>,
+    onDeleteClick: (IngredientInputedModel) -> Unit,
     onWeightClick: (Int, Int, String) -> Unit,
 ) {
     val iconDeleteIngredient = R.drawable.round_do_not_disturb_on_24
