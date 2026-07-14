@@ -1,4 +1,4 @@
-package com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel
+package com.alexit.justrecipes.presentation.components
 
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.StringResourceHolder

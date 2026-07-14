@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -36,10 +37,19 @@ fun SearchRecipesScreen(
     searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel(),
     onRecipeClick: (Int) -> Unit
 ) {
+    val searchRecipesUiState by searchRecipesViewModel.uiState.collectAsStateWithLifecycle()
     val recipesPagingDataCard = searchRecipesViewModel.recipeCardData.collectAsLazyPagingItems()
 
     val paddingFieldInput = JustRecipesTheme.dimensions.paddingFieldInput
     val innerPaddingCard = JustRecipesTheme.dimensions.innerPaddingCard
+
+    if (searchRecipesUiState.isNewNotify) {
+        CustomPopup(
+            message = searchRecipesUiState.notifyMessage,
+            state = NotifyState.DANGER,
+            onDismissRequest = { searchRecipesViewModel.notifyDismiss() }
+        )
+    }
 
     Column(modifier = Modifier.fillMaxSize()
     ) {
@@ -82,12 +92,14 @@ fun SearchRecipesScreen(
                         recipesPagingDataCard.apply {
                             if (recipesPagingDataCard.loadState.append is LoadState.Loading ||
                                 recipesPagingDataCard.loadState.refresh is LoadState.Loading ||
-                                recipesPagingDataCard.loadState.prepend is LoadState.Loading) {
+                                recipesPagingDataCard.loadState.prepend is LoadState.Loading
+                                ) {
                                 LoadingScreen()
                             }
                             if (recipesPagingDataCard.loadState.append is LoadState.Error ||
                                 recipesPagingDataCard.loadState.refresh is LoadState.Error ||
-                                recipesPagingDataCard.loadState.prepend is LoadState.Error) {
+                                recipesPagingDataCard.loadState.prepend is LoadState.Error
+                                ) {
                                 val error = if (loadState.append is LoadState.Error) {
                                     (loadState.append as LoadState.Error).error
                                 } else if (loadState.refresh is LoadState.Error) {
@@ -95,12 +107,12 @@ fun SearchRecipesScreen(
                                 } else {
                                     (loadState.prepend as LoadState.Error).error
                                 }
-                                val message = if (error.message != null) {
+                                val errorMessage = if (error.message != null) {
                                     "${stringResource(R.string.hardware_error)}\n${error.message}"
                                 } else {
                                     stringResource(R.string.unknown_error_occurred)
                                 }
-                                ErrorScreen(message)
+                                searchRecipesViewModel.notifyShow(message = errorMessage)
                             }
 
                         }
@@ -128,13 +140,4 @@ private fun LoadingScreen() {
             isVisible = isLoading
         )
     }
-}
-
-@Composable
-private fun ErrorScreen(message: String) {
-    CustomPopup(
-        message = message,
-        state = NotifyState.DANGER,
-        onDismissRequest = {}
-    )
 }

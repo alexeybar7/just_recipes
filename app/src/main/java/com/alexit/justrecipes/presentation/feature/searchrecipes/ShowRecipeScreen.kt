@@ -34,13 +34,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexit.justrecipes.R
+import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.domain.model.RecipeModelFull
 import com.alexit.justrecipes.presentation.components.CircleLoader
 import com.alexit.justrecipes.presentation.components.CustomDivider
+import com.alexit.justrecipes.presentation.components.CustomPopup
+import com.alexit.justrecipes.presentation.components.NotifySideEffect
 import com.alexit.justrecipes.presentation.components.TitlePanel
 import com.alexit.justrecipes.presentation.components.dpToPx
 import com.alexit.justrecipes.presentation.feature.searchrecipes.viewmodel.ShowRecipeViewModel
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ShowRecipeScreen(
@@ -61,6 +65,31 @@ fun ShowRecipeScreen(
     val padding = JustRecipesTheme.dimensions.gap1
     val colorInputtedIngredients = JustRecipesTheme.colors.inputtedIngredients
     val widthIngredientName = JustRecipesTheme.dimensions.widthIngredientName
+
+    var isNewNotify by remember { mutableStateOf(false) }
+    var notifyMessage by remember { mutableStateOf("") }
+    var notifyState by remember { mutableStateOf(NotifyState.INFO) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        showRecipeViewModel.sideEffect.collectLatest { notify ->
+            when (notify) {
+                is NotifySideEffect.ShowNotify -> {
+                    isNewNotify = true
+                    notifyMessage = "${notify.message.asString(context)}\n${notify.addition}".trimEnd()
+                    notifyState = notify.state
+                }
+            }
+        }
+    }
+
+    if (isNewNotify) {
+        CustomPopup(
+            message = notifyMessage,
+            state = notifyState,
+            onDismissRequest = { isNewNotify = !isNewNotify }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -85,7 +114,7 @@ fun ShowRecipeScreen(
                     color = { colorText },
                 )
 
-                ImageWithTextView(imageName = recipe.image)
+                ImageShow(imageName = recipe.image)
 
                 Divider()
 
@@ -232,7 +261,7 @@ fun ShowRecipeScreen(
                             )
                         }
                         if (stepImg != null) {
-                            ImageWithTextView(imageName = stepImg)
+                            ImageShow(imageName = stepImg)
                         }
                         Divider()
                     }
@@ -274,7 +303,7 @@ private fun Divider() {
 }
 
 @Composable
-fun ImageWithTextView(imageName: String) {
+fun ImageShow(imageName: String) {
     val padding = JustRecipesTheme.dimensions.gap1
     val roundedCorner = JustRecipesTheme.dimensions.radiusCornerField
     val sizeImage = JustRecipesTheme.dimensions.sizeImageRecipe

@@ -20,7 +20,7 @@
     <string name="title_input_ingredients">"Список Ингредиентов"</string>
     <string name="title_search_recipe">Список Рецептов</string>
     <string name="title_show_recipe">Рецепт</string>
-    <string name="title_request_ai">Запрос ИИ</string>
+    <string name="title_request_ai">Запросить ИИ</string>
     <string name="title_answer_ai">Ответ ИИ</string>
     <string name="title_own_recipes">Свои Рецепты</string>
     <string name="title_make_own_recipes">Создание Своего Рецепта</string>
@@ -50,6 +50,7 @@
     <string name="hardware_error_remove_ing">Аппаратная ошибка.\nНе удалось удалить ингредиент</string>
     <string name="change_weight_ingredient">Изменено количество ингредиента</string>
     <string name="hardware_error_change_weight_ing">Аппаратная ошибка.\nНе удалось изменить вес ингредиента</string>
+    <string name="hardware_error_get_recipe">Аппаратная ошибка.\nНе удалось получить рецепт</string>
     <string name="hardware_error">Аппаратная ошибка.</string>
     <string name="unknown_error_occurred">Произошла неизвестная ошибка</string>
     <string name="for_one_portion">На одну порцию</string>

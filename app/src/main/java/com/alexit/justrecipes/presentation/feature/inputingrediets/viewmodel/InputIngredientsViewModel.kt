@@ -19,6 +19,7 @@ import com.alexit.justrecipes.domain.usecase.GetIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.GetIngredientsNameUseCase
 import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsUseCase
 import com.alexit.justrecipes.domain.usecase.RemoveInputtedIngredientUseCase
+import com.alexit.justrecipes.presentation.components.NotifySideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

@@ -28,7 +28,7 @@ import com.alexit.justrecipes.presentation.components.CustomTextField
 import com.alexit.justrecipes.presentation.components.TitlePanel
 import com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel.InputIngredientsIntent
 import com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel.InputIngredientsViewModel
-import com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel.NotifySideEffect
+import com.alexit.justrecipes.presentation.components.NotifySideEffect
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.collectLatest
@@ -71,7 +71,6 @@ fun InputIngredientsScreen(
         ) {
         TitlePanel(
             text = stringResource(R.string.title_input_ingredients),
-            //onLeftClick = {}
         )
 
         Column(
