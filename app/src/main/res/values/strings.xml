@@ -62,4 +62,5 @@
     <string name="duration">Время приготовления</string>
     <string name="ingredients">Ингредиенты</string>
     <string name="to_taste">по вкусу</string>
+    <string name="make_recipe_from">Составь рецепт блюда из:</string>
 </resources>

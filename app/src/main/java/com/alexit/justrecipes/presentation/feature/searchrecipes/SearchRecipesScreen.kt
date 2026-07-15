@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -37,17 +36,21 @@ fun SearchRecipesScreen(
     searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel(),
     onRecipeClick: (Int) -> Unit
 ) {
-    val searchRecipesUiState by searchRecipesViewModel.uiState.collectAsStateWithLifecycle()
+    //val searchRecipesUiState by searchRecipesViewModel.uiState.collectAsStateWithLifecycle()
     val recipesPagingDataCard = searchRecipesViewModel.recipeCardData.collectAsLazyPagingItems()
 
     val paddingFieldInput = JustRecipesTheme.dimensions.paddingFieldInput
     val innerPaddingCard = JustRecipesTheme.dimensions.innerPaddingCard
 
-    if (searchRecipesUiState.isNewNotify) {
+    var isNewNotify by remember { mutableStateOf(false) }
+    var notifyMessage by remember { mutableStateOf("") }
+    var notifyState by remember { mutableStateOf(NotifyState.INFO) }
+
+    if (isNewNotify) {
         CustomPopup(
-            message = searchRecipesUiState.notifyMessage,
-            state = NotifyState.DANGER,
-            onDismissRequest = { searchRecipesViewModel.notifyDismiss() }
+            message = notifyMessage,
+            state = notifyState,
+            onDismissRequest = { isNewNotify = !isNewNotify }
         )
     }
 
@@ -112,7 +115,9 @@ fun SearchRecipesScreen(
                                 } else {
                                     stringResource(R.string.unknown_error_occurred)
                                 }
-                                searchRecipesViewModel.notifyShow(message = errorMessage)
+                                isNewNotify = true
+                                notifyMessage = errorMessage
+                                notifyState = NotifyState.DANGER
                             }
 
                         }

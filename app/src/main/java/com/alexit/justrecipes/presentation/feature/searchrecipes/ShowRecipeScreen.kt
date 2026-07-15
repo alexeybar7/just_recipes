@@ -64,7 +64,7 @@ fun ShowRecipeScreen(
     val styleEnergy = JustRecipesTheme.typography.text8
     val padding = JustRecipesTheme.dimensions.gap1
     val colorInputtedIngredients = JustRecipesTheme.colors.inputtedIngredients
-    val widthIngredientName = JustRecipesTheme.dimensions.widthIngredientName
+    val widthIngredientName = JustRecipesTheme.dimensions.widthIngredientNameInRecipe
 
     var isNewNotify by remember { mutableStateOf(false) }
     var notifyMessage by remember { mutableStateOf("") }
@@ -94,7 +94,6 @@ fun ShowRecipeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
     ) {
         TitlePanel(
             text = stringResource(R.string.title_show_recipe), onLeftClick = onBackClick
@@ -105,7 +104,8 @@ fun ShowRecipeScreen(
             Column(
                 modifier = Modifier
                     .padding(padding)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 BasicText(
@@ -118,17 +118,16 @@ fun ShowRecipeScreen(
 
                 Divider()
 
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = padding, top = padding)
-                    .align(Alignment.Start)
-                ) {
-                    BasicText(
-                        text = stringResource(R.string.for_one_portion),
-                        style = styleAdding,
-                        color = { colorAdding },
-                    )
-                }
+                BasicText(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = padding, top = padding)
+                        .align(Alignment.Start),
+                    text = stringResource(R.string.for_one_portion),
+                    style = styleAdding,
+                    color = { colorAdding },
+                )
+
                 Row(
                     modifier = Modifier
                         .padding(padding)
@@ -198,38 +197,34 @@ fun ShowRecipeScreen(
                         style = styleEnergy,
                         color = { colorText },
                     )
-                    recipe.ingredients.forEach {
+                    recipe.ingredients.forEach { ingredient ->
                         Row(
                             modifier = Modifier
-                                .padding(start = padding)
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Box(modifier = Modifier
-                                .width(widthIngredientName )
-                                .padding(start = padding)
-                            ) {
-                                val colorName =
-                                    if (!it.isSynonym) colorText else colorInputtedIngredients
-                                BasicText(
-                                    text = it.name,
-                                    style = styleText.copy(textAlign = TextAlign.Left),
-                                    color = { colorName },
-                                )
-                            }
+                            val colorName =
+                                if (ingredient.isSynonym) colorInputtedIngredients else colorText
+                            BasicText(
+                                modifier = Modifier
+                                    .width(widthIngredientName),
+                                text = ingredient.name.replaceFirstChar { it.uppercase() },
+                                style = styleText.copy(textAlign = TextAlign.Left),
+                                color = { colorName },
+                            )
                             val df = DecimalFormat("#.##")
-                            val amount: Double = if (it.quantity != null && it.density != null) {
-                                it.quantity * it.density
+                            val amount: Double = if (ingredient.quantity != null && ingredient.density != null) {
+                                ingredient.quantity * ingredient.density
                             } else -1.0
                             val colorAmount =
-                                if (it.weight != null && it.weight >= amount) colorInputtedIngredients else colorText
-                            val ingredientStr = when (amount) {
+                                if (ingredient.weight != null && ingredient.weight >= amount) colorInputtedIngredients else colorText
+                            val amountStr = when (amount) {
                                 -1.0 -> ""
                                 0.0 -> stringResource(R.string.to_taste)
-                                else -> "${df.format(it.quantity)} ${it.unit}"
+                                else -> "${df.format(ingredient.quantity)} ${ingredient.unit}"
                             }
                             BasicText(
-                                text = ingredientStr,
+                                text = amountStr,
                                 style = styleEnergy.copy(textAlign = TextAlign.Right),
                                 color = { colorAmount },
                             )
