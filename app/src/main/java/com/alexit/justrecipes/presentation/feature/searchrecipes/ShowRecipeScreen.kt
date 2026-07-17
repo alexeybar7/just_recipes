@@ -101,6 +101,13 @@ fun ShowRecipeScreen(
         if (recipeNullable == null) LoadingScreen()
         else {
             val recipe: RecipeModelFull = recipeNullable!!
+            BasicText(
+                modifier = Modifier
+                    .align(alignment = Alignment.CenterHorizontally),
+                text = recipe.name,
+                style = styleName,
+                color = { colorText },
+            )
             Column(
                 modifier = Modifier
                     .padding(padding)
@@ -108,12 +115,6 @@ fun ShowRecipeScreen(
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                BasicText(
-                    text = recipe.name,
-                    style = styleName,
-                    color = { colorText },
-                )
-
                 ImageShow(imageName = recipe.image)
 
                 Divider()

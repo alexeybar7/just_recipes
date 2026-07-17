@@ -26,7 +26,6 @@ data class CustomDimension(
     val sizeIcon1: Dp,
     val sizeIcon2: Dp,
     val sizeIcon3: Dp,
-    val sizeIcon4: Dp,
     val heightDialog: Dp,
     val widthDialog: Dp,
     val heightPopup: Dp,
@@ -34,7 +33,6 @@ data class CustomDimension(
     val heightNewIngredientDialog: Dp,
     val widthNewIngredientDialog: Dp,
     val sizeCircleLoader: Dp,
-    val heightTitleField: Dp,
     val widthRecipeCard: Dp,
     val heightRecipeCard: Dp,
     val gap1: Dp,
@@ -47,7 +45,11 @@ data class CustomDimension(
     val scrollBarMinLength: Dp,
     val sizeImageRecipe: Dp,
     val widthIngredientNameInRecipe: Dp,
-    val widthIngredientNameInRequest: Dp
+    val widthIngredientNameInRequest: Dp,
+    val heightSelectorDish: Dp,
+    val widthSelectorDish: Dp,
+    val heighButtonTitlePanel: Dp,
+    val widthButtonTitlePanel: Dp
 )
 
 val themeDimension = CustomDimension(
@@ -56,7 +58,7 @@ val themeDimension = CustomDimension(
     thicknessDividerBottomMenu = 2.dp,
     heightDividerBottomMenu = 54.dp,
     heightTopBorderButtonSelected = 6.dp,
-    paddingTextTitlePanel = 24.dp,
+    paddingTextTitlePanel = 11.dp,
     heightInputTextField = 48.dp,
     widthInputTextField = 330.dp,
     widthInputtedIngredientText = 170.dp,
@@ -69,8 +71,7 @@ val themeDimension = CustomDimension(
     borderThickness = 1.dp,
     sizeIcon1 = 32.dp,
     sizeIcon2 = 24.dp,
-    sizeIcon3 = 36.dp,
-    sizeIcon4 = 28.dp,
+    sizeIcon3 = 28.dp,
     heightDialog = 200.dp,
     widthDialog = 300.dp,
     heightPopup = 150.dp,
@@ -78,7 +79,6 @@ val themeDimension = CustomDimension(
     heightNewIngredientDialog = 500.dp,
     widthNewIngredientDialog = 300.dp,
     sizeCircleLoader = 50.dp,
-    heightTitleField = 50.dp,
     widthRecipeCard = 330.dp,
     heightRecipeCard = 135.dp,
     gap1 = 4.dp,
@@ -91,7 +91,11 @@ val themeDimension = CustomDimension(
     scrollBarMinLength = 44.dp,
     sizeImageRecipe = 330.dp,
     widthIngredientNameInRecipe = 250.dp,
-    widthIngredientNameInRequest = 300.dp
+    widthIngredientNameInRequest = 300.dp,
+    heightSelectorDish = 48.dp,
+    widthSelectorDish = 330.dp,
+    heighButtonTitlePanel = 34.dp,
+    widthButtonTitlePanel = 70.dp
 )
 
 val LocalCustomDimension = staticCompositionLocalOf {

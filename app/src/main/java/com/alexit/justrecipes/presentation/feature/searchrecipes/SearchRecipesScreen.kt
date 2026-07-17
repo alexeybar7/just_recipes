@@ -36,7 +36,6 @@ fun SearchRecipesScreen(
     searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel(),
     onRecipeClick: (Int) -> Unit
 ) {
-    //val searchRecipesUiState by searchRecipesViewModel.uiState.collectAsStateWithLifecycle()
     val recipesPagingDataCard = searchRecipesViewModel.recipeCardData.collectAsLazyPagingItems()
 
     val paddingFieldInput = JustRecipesTheme.dimensions.paddingFieldInput

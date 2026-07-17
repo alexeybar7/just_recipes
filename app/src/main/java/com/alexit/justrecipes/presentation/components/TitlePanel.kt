@@ -1,23 +1,21 @@
 package com.alexit.justrecipes.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
@@ -26,77 +24,72 @@ import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 fun TitlePanel(
     text: String,
     onLeftClick: (() -> Unit)? = null,
-    onRightClick: (() -> Unit)? = null
+    textLeft: String = stringResource(R.string.go_back),
+    onRightClick: (() -> Unit)? = null,
+    textRight: String = ""
 ) {
     val height = JustRecipesTheme.dimensions.heightTitlePanel
     val background = JustRecipesTheme.colors.background1
-    val color = JustRecipesTheme.colors.text1
+    val colorTitleText = JustRecipesTheme.colors.text1
     val padding = JustRecipesTheme.dimensions.paddingTextTitlePanel
-    val style = JustRecipesTheme.typography.text1
-    val iconLeftId = R.drawable.chevron_left_circle
-    val iconLeftDescription = R.string.icon_arrow_back
-    val sizeIcon = JustRecipesTheme.dimensions.sizeIcon3
-    val heightTitleField = JustRecipesTheme.dimensions.heightTitleField
+    val styleTitleText = JustRecipesTheme.typography.text1
+    val styleButtonText = JustRecipesTheme.typography.text9
+    val heighButton = JustRecipesTheme.dimensions.heighButtonTitlePanel
+    val widthButton = JustRecipesTheme.dimensions.widthButtonTitlePanel
 
-    Row(
+    Box(
         modifier = Modifier
             .height(height)
             .background(background)
             .padding(padding)
-            .fillMaxSize(),
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .fillMaxSize()
     ) {
-        Box(modifier =
-            Modifier
-                .size(heightTitleField),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            if (onLeftClick != null) {
-                Image(
-                    modifier = Modifier
-                        .size(sizeIcon)
-                        .clickable(
-                            enabled = true,
-                            onClick = onLeftClick
-                        ),
-                    imageVector = ImageVector.vectorResource(iconLeftId),
-                    contentDescription = stringResource(iconLeftDescription),
-                    colorFilter = ColorFilter.tint(color)
-                )
-            }
-        }
-        Box(modifier =
-            Modifier
-                .weight(1f)
-                .height(heightTitleField),
-            contentAlignment = Alignment.Center
-        ){
+        if (onLeftClick != null) {
             BasicText(
-                text = text,
-                modifier = Modifier,
-                style = style,
-                color = { color },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(heighButton))
+                    .clickable(
+                        enabled = true,
+                        onClick = onLeftClick
+                    )
+                    .align(Alignment.BottomStart)
+                    .height(heighButton)
+                    .width(widthButton)
+                    .background(colorTitleText)
+                    .wrapContentHeight(align = Alignment.CenterVertically),
+                style = styleButtonText.copy(textAlign = TextAlign.Center),
+                color = { background },
+                text = textLeft
             )
         }
-        Box(modifier =
-                Modifier
-                    .size(heightTitleField),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            if (onRightClick != null) {
-                Image(
-                    modifier = Modifier
-                        .size(sizeIcon)
-                        .clickable(
-                            enabled = true,
-                            onClick = onRightClick
-                        ),
-                    imageVector = ImageVector.vectorResource(iconLeftId),
-                    contentDescription = stringResource(iconLeftDescription),
-                    colorFilter = ColorFilter.tint(color)
-                )
-            }
+
+        BasicText(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .height(heighButton)
+                .wrapContentHeight(align = Alignment.CenterVertically),
+            text = text,
+            style = styleTitleText.copy(textAlign = TextAlign.Center),
+            color = { colorTitleText },
+        )
+
+        if (onRightClick != null) {
+            BasicText(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(heighButton))
+                    .clickable(
+                        enabled = true,
+                        onClick = onRightClick
+                    )
+                    .align(Alignment.BottomEnd)
+                    .height(heighButton)
+                    .width(widthButton)
+                    .background(colorTitleText)
+                    .wrapContentHeight(align = Alignment.CenterVertically),
+                style = styleButtonText.copy(textAlign = TextAlign.Center),
+                color = { background },
+                text = textRight
+            )
         }
     }
 }

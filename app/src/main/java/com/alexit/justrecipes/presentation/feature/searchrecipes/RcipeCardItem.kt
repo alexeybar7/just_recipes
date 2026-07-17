@@ -57,7 +57,7 @@ fun RecipeCardItem (
     val textNameStyle = JustRecipesTheme.typography.text1
     val colorText = JustRecipesTheme.colors.text4
     val sizeImage = JustRecipesTheme.dimensions.sizeImageRecipeCard
-    val sizeIcon = JustRecipesTheme.dimensions.sizeIcon4
+    val sizeIcon = JustRecipesTheme.dimensions.sizeIcon3
     val textIconStyle = JustRecipesTheme.typography.text5
     val colorIconOk = JustRecipesTheme.colors.iconOk
     val widthIconInfo = JustRecipesTheme.dimensions.widthIconInfoRecipeCard
