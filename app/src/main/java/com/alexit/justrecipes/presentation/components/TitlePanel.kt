@@ -22,7 +22,8 @@ fun TitlePanel(
     onLeftClick: () -> Unit = {},
     textLeft: String = "",
     onRightClick: (String) -> Unit = {},
-    textRight: String = ""
+    textRight: String = "",
+    additional: String = ""
 ) {
     val height = JustRecipesTheme.dimensions.heightTitlePanel
     val background = JustRecipesTheme.colors.background1
@@ -76,7 +77,7 @@ fun TitlePanel(
                     .clip(RoundedCornerShape(heighButton))
                     .clickable(
                         enabled = true,
-                        onClick = { onRightClick("") }
+                        onClick = { onRightClick(additional) }
                     )
                     .align(Alignment.BottomEnd)
                     .height(heighButton)

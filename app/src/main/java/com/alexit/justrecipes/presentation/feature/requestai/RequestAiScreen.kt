@@ -59,6 +59,18 @@ fun RequestAiScreen(
     val styleText = JustRecipesTheme.typography.text1
     val padding = JustRecipesTheme.dimensions.gap1
 
+    val requestAi =stringResource(R.string.title_request_ai)
+    val makeRecipe = stringResource(R.string.make_recipe)
+    val typeDish = if (requestAiUiState.isDishFirst) stringResource(R.string.first_dish)
+    else stringResource(R.string.second_dish)
+    val fromIngredients = stringResource(R.string.from_ingredients)
+    val liquidFood = stringArrayResource(R.array.liquid_foodstuff)
+    val pieceFood = stringArrayResource(R.array.piece_foodstuff)
+    val unitMl: String = stringResource(R.string.ml)
+    val unitPiece = stringResource(R.string.piece)
+    val unitG = stringResource(R.string.g)
+
+
     var isNewNotify by remember { mutableStateOf(false) }
     var notifyMessage by remember { mutableStateOf("") }
     var notifyState by remember { mutableStateOf(NotifyState.INFO) }
@@ -71,16 +83,16 @@ fun RequestAiScreen(
         )
     }
 
-    var isDishFirst by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize(),
     ) {
+        val prompt = "$makeRecipe $typeDish $fromIngredients ${requestAiUiState.listIngredients}"
         TitlePanel(
-            text = stringResource(R.string.title_request_ai),
+            text = requestAi,
             onRightClick = onPromptClick,
-            textRight = stringResource(R.string.request)
+            textRight = stringResource(R.string.request),
+            additional = prompt
         )
         Column(
             modifier = Modifier
@@ -90,26 +102,43 @@ fun RequestAiScreen(
         ) {
             BasicText(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = stringResource(R.string.make_recipe_from),
+                text = makeRecipe,
                 style = styleText,
                 color = { colorText }
             )
-            Column(modifier = Modifier.weight(1f)) {
-                when (val sourceState = inputtedIngredientsState.value) {
-                    is SourceState.Loading -> LoadingScreen()
-                    is SourceState.Success -> ShowIngredients(sourceState.data.toPersistentList())
-                    is SourceState.Error -> {
-                        isNewNotify = true
-                        notifyMessage = if (sourceState.message != null) {
-                            "${stringResource(R.string.hardware_error)}\n${sourceState.message}"
-                        } else {
-                            stringResource(R.string.unknown_error_occurred)
-                        }
-                        notifyState = NotifyState.DANGER
+            SelectorDishType(
+                isDishFirst = requestAiUiState.isDishFirst,
+                onSelect = { isFirst: Boolean ->  requestAiViewModel.selectDishType(isFirst) }
+            )
+            BasicText(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = fromIngredients,
+                style = styleText,
+                color = { colorText }
+            )
+            when (val sourceState = inputtedIngredientsState.value) {
+                is SourceState.Loading -> LoadingScreen()
+                is SourceState.Success -> {
+                    requestAiViewModel.makeListIngredients(
+                        unitMl, unitPiece, unitG,
+                        liquidFood, pieceFood,
+                        inputtedIngredients = sourceState.data)
+                    ShowIngredients(
+                        unitMl, unitPiece, unitG,
+                        liquidFood, pieceFood,
+                        inputtedIngredients = sourceState.data.toPersistentList())
+                }
+
+                is SourceState.Error -> {
+                    isNewNotify = true
+                    notifyMessage = if (sourceState.message != null) {
+                        "${stringResource(R.string.hardware_error)}\n${sourceState.message}"
+                    } else {
+                        stringResource(R.string.unknown_error_occurred)
                     }
+                    notifyState = NotifyState.DANGER
                 }
             }
-            SelectTypeDish(isDishFirst, onSelect = { first: Boolean -> isDishFirst = first })
         }
     }
 }
@@ -132,16 +161,18 @@ private fun LoadingScreen() {
 }
 
 @Composable
-private fun ShowIngredients (inputtedIngredients: PersistentList<IngredientInputedModel>) {
-    val liquid = stringArrayResource(R.array.liquid_foodstuff)
-    val piece = stringArrayResource(R.array.piece_foodstuff)
+private fun ShowIngredients (
+    unitMl: String, unitPiece: String, unitG: String,
+    liquidFood: Array<String>, pieceFood: Array<String>,
+    inputtedIngredients: PersistentList<IngredientInputedModel>
+) {
     val colorText = JustRecipesTheme.colors.text4
     val styleText = JustRecipesTheme.typography.text1
     val styleDigit = JustRecipesTheme.typography.text8
     val widthIngredientName = JustRecipesTheme.dimensions.widthIngredientNameInRequest
     val padding = JustRecipesTheme.dimensions.gap1
 
-    LazyColumn() {
+    LazyColumn {
         itemsIndexed(
             items = inputtedIngredients,
             key = { _ , item -> item.id }
@@ -160,13 +191,10 @@ private fun ShowIngredients (inputtedIngredients: PersistentList<IngredientInput
                     color = { colorText }
                 )
                 if (ingredient.weight != null) {
-                    val unit: String = if (liquid.contains(ingredient.category)) {
-                        stringResource(R.string.ml)
-                    } else if (piece.contains(ingredient.category)) {
-                        stringResource(R.string.piece)
-                    } else {
-                        stringResource(R.string.g)
-                    }
+                    val unit: String = if (liquidFood.contains(ingredient.category)) unitMl
+                    else if (pieceFood.contains(ingredient.category)) unitPiece
+                    else unitG
+
                     BasicText(
                         text = "${ingredient.weight} $unit",
                         style = styleDigit,
@@ -179,7 +207,7 @@ private fun ShowIngredients (inputtedIngredients: PersistentList<IngredientInput
 }
 
 @Composable
-private fun SelectTypeDish(isDishFirst: Boolean, onSelect: (Boolean) -> Unit) {
+private fun SelectorDishType(isDishFirst: Boolean, onSelect: (Boolean) -> Unit) {
     val heightSelector = JustRecipesTheme.dimensions.heightSelectorDish
     val widthSelector = JustRecipesTheme.dimensions.widthSelectorDish
     val padding = JustRecipesTheme.dimensions.gap1
@@ -202,11 +230,14 @@ private fun SelectTypeDish(isDishFirst: Boolean, onSelect: (Boolean) -> Unit) {
     ) {
         BasicText(
             modifier = Modifier
-                .clip(RoundedCornerShape(
-                    topStart = radiusShape,
-                    bottomStart = radiusShape))
+                .clip(
+                    RoundedCornerShape(
+                        topStart = radiusShape,
+                        bottomStart = radiusShape
+                    )
+                )
                 .background(color = if (isDishFirst) colorBackgroundSelected else colorBackground)
-                .alpha( if (isDishFirst) 1f else 0.3f )
+                .alpha(if (isDishFirst) 1f else 0.3f)
                 .clickable(
                     enabled = true,
                     onClick = { onSelect(true) }
@@ -232,11 +263,14 @@ private fun SelectTypeDish(isDishFirst: Boolean, onSelect: (Boolean) -> Unit) {
 
         BasicText(
             modifier = Modifier
-                .clip(RoundedCornerShape(
-                    topEnd = radiusShape,
-                    bottomEnd = radiusShape))
+                .clip(
+                    RoundedCornerShape(
+                        topEnd = radiusShape,
+                        bottomEnd = radiusShape
+                    )
+                )
                 .background(color = if (!isDishFirst) colorBackgroundSelected else colorBackground)
-                .alpha( if (!isDishFirst) 1f else 0.3f )
+                .alpha(if (!isDishFirst) 1f else 0.3f)
                 .clickable(
                     enabled = true,
                     onClick = { onSelect(false) }

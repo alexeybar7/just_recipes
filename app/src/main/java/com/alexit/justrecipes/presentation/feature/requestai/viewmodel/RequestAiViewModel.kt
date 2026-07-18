@@ -5,14 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.domain.model.IngredientInputedModel
 import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsUseCase
-import com.alexit.justrecipes.domain.usecase.GetRecipeFullDataUseCase
-import com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel.InputIngredientsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,8 +19,8 @@ class RequestAiViewModel @Inject constructor(
     private val getInputtedIngredientsUseCase: GetInputtedIngredientsUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(InputIngredientsUiState())
-    val uiState: StateFlow<InputIngredientsUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(RequestAiUiState())
+    val uiState: StateFlow<RequestAiUiState> = _uiState.asStateFlow()
 
     val inputtedIngredientsState: StateFlow<SourceState<List<IngredientInputedModel>>> by lazy {
         getInputtedIngredientsUseCase().stateIn(
@@ -29,5 +28,35 @@ class RequestAiViewModel @Inject constructor(
             SharingStarted.WhileSubscribed(5000L),
             SourceState.Loading
         )
+    }
+
+    fun makeListIngredients(
+        unitMl: String, unitPiece: String, unitG: String,
+        liquidFood: Array<String>, pieceFood: Array<String>,
+        inputtedIngredients: List<IngredientInputedModel>
+    ) {
+        var listIngredients = ""
+        inputtedIngredients.forEach { ingredient ->
+            val amountIngredient = if (ingredient.weight != null) {
+                val unit: String = if (liquidFood.contains(ingredient.category)) unitMl
+                else if (pieceFood.contains(ingredient.category)) unitPiece
+                else unitG
+                " ${ingredient.weight} $unit"
+            } else ""
+            listIngredients += "${ingredient.name}${amountIngredient}, "
+        }
+        _uiState.update { currentState ->
+            currentState.copy(
+                listIngredients = listIngredients
+            )
+        }
+    }
+
+    fun selectDishType(isFirst: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isDishFirst = isFirst
+            )
+        }
     }
 }
