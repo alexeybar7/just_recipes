@@ -74,17 +74,21 @@ fun RecipeCardItem (
         modifier = Modifier
             .padding(padding)
             .size(
-                width = widthRecipeCard, height = heightRecipeCard
+                width = widthRecipeCard,
+                height = heightRecipeCard
             )
             .background(
-                color = backgroundRecipeCard, shape = RoundedCornerShape(
+                color = backgroundRecipeCard,
+                shape = RoundedCornerShape(
                     size = roundedCorner
                 )
             )
             .border(
                 border = BorderStroke(
-                    width = borderThickness, color = borderColor
-                ), shape = RoundedCornerShape(
+                    width = borderThickness,
+                    color = borderColor
+                ),
+                shape = RoundedCornerShape(
                     size = roundedCorner,
                 )
             ),
@@ -103,7 +107,9 @@ fun RecipeCardItem (
                     .padding(start = padding)
                     .width(widthNameRecipeCard)
                     .clickable(
-                        enabled = true, onClick = { onRecipeClick(recipe.id) }),
+                        enabled = true,
+                        onClick = { onRecipeClick(recipe.id) }
+                    ),
                 style = textNameStyle,
                 color = { colorText },
                 text = recipe.name
@@ -116,8 +122,8 @@ fun RecipeCardItem (
                         .padding(end = padding)
                         .size(sizeImage)
                         .clip(
-                            RoundedCornerShape(
-                                roundedCorner
+                            shape = RoundedCornerShape(
+                                size = roundedCorner
                             )
                         ),
                     bitmap = bitmap,

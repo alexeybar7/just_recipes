@@ -19,7 +19,7 @@
     <string name="title_input_ingredients">"Список Ингредиентов"</string>
     <string name="title_search_recipe">Список Рецептов</string>
     <string name="title_show_recipe">Рецепт</string>
-    <string name="title_request_ai">Запросить ИИ</string>
+    <string name="title_request_ai">Спросить ИИ</string>
     <string name="title_answer_ai">Ответ ИИ</string>
     <string name="title_own_recipes">Свои Рецепты</string>
     <string name="title_make_own_recipes">Создание Своего Рецепта</string>
@@ -65,4 +65,5 @@
     <string name="first_dish">I блюдо</string>
     <string name="second_dish">II блюдо</string>
     <string name="go_back">Назад</string>
+    <string name="request">Спросить</string>
 </resources>

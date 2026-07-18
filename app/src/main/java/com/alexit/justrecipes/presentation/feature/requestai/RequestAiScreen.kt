@@ -1,9 +1,6 @@
 package com.alexit.justrecipes.presentation.feature.requestai
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,11 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexit.justrecipes.R
@@ -83,7 +78,9 @@ fun RequestAiScreen(
             .fillMaxSize(),
     ) {
         TitlePanel(
-            text = stringResource(R.string.title_request_ai)
+            text = stringResource(R.string.title_request_ai),
+            onRightClick = onPromptClick,
+            textRight = stringResource(R.string.request)
         )
         Column(
             modifier = Modifier
@@ -97,7 +94,6 @@ fun RequestAiScreen(
                 style = styleText,
                 color = { colorText }
             )
-
             Column(modifier = Modifier.weight(1f)) {
                 when (val sourceState = inputtedIngredientsState.value) {
                     is SourceState.Loading -> LoadingScreen()
@@ -113,7 +109,6 @@ fun RequestAiScreen(
                     }
                 }
             }
-
             SelectTypeDish(isDishFirst, onSelect = { first: Boolean -> isDishFirst = first })
         }
     }

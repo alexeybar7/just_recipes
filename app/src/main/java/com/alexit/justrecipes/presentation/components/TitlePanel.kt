@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
@@ -14,18 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import com.alexit.justrecipes.R
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
 fun TitlePanel(
     text: String,
-    onLeftClick: (() -> Unit)? = null,
-    textLeft: String = stringResource(R.string.go_back),
-    onRightClick: (() -> Unit)? = null,
+    onLeftClick: () -> Unit = {},
+    textLeft: String = "",
+    onRightClick: (String) -> Unit = {},
     textRight: String = ""
 ) {
     val height = JustRecipesTheme.dimensions.heightTitlePanel
@@ -35,7 +31,6 @@ fun TitlePanel(
     val styleTitleText = JustRecipesTheme.typography.text1
     val styleButtonText = JustRecipesTheme.typography.text9
     val heighButton = JustRecipesTheme.dimensions.heighButtonTitlePanel
-    val widthButton = JustRecipesTheme.dimensions.widthButtonTitlePanel
 
     Box(
         modifier = Modifier
@@ -44,7 +39,7 @@ fun TitlePanel(
             .padding(padding)
             .fillMaxSize()
     ) {
-        if (onLeftClick != null) {
+        if (textLeft != "") {
             BasicText(
                 modifier = Modifier
                     .clip(RoundedCornerShape(heighButton))
@@ -54,8 +49,11 @@ fun TitlePanel(
                     )
                     .align(Alignment.BottomStart)
                     .height(heighButton)
-                    .width(widthButton)
                     .background(colorTitleText)
+                    .padding(
+                        start = padding,
+                        end=padding
+                    )
                     .wrapContentHeight(align = Alignment.CenterVertically),
                 style = styleButtonText.copy(textAlign = TextAlign.Center),
                 color = { background },
@@ -72,38 +70,27 @@ fun TitlePanel(
             style = styleTitleText.copy(textAlign = TextAlign.Center),
             color = { colorTitleText },
         )
-
-        if (onRightClick != null) {
+        if (textRight != "") {
             BasicText(
                 modifier = Modifier
                     .clip(RoundedCornerShape(heighButton))
                     .clickable(
                         enabled = true,
-                        onClick = onRightClick
+                        onClick = { onRightClick("") }
                     )
                     .align(Alignment.BottomEnd)
                     .height(heighButton)
-                    .width(widthButton)
                     .background(colorTitleText)
+                    .padding(
+                        start = padding,
+                        end=padding
+                    )
                     .wrapContentHeight(align = Alignment.CenterVertically),
                 style = styleButtonText.copy(textAlign = TextAlign.Center),
                 color = { background },
                 text = textRight
             )
         }
-    }
-}
 
-@Preview(
-    showBackground = true
-)
-@Composable
-fun TestTitlePanel(){
-    JustRecipesTheme {
-        TitlePanel(
-            text = "Поиск рецепта",
-            onLeftClick = {},
-            onRightClick = {}
-        )
     }
 }

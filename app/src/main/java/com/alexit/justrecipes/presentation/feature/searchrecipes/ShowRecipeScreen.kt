@@ -96,7 +96,9 @@ fun ShowRecipeScreen(
             .fillMaxSize()
     ) {
         TitlePanel(
-            text = stringResource(R.string.title_show_recipe), onLeftClick = onBackClick
+            text = stringResource(R.string.title_show_recipe),
+            onLeftClick = onBackClick,
+            textLeft = stringResource(R.string.go_back)
         )
         if (recipeNullable == null) LoadingScreen()
         else {

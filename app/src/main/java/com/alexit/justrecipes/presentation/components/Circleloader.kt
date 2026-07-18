@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 
 @Composable
 fun CircleLoader(
@@ -36,7 +37,7 @@ fun CircleLoader(
     tailLength: Float = 140f,
     smoothTransition: Boolean = true,
     strokeStyle: StrokeStyle = StrokeStyle(),
-    cycleDuration: Int = 1400,
+    cycleDuration: Int = JustRecipesTheme.duration.circleLoaderDuration,
 ) {
     val tailToDisplay = remember { Animatable(0f) }
 
