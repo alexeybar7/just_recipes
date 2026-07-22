@@ -1,11 +1,11 @@
 package com.alexit.justrecipes.domain.usecase
 
-import com.alexit.justrecipes.domain.model.HealthyFoodModel
-import com.alexit.justrecipes.domain.model.IngredientDataModel
-import com.alexit.justrecipes.domain.model.IngredientModelEnergy
-import com.alexit.justrecipes.domain.model.IngredientModelFull
-import com.alexit.justrecipes.domain.model.RecipeDataModel
-import com.alexit.justrecipes.domain.model.RecipeModelFull
+import com.alexit.justrecipes.domain.model.database.HealthyFoodModel
+import com.alexit.justrecipes.domain.model.database.IngredientDataModel
+import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
+import com.alexit.justrecipes.domain.model.database.IngredientModelFull
+import com.alexit.justrecipes.domain.model.database.RecipeDataModel
+import com.alexit.justrecipes.domain.model.database.RecipeModelFull
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import com.alexit.justrecipes.utility.getHealthyFoodData
 import javax.inject.Inject

@@ -1,7 +1,7 @@
 package com.alexit.justrecipes.utility
 
-import com.alexit.justrecipes.domain.model.HealthyFoodModel
-import com.alexit.justrecipes.domain.model.IngredientModelEnergy
+import com.alexit.justrecipes.domain.model.database.HealthyFoodModel
+import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
 
 fun getHealthyFoodData(ingredients: List<IngredientModelEnergy>): HealthyFoodModel {
     val healthyFoodModel = HealthyFoodModel(0.0, 0.0, 0.0, 0.0)

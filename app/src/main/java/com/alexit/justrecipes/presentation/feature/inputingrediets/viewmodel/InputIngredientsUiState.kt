@@ -1,6 +1,6 @@
 package com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel
 
-import com.alexit.justrecipes.domain.model.CategoryModel
+import com.alexit.justrecipes.domain.model.database.CategoryModel
 
 data class InputIngredientsUiState(
     val isIngredientNew: Boolean = false,

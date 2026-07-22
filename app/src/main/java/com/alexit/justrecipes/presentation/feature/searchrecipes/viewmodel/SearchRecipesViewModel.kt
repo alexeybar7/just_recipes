@@ -8,7 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.alexit.justrecipes.common.customDebounce
 import com.alexit.justrecipes.common.customFlatMapLatest
-import com.alexit.justrecipes.domain.model.RecipeCardModel
+import com.alexit.justrecipes.domain.model.database.RecipeCardModel
 import com.alexit.justrecipes.domain.usecase.GetRecipeCardDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

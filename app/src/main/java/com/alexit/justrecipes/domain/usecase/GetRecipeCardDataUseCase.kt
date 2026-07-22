@@ -2,8 +2,8 @@ package com.alexit.justrecipes.domain.usecase
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.alexit.justrecipes.domain.model.IngredientModelEnergy
-import com.alexit.justrecipes.domain.model.RecipeCardModel
+import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
+import com.alexit.justrecipes.domain.model.database.RecipeCardModel
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import com.alexit.justrecipes.utility.getHealthyFoodData
 import kotlinx.coroutines.flow.Flow

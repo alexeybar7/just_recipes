@@ -6,12 +6,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
-import com.alexit.justrecipes.domain.model.IngredientInputedModel
-import com.alexit.justrecipes.domain.model.IngredientModelEnergy
-import com.alexit.justrecipes.domain.model.IngredientModelFull
-import com.alexit.justrecipes.domain.model.IngredientModelShort
-import com.alexit.justrecipes.domain.model.RecipeCardModel
-import com.alexit.justrecipes.domain.model.RecipeDataModel
+import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
+import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
+import com.alexit.justrecipes.domain.model.database.IngredientModelFull
+import com.alexit.justrecipes.domain.model.database.IngredientModelShort
+import com.alexit.justrecipes.domain.model.database.RecipeCardModel
+import com.alexit.justrecipes.domain.model.database.RecipeDataModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao

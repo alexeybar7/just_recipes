@@ -1,6 +1,6 @@
 package com.alexit.justrecipes.domain.usecase
 
-import com.alexit.justrecipes.domain.model.CategoryModel
+import com.alexit.justrecipes.domain.model.database.CategoryModel
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import javax.inject.Inject
 

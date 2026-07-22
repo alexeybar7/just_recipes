@@ -46,7 +46,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.alexit.justrecipes.R
-import com.alexit.justrecipes.domain.model.IngredientInputedModel
+import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.collections.immutable.PersistentList
 

@@ -1,4 +1,4 @@
-package com.alexit.justrecipes.domain.model
+package com.alexit.justrecipes.domain.model.database
 
 data class RecipeModelFull(
     val id: Int,

@@ -3,7 +3,7 @@ package com.alexit.justrecipes.presentation.feature.requestai.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexit.justrecipes.common.SourceState
-import com.alexit.justrecipes.domain.model.IngredientInputedModel
+import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

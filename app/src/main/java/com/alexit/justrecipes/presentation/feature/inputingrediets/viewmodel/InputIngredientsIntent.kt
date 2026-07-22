@@ -1,6 +1,6 @@
 package com.alexit.justrecipes.presentation.feature.inputingrediets.viewmodel
 
-import com.alexit.justrecipes.domain.model.IngredientInputedModel
+import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 
 sealed class InputIngredientsIntent {
     data class SelectSuggestionIngredient(val suggestion: String) : InputIngredientsIntent()

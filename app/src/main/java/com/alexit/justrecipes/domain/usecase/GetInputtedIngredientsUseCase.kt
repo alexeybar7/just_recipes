@@ -1,7 +1,7 @@
 package com.alexit.justrecipes.domain.usecase
 
 import com.alexit.justrecipes.common.SourceState
-import com.alexit.justrecipes.domain.model.IngredientInputedModel
+import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

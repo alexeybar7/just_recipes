@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.StringResourceHolder
-import com.alexit.justrecipes.domain.model.RecipeModelFull
+import com.alexit.justrecipes.domain.model.database.RecipeModelFull
 import com.alexit.justrecipes.domain.usecase.GetRecipeFullDataUseCase
 import com.alexit.justrecipes.presentation.components.NotifySideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel

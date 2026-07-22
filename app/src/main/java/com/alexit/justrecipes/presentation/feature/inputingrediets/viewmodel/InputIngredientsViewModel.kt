@@ -9,8 +9,8 @@ import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.common.StringResourceHolder
-import com.alexit.justrecipes.domain.model.IngredientInputedModel
-import com.alexit.justrecipes.domain.model.IngredientModelShort
+import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
+import com.alexit.justrecipes.domain.model.database.IngredientModelShort
 import com.alexit.justrecipes.domain.usecase.AddInputtedIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.AddNewIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.ChangeWeightIngredientUseCase

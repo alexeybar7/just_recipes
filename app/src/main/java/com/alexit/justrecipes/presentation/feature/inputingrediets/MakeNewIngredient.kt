@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import com.alexit.justrecipes.R
-import com.alexit.justrecipes.domain.model.CategoryModel
+import com.alexit.justrecipes.domain.model.database.CategoryModel
 import com.alexit.justrecipes.presentation.components.CustomDivider
 import com.alexit.justrecipes.presentation.components.dpToPx
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
