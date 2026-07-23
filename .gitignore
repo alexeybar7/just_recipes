@@ -13,4 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
-/app/src/main/assets/
+/app/src/main/cpp/CMakeLists.txt
+/app/src/main/cpp/native-lib.cpp
+/app/src/main/assets/recipeimg/*
+/app/src/main/assets/databases/*
