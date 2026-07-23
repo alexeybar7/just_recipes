@@ -15,5 +15,4 @@
 local.properties
 /app/src/main/cpp/CMakeLists.txt
 /app/src/main/cpp/native-lib.cpp
-/app/src/main/assets/recipeimg/*
-/app/src/main/assets/databases/*
+/app/src/main/assets/
