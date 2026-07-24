@@ -1,7 +1,7 @@
 package com.alexit.justrecipes.data.remote
 
 import com.alexit.justrecipes.NativeLib.NativeLib
-import com.alexit.justrecipes.domain.model.ai.RequestAi
+import com.alexit.justrecipes.domain.model.ai.Body
 import com.alexit.justrecipes.domain.remote.KtorApiService
 import io.ktor.client.HttpClient
 import io.ktor.client.request.bearerAuth
@@ -18,11 +18,11 @@ private val apiKey: String by lazy { NativeLib.getApiKey() }
 class KtorApiServiceImpl @Inject constructor(
     private val httpClient: HttpClient
 ) : KtorApiService {
-    override suspend fun getRecipeAi(requestAi: RequestAi): HttpResponse {
+    override suspend fun getRecipeAi(body: Body): HttpResponse {
         return httpClient.post("https://api.deepseek.com") {
             contentType(ContentType.Application.Json)
             bearerAuth(apiKey)
-            setBody(requestAi)
+            setBody(body)
         }
     }
 }
