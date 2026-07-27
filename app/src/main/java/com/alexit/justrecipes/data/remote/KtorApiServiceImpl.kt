@@ -1,10 +1,8 @@
 package com.alexit.justrecipes.data.remote
 
 import com.alexit.justrecipes.domain.model.ai.Body
-import com.alexit.justrecipes.domain.model.ai.ResponseAi
 import com.alexit.justrecipes.domain.remote.KtorApiService
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse

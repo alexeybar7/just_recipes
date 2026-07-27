@@ -1,6 +1,5 @@
 package com.alexit.justrecipes.domain.model.ai
 
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
