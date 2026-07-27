@@ -4,5 +4,5 @@ import com.alexit.justrecipes.domain.model.ai.Body
 import io.ktor.client.statement.HttpResponse
 
 interface KtorApiService {
-    suspend fun getRecipeAi(requestAi: Body): HttpResponse
+    suspend fun getRecipeAi(body: Body): HttpResponse
 }

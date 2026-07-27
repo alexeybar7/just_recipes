@@ -109,7 +109,7 @@ interface RecipesDao {
     suspend fun getRecipeData(recipeId: Int): RecipeDataModel
 
     @Query("SELECT " +
-            "ingredients.id, ingredients.name, ingredients.energy, recipes.portion, recipes.image, " +
+            "ingredients.id, ingredients.name, ingredients.energy, " +
             "ingredients.protein, ingredients.fat, ingredients.carbohydrate, ingredients.weight, " +
             "ingredients.is_synonym AS isSynonym, " +
             "recipe_ingredients.quantity, recipe_ingredients.unit, recipe_ingredients.density " +

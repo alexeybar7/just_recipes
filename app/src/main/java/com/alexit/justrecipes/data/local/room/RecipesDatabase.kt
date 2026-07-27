@@ -14,6 +14,7 @@ import com.alexit.justrecipes.data.local.room.entity.RecipeIngredientsEntity
         RecipeIngredientsEntity::class,
     ],
     version = 1,
+    exportSchema = false
 )
 abstract class RecipesDatabase : RoomDatabase()  {
     abstract fun recipesDao() : RecipesDao

@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.domain.model.database.RecipeModelFull
@@ -52,8 +51,8 @@ fun ShowRecipeScreen(
     recipeId: Int,
     onBackClick: () -> Unit
 ) {
-    val recipeNullable by showRecipeViewModel.recipeState.collectAsStateWithLifecycle()
-    showRecipeViewModel.getRecipe(recipeId)
+    val recipeNullable by showRecipeViewModel.recipeState
+
     val scrollState = rememberScrollState()
 
     val colorText = JustRecipesTheme.colors.text4
@@ -71,7 +70,8 @@ fun ShowRecipeScreen(
     var notifyState by remember { mutableStateOf(NotifyState.INFO) }
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(recipeId) {
+        showRecipeViewModel.getRecipe(recipeId)
         showRecipeViewModel.sideEffect.collectLatest { notify ->
             when (notify) {
                 is NotifySideEffect.ShowNotify -> {

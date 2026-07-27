@@ -1,5 +1,6 @@
 package com.alexit.justrecipes.di
 
+import com.alexit.justrecipes.domain.remote.KtorApiService
 import com.alexit.justrecipes.domain.usecase.AddNewIngredientUseCase
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import com.alexit.justrecipes.domain.usecase.AddInputtedIngredientUseCase
@@ -9,6 +10,7 @@ import com.alexit.justrecipes.domain.usecase.GetIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.GetIngredientsNameUseCase
 import com.alexit.justrecipes.domain.usecase.GetInputtedIngredientsUseCase
 import com.alexit.justrecipes.domain.usecase.GetMAXIdIngredientsUseCase
+import com.alexit.justrecipes.domain.usecase.GetRecipeAiUseCase
 import com.alexit.justrecipes.domain.usecase.GetRecipeCardDataUseCase
 import com.alexit.justrecipes.domain.usecase.GetRecipeFullDataUseCase
 import com.alexit.justrecipes.domain.usecase.RemoveInputtedIngredientUseCase
@@ -86,5 +88,11 @@ object UseCaseModule {
     @Singleton
     fun provideGetRecipeFullDataUseCase(recipesRepository: RecipesRepository): GetRecipeFullDataUseCase {
         return GetRecipeFullDataUseCase(recipesRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetRecipeAiUseCase(ktorApiService: KtorApiService): GetRecipeAiUseCase {
+        return GetRecipeAiUseCase(ktorApiService)
     }
 }
