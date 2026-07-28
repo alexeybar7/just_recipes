@@ -88,7 +88,7 @@ fun AnswerAiScreen(
             if (recipeAiNullable == null) LoadingScreen()
             else {
                 val answerAi: ResponseAi = recipeAiNullable!!
-                val recipeAiStr: String? = answerAi.choices.firstOrNull()?.message?.content.toString()
+                val recipeAiStr: String? = answerAi.choices.firstOrNull()?.message?.content
 
                 if (recipeAiStr != null) {
                     val recipeAi: RecipeAi = Json.decodeFromString<RecipeAi>(recipeAiStr)
