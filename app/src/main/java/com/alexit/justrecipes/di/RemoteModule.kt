@@ -33,13 +33,12 @@ object RemoteModule {
                 json(Json {
                     isLenient = true
                     ignoreUnknownKeys = true
-                    explicitNulls = false
                 })
             }
             install(HttpTimeout) {
-                requestTimeoutMillis = 100_000
-                connectTimeoutMillis = 100_000
-                socketTimeoutMillis = 100_000
+                requestTimeoutMillis = 90_000
+                connectTimeoutMillis = 90_000
+                socketTimeoutMillis = 90_000
             }
             defaultRequest {
                 url("https://api.deepseek.com/")

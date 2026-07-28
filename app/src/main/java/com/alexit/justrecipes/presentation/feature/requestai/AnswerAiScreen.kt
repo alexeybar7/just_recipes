@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
+import com.alexit.justrecipes.domain.model.ai.RecipeAi
 import com.alexit.justrecipes.domain.model.ai.ResponseAi
 import com.alexit.justrecipes.presentation.components.CircleLoader
 import com.alexit.justrecipes.presentation.components.CustomPopup
@@ -28,6 +29,7 @@ import com.alexit.justrecipes.presentation.components.TitlePanel
 import com.alexit.justrecipes.presentation.feature.requestai.viewmodel.AnswerAiViewModel
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.serialization.json.Json
 
 @Composable
 fun AnswerAiScreen(
@@ -35,8 +37,7 @@ fun AnswerAiScreen(
     prompt: String,
     onBackClick: () -> Unit
 ) {
-    val recipeAiNullable by answerAiViewModel.recipeAiState
-
+    val recipeAiNullable by answerAiViewModel.responseAiState
     val scrollState = rememberScrollState()
 
     var isNewNotify by remember { mutableStateOf(false) }
@@ -65,9 +66,10 @@ fun AnswerAiScreen(
         )
     }
 
+    var i = 0
+
     Column(
         modifier = Modifier
-            .verticalScroll(scrollState)
             .fillMaxSize(),
     ) {
         TitlePanel(
@@ -78,19 +80,54 @@ fun AnswerAiScreen(
             textRight = stringResource(R.string.save)
         )
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .fillMaxSize(),
             //contentAlignment = Alignment.Center
         ) {
             if (recipeAiNullable == null) LoadingScreen()
             else {
                 val answerAi: ResponseAi = recipeAiNullable!!
-                val recipeAi: String = answerAi.choices.firstOrNull()?.message?.content ?: "EMPTY"
+                val recipeAiStr: String? = answerAi.choices.firstOrNull()?.message?.content.toString()
 
-                BasicText(
-                    text = recipeAi,
-                    style = JustRecipesTheme.typography.text1,
-                    //color = JustRecipesTheme.colors.onTitlePanel
-                )
+                if (recipeAiStr != null) {
+                    val recipeAi: RecipeAi = Json.decodeFromString<RecipeAi>(recipeAiStr)
+                    BasicText(
+                        text = recipeAi.name,
+                        style = JustRecipesTheme.typography.text1,
+                        //color = JustRecipesTheme.colors.onTitlePanel
+                    )
+
+                    BasicText(
+                        text = "Время приготовления: ${recipeAi.cookingTime}\n" +
+                                "На ${recipeAi.persons} чел.",
+                        style = JustRecipesTheme.typography.text1,
+                        //color = JustRecipesTheme.colors.onTitlePanel
+                    )
+                    BasicText(
+                        text = "Ингредиенты:",
+                        style = JustRecipesTheme.typography.text1,
+                        //color = JustRecipesTheme.colors.onTitlePanel
+                    )
+                    recipeAi.ingredients.forEach {
+                        BasicText(
+                            text = "${it.name} - ${it.quantity} г",
+                            style = JustRecipesTheme.typography.text1,
+                        )
+                    }
+                    BasicText(
+                        text = "Шаги приготовления:",
+                        style = JustRecipesTheme.typography.text1,
+                        //color = JustRecipesTheme.colors.onTitlePanel
+                    )
+                    recipeAi.steps.forEach {
+                        i++
+                        BasicText(
+                            text = "$i. $it",
+                            style = JustRecipesTheme.typography.text1,
+                        )
+                    }
+                }
             }
         }
     }

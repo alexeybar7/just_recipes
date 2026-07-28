@@ -18,7 +18,8 @@ class GetRecipeAiUseCase @Inject constructor(
         val model = "deepseek-v4-flash"
         val messageSystem = Message(
             role = Role.SYSTEM,
-            content = "Ты повар"
+            content = "Ты повар, ответ отправь в формате JSON, заполни поля name, persons, cooking_time," +
+                    "ingredients, steps. Для ингредиентов заполни поля name, quantity в граммах."
         )
         val messageUser = Message(
             role = Role.USER,
@@ -28,7 +29,7 @@ class GetRecipeAiUseCase @Inject constructor(
         val thinking = Thinking(ThinkingType.ENABLED)
         val reasoningEffort = "high"
         val maxTokens = 4096
-        val responseFormat = ResponseFormat(ResponseFormatType.TEXT)
+        val responseFormat = ResponseFormat(ResponseFormatType.JSON_OBJECT)
         val stream = false
         val temperature = 1.0
         val topP = 1.0

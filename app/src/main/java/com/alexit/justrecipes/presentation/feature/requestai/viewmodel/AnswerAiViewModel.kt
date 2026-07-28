@@ -24,22 +24,22 @@ import javax.inject.Inject
 class AnswerAiViewModel @Inject constructor(
     private val getRecipeAiUseCase: GetRecipeAiUseCase
 ) : ViewModel() {
-    private val _recipeAiState = mutableStateOf<ResponseAi?>(null)
-    val recipeAiState: MutableState<ResponseAi?> = _recipeAiState
+    private val _responseAiState = mutableStateOf<ResponseAi?>(null)
+    val responseAiState: MutableState<ResponseAi?> = _responseAiState
 
     private val _sideEffect = Channel<NotifySideEffect>()
     val sideEffect: Flow<NotifySideEffect> = _sideEffect.receiveAsFlow()
 
 
     fun getRecipeAi(prompt: String) {
-        if (recipeAiState.value == null) {
+        if (responseAiState.value == null) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     val recipeAiAnswer = withContext(Dispatchers.IO) { getRecipeAiUseCase(prompt) }
                     when (recipeAiAnswer.status.value) {
                         in 200..299 -> {
-                            val recipeAi = recipeAiAnswer.body<ResponseAi>()
-                            _recipeAiState.value = recipeAi
+                            val responseAi = recipeAiAnswer.body<ResponseAi>()
+                            _responseAiState.value = responseAi
                         }
                     }
                 } catch (err: Throwable) {
