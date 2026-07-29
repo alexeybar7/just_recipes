@@ -47,7 +47,7 @@ fun EntryProviderScope<NavKey>.featureRequestAi(
 
     entry<AnswerAi> { key ->
         AnswerAiScreen(
-            prompt = key.prompt,
+            promptUser = key.prompt,
             onBackClick = onBackClick
         )
     }

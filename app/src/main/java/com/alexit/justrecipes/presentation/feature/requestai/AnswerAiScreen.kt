@@ -1,9 +1,15 @@
 package com.alexit.justrecipes.presentation.feature.requestai
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
@@ -17,15 +23,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.domain.model.ai.RecipeAi
 import com.alexit.justrecipes.domain.model.ai.ResponseAi
 import com.alexit.justrecipes.presentation.components.CircleLoader
+import com.alexit.justrecipes.presentation.components.CustomDivider
 import com.alexit.justrecipes.presentation.components.CustomPopup
 import com.alexit.justrecipes.presentation.components.NotifySideEffect
 import com.alexit.justrecipes.presentation.components.TitlePanel
+import com.alexit.justrecipes.presentation.components.dpToPx
 import com.alexit.justrecipes.presentation.feature.requestai.viewmodel.AnswerAiViewModel
 import com.alexit.justrecipes.presentation.theme.JustRecipesTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -34,19 +43,22 @@ import kotlinx.serialization.json.Json
 @Composable
 fun AnswerAiScreen(
     answerAiViewModel: AnswerAiViewModel = hiltViewModel(),
-    prompt: String,
+    promptUser: String,
     onBackClick: () -> Unit
 ) {
     val recipeAiNullable by answerAiViewModel.responseAiState
     val scrollState = rememberScrollState()
+    val promptSystem = stringResource(R.string.prompt_sys)
+
+    val padding = JustRecipesTheme.dimensions.gap1
 
     var isNewNotify by remember { mutableStateOf(false) }
     var notifyMessage by remember { mutableStateOf("") }
     var notifyState by remember { mutableStateOf(NotifyState.INFO) }
     val context = LocalContext.current
 
-    LaunchedEffect(prompt) {
-        answerAiViewModel.getRecipeAi(prompt)
+    LaunchedEffect(promptUser) {
+        answerAiViewModel.getRecipeAi(promptUser, promptSystem)
         answerAiViewModel.sideEffect.collectLatest { notify ->
             when (notify) {
                 is NotifySideEffect.ShowNotify -> {
@@ -66,8 +78,6 @@ fun AnswerAiScreen(
         )
     }
 
-    var i = 0
-
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -81,9 +91,11 @@ fun AnswerAiScreen(
         )
         Column(
             modifier = Modifier
-                .verticalScroll(scrollState)
-                .fillMaxSize(),
-            //contentAlignment = Alignment.Center
+                .padding(padding)
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             if (recipeAiNullable == null) LoadingScreen()
             else {
@@ -91,45 +103,107 @@ fun AnswerAiScreen(
                 val recipeAiStr: String? = answerAi.choices.firstOrNull()?.message?.content
 
                 if (recipeAiStr != null) {
-                    val recipeAi: RecipeAi = Json.decodeFromString<RecipeAi>(recipeAiStr)
-                    BasicText(
-                        text = recipeAi.name,
-                        style = JustRecipesTheme.typography.text1,
-                        //color = JustRecipesTheme.colors.onTitlePanel
-                    )
+                    runCatching { Json.decodeFromString<RecipeAi>(recipeAiStr) }
+                        .onSuccess { recipeAi -> ShowRecipeAi(recipeAi) }
+                        .onFailure { error ->
+                            val errorMessage =
+                                "${stringResource(R.string.json_error)}\n${error.message}"
+                            isNewNotify = true
+                            notifyMessage = errorMessage
+                            notifyState = NotifyState.DANGER
 
-                    BasicText(
-                        text = "Время приготовления: ${recipeAi.cookingTime}\n" +
-                                "На ${recipeAi.persons} чел.",
-                        style = JustRecipesTheme.typography.text1,
-                        //color = JustRecipesTheme.colors.onTitlePanel
-                    )
-                    BasicText(
-                        text = "Ингредиенты:",
-                        style = JustRecipesTheme.typography.text1,
-                        //color = JustRecipesTheme.colors.onTitlePanel
-                    )
-                    recipeAi.ingredients.forEach {
-                        BasicText(
-                            text = "${it.name} - ${it.quantity} г",
-                            style = JustRecipesTheme.typography.text1,
-                        )
-                    }
-                    BasicText(
-                        text = "Шаги приготовления:",
-                        style = JustRecipesTheme.typography.text1,
-                        //color = JustRecipesTheme.colors.onTitlePanel
-                    )
-                    recipeAi.steps.forEach {
-                        i++
-                        BasicText(
-                            text = "$i. $it",
-                            style = JustRecipesTheme.typography.text1,
-                        )
-                    }
+                        }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ColumnScope.ShowRecipeAi(recipeAi: RecipeAi) {
+
+    val colorText = JustRecipesTheme.colors.text4
+    val styleName = JustRecipesTheme.typography.text6
+    val styleText = JustRecipesTheme.typography.text1
+    val styleDigit = JustRecipesTheme.typography.text8
+    val padding = JustRecipesTheme.dimensions.gap1
+    val widthIngredientName = JustRecipesTheme.dimensions.widthIngredientNameInRecipe
+    val unit = stringResource(R.string.g)
+
+    BasicText(
+        modifier = Modifier
+            .align(alignment = Alignment.CenterHorizontally),
+        style = styleName,
+        color = { colorText },
+        text = recipeAi.name
+    )
+
+    Divider()
+
+    Row(
+        modifier = Modifier
+            .padding(padding)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        val portionStr = stringResource(R.string.portion)
+        val durationStr = stringResource(R.string.duration)
+        BasicText(
+            text = "$portionStr\n$durationStr",
+            style = styleText,
+            color = { colorText },
+        )
+        val portion = recipeAi.persons
+        val duration = recipeAi.cookingTime
+        val persons = stringResource(R.string.person)
+        val minute = stringResource(R.string.minute)
+        BasicText(
+            text = "$portion $persons\n$duration $minute",
+            style = styleDigit,
+            color = { colorText },
+        )
+    }
+
+    Divider()
+
+    val ingredientsStr = stringResource(R.string.ingredients)
+    BasicText(
+        text = ingredientsStr,
+        style = styleDigit,
+        color = { colorText },
+    )
+    recipeAi.ingredients.forEach { ingredient ->
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            BasicText(
+                modifier = Modifier
+                    .width(widthIngredientName),
+                text = ingredient.name.replaceFirstChar { it.uppercase() },
+                style = styleText.copy(textAlign = TextAlign.Left),
+                color = { colorText },
+            )
+            BasicText(
+                text = "${ingredient.quantity} $unit",
+                style = styleDigit.copy(textAlign = TextAlign.Right),
+                color = { colorText },
+            )
+        }
+    }
+
+    Divider()
+
+    recipeAi.steps.forEachIndexed { i, step ->
+        BasicText(
+            modifier = Modifier
+                .padding(top = padding)
+                .fillMaxWidth(),
+            text = "${i + 1}. $step",
+            style = styleText.copy(textAlign = TextAlign.Justify),
+            color = { colorText },
+        )
     }
 }
 
@@ -147,4 +221,19 @@ private fun LoadingScreen() {
             isVisible = isLoading
         )
     }
+}
+
+@Composable
+private fun Divider() {
+    val dividerColor = JustRecipesTheme.colors.border2
+    val dividerThickness = JustRecipesTheme.dimensions.borderThickness
+    val dividerWidth = JustRecipesTheme.dimensions.widthInputTextField
+    CustomDivider(
+        color = dividerColor,
+        thickness = dividerThickness.dpToPx(),
+        startX = - (dividerWidth / 2).dpToPx(),
+        endX = (dividerWidth / 2).dpToPx(),
+        startY = 0f,
+        endY = 0f
+    )
 }

@@ -11,19 +11,20 @@ import com.alexit.justrecipes.domain.remote.KtorApiService
 import io.ktor.client.statement.HttpResponse
 import javax.inject.Inject
 
+const val MODEL_GPT = "deepseek-v4-flash"
+
 class GetRecipeAiUseCase @Inject constructor(
     private val ktorApiService: KtorApiService
 ) {
-    suspend operator fun invoke(prompt: String): HttpResponse {
-        val model = "deepseek-v4-flash"
+    suspend operator fun invoke(promptUser: String, promptSystem: String): HttpResponse {
+        val model = MODEL_GPT
         val messageSystem = Message(
             role = Role.SYSTEM,
-            content = "Ты повар, ответ отправь в формате JSON, заполни поля name, persons, cooking_time," +
-                    "ingredients, steps. Для ингредиентов заполни поля name, quantity в граммах."
+            content = promptSystem
         )
         val messageUser = Message(
             role = Role.USER,
-            content = prompt
+            content = promptUser
         )
         val messages: List<Message> = listOf(messageSystem, messageUser)
         val thinking = Thinking(ThinkingType.ENABLED)

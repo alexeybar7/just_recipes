@@ -31,15 +31,24 @@ class AnswerAiViewModel @Inject constructor(
     val sideEffect: Flow<NotifySideEffect> = _sideEffect.receiveAsFlow()
 
 
-    fun getRecipeAi(prompt: String) {
+    fun getRecipeAi(promptUser: String, promptSystem: String) {
         if (responseAiState.value == null) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val recipeAiAnswer = withContext(Dispatchers.IO) { getRecipeAiUseCase(prompt) }
+                    val recipeAiAnswer = withContext(Dispatchers.IO) { getRecipeAiUseCase(promptUser, promptSystem) }
                     when (recipeAiAnswer.status.value) {
                         in 200..299 -> {
                             val responseAi = recipeAiAnswer.body<ResponseAi>()
                             _responseAiState.value = responseAi
+                        }
+                        else -> {
+                            _sideEffect.send(
+                                NotifySideEffect.ShowNotify(
+                                    message = StringResourceHolder.StringResource(R.string.ai_not_avialable),
+                                    addition = recipeAiAnswer.status.value.toString(),
+                                    state = NotifyState.WARNING
+                                )
+                            )
                         }
                     }
                 } catch (err: Throwable) {

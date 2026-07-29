@@ -52,6 +52,7 @@
     <string name="hardware_error_get_recipe">Аппаратная ошибка.\nНе удалось получить рецепт</string>
     <string name="hardware_error">Аппаратная ошибка.</string>
     <string name="unknown_error_occurred">Произошла неизвестная ошибка</string>
+    <string name="json_error">Не удалось расшифровать ответ</string>
     <string name="for_one_portion">На одну порцию</string>
     <string name="energy">Калорийность</string>
     <string name="protein">Белки</string>

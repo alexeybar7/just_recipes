@@ -115,7 +115,8 @@ fun ShowRecipeScreen(
                     .padding(padding)
                     .fillMaxWidth()
                     .verticalScroll(scrollState),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 ImageShow(imageName = recipe.image)
 
@@ -261,7 +262,6 @@ fun ShowRecipeScreen(
                         if (stepImg != null) {
                             ImageShow(imageName = stepImg)
                         }
-                        Divider()
                     }
                 }
             }
