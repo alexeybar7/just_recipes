@@ -1,7 +1,5 @@
 package com.alexit.justrecipes.presentation.feature.requestai.viewmodel
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexit.justrecipes.R

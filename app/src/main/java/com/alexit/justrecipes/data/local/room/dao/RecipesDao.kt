@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
-import com.alexit.justrecipes.domain.model.ai.RecipeAi
 import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.database.IngredientModelFull
