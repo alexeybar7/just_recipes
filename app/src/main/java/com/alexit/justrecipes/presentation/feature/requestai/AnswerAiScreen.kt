@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexit.justrecipes.R
 import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.domain.model.ai.RecipeAi
@@ -46,8 +47,9 @@ fun AnswerAiScreen(
     promptUser: String,
     onBackClick: () -> Unit
 ) {
-    val recipeAiNullable by answerAiViewModel.responseAiState
+    val answerAiUiState by answerAiViewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
+
     val promptSystem = stringResource(R.string.prompt_sys)
 
     val padding = JustRecipesTheme.dimensions.gap1
@@ -78,6 +80,11 @@ fun AnswerAiScreen(
         )
     }
 
+    if (answerAiUiState.isRecipeAiOk) {
+        answerAiViewModel.saveRecipeAi()
+        answerAiViewModel.changeRecipeAiTask()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -86,7 +93,7 @@ fun AnswerAiScreen(
             text = stringResource(R.string.title_answer_ai),
             onLeftClick = onBackClick,
             textLeft = stringResource(R.string.go_back),
-            //onRightClick = onPromptClick,
+            onRightClick = { answerAiViewModel.changeRecipeAiTask() },
             textRight = stringResource(R.string.save)
         )
         Column(
@@ -97,14 +104,18 @@ fun AnswerAiScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (recipeAiNullable == null) LoadingScreen()
-            else {
-                val answerAi: ResponseAi = recipeAiNullable!!
+            if (answerAiUiState.responseAi == null) {
+                LoadingScreen()
+            } else {
+                val answerAi: ResponseAi = answerAiUiState.responseAi!!
                 val recipeAiStr: String? = answerAi.choices.firstOrNull()?.message?.content
 
                 if (recipeAiStr != null) {
                     runCatching { Json.decodeFromString<RecipeAi>(recipeAiStr) }
-                        .onSuccess { recipeAi -> ShowRecipeAi(recipeAi) }
+                        .onSuccess { recipeAi ->
+                            answerAiViewModel.changeRecipeAiState(recipeAi)
+                            ShowRecipeAi(recipeAi)
+                        }
                         .onFailure { error ->
                             val errorMessage =
                                 "${stringResource(R.string.json_error)}\n${error.message}"

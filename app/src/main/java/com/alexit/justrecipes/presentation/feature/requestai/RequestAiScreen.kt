@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,8 +62,11 @@ fun RequestAiScreen(
 
     val requestAi =stringResource(R.string.title_request_ai)
     val makeRecipe = stringResource(R.string.make_recipe)
-    val typeDish = if (requestAiUiState.isDishFirst) stringResource(R.string.first_dish)
-    else stringResource(R.string.second_dish)
+    val typeDish = if (requestAiUiState.isDishFirst) {
+        stringResource(R.string.first_dish)
+    } else {
+        stringResource(R.string.second_dish)
+    }
     val fromIngredients = stringResource(R.string.from_ingredients)
     val liquidFood = stringArrayResource(R.array.liquid_foodstuff)
     val pieceFood = stringArrayResource(R.array.piece_foodstuff)
@@ -70,6 +74,11 @@ fun RequestAiScreen(
     val unitPiece = stringResource(R.string.piece)
     val unitG = stringResource(R.string.g)
 
+    val prompt = "$makeRecipe $typeDish $fromIngredients ${requestAiUiState.listIngredients}"
+    if (requestAiUiState.isRequestOk) {
+        onPromptClick(prompt)
+        requestAiViewModel.changeRequestTask()
+    }
 
     var isNewNotify by remember { mutableStateOf(false) }
     var notifyMessage by remember { mutableStateOf("") }
@@ -87,12 +96,10 @@ fun RequestAiScreen(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        val prompt = "$makeRecipe $typeDish $fromIngredients ${requestAiUiState.listIngredients}"
         TitlePanel(
             text = requestAi,
-            onRightClick = onPromptClick,
+            onRightClick = { requestAiViewModel.changeRequestTask() },
             textRight = stringResource(R.string.request),
-            additional = prompt
         )
         Column(
             modifier = Modifier

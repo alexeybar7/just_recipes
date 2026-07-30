@@ -59,4 +59,11 @@ class RequestAiViewModel @Inject constructor(
             )
         }
     }
+
+    fun changeRequestTask() {
+        _uiState.update { currentState ->
+            val isRequestOk = uiState.value.isRequestOk
+            currentState.copy(isRequestOk = !isRequestOk)
+        }
+    }
 }

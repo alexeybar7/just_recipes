@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
+import com.alexit.justrecipes.domain.model.ai.RecipeAi
 import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.database.IngredientModelFull
@@ -118,4 +119,10 @@ interface RecipesDao {
             "INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id " +
             "WHERE recipe_ingredients.recipe_id = :recipeId")
     suspend fun getIngredientsData(recipeId: Int): List<IngredientModelFull>
+
+
+    //@Query("INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit, density)" +
+    //        "VALUES ()"
+    //)
+    //suspend fun insertRecipeAi(recipeAi: RecipeAi)
 }
