@@ -7,6 +7,7 @@ import com.alexit.justrecipes.common.NotifyState
 import com.alexit.justrecipes.common.StringResourceHolder
 import com.alexit.justrecipes.domain.model.ai.RecipeAi
 import com.alexit.justrecipes.domain.model.ai.ResponseAi
+import com.alexit.justrecipes.domain.usecase.AddAiRecipeUseCase
 import com.alexit.justrecipes.domain.usecase.GetRecipeAiUseCase
 import com.alexit.justrecipes.presentation.components.NotifySideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AnswerAiViewModel @Inject constructor(
-    private val getRecipeAiUseCase: GetRecipeAiUseCase
+    private val getRecipeAiUseCase: GetRecipeAiUseCase,
+    private val addAiRecipeUseCase: AddAiRecipeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AnswerAiUiState())
@@ -87,5 +89,9 @@ class AnswerAiViewModel @Inject constructor(
         }
     }
 
-    fun saveRecipeAi() {}
+    fun saveRecipeAi() {
+        viewModelScope.launch {
+            addAiRecipeUseCase(uiState.value.recipeAi!!)
+        }
+    }
 }

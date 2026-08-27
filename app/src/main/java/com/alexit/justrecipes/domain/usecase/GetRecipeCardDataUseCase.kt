@@ -15,7 +15,8 @@ const val RATIO_CARBO_FAT_PROTEIN = 4.0
 
 class GetRecipeCardDataUseCase @Inject constructor(
     private val recipesRepository: RecipesRepository
-) { operator fun invoke(query: String): Flow<PagingData<RecipeCardModel>> {
+) {
+    operator fun invoke(query: String): Flow<PagingData<RecipeCardModel>> {
     val recipesFlow: Flow<PagingData<RecipeCardModel>> =
         recipesRepository.getRecipesCardData(query).map { recipesData ->
             recipesData.map {
@@ -36,7 +37,14 @@ class GetRecipeCardDataUseCase @Inject constructor(
     }
 }
 
-fun isHealthy(ingredients: List<IngredientModelEnergy>, portion: Int?): Boolean {
+private fun isHealthy(ingredients: List<IngredientModelEnergy>, portion: Int?): Boolean {
+    if (ingredients.any { it.energy < 0 ||
+                it.protein < 0 ||
+                it.fat < 0 ||
+                it.carbohydrate < 0 ||
+                it.quantity < 0
+    }) return false
+
     val healthyFoodData = getHealthyFoodData(ingredients)
     val portionOk: Int = portion ?: 1
     val isHealthy =

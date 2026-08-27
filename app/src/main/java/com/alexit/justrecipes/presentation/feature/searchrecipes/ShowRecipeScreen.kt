@@ -118,76 +118,106 @@ fun ShowRecipeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                ImageShow(imageName = recipe.image)
-
+                //-----Image-----
+                if (recipe.image != "ai" && recipe.image != "own") {
+                    ImageShow(imageName = recipe.image)
+                }
                 Divider()
 
-                BasicText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = padding, top = padding)
-                        .align(Alignment.Start),
-                    text = stringResource(R.string.for_one_portion),
-                    style = styleAdding,
-                    color = { colorAdding },
-                )
-
-                Row(
-                    modifier = Modifier
-                        .padding(padding)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                //-----Energy-----
+                if (recipe.energy >= 0 ||
+                    recipe.protein >= 0 ||
+                    recipe.fat >= 0 ||
+                    recipe.carbohydrate >= 0
                 ) {
-                    val energyStr = stringResource(R.string.energy)
-                    val proteinStr = stringResource(R.string.protein)
-                    val fatStr = stringResource(R.string.fat)
-                    val carbohydrateStr = stringResource(R.string.carbohydrate)
                     BasicText(
-                        text = "$energyStr\n$proteinStr\n$fatStr\n$carbohydrateStr",
-                        style = styleText,
-                        color = { colorText },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = padding, top = padding)
+                            .align(Alignment.Start),
+                        text = stringResource(R.string.for_one_portion),
+                        style = styleAdding,
+                        color = { colorAdding },
                     )
-                    val df = DecimalFormat("#.#")
-                    val energy = df.format(recipe.energy / recipe.portion)
-                    val protein = df.format(recipe.protein / recipe.portion)
-                    val fat = df.format(recipe.fat / recipe.portion)
-                    val carbohydrate = df.format(recipe.carbohydrate / recipe.portion)
-                    val kcal = stringResource(R.string.kcal)
-                    val g = stringResource(R.string.g)
-                    BasicText(
-                        text = "$energy $kcal\n$protein $g\n$fat $g\n$carbohydrate $g",
-                        style = styleEnergy,
-                        color = { colorText },
-                    )
+
+                    Row(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        val energyStr = stringResource(R.string.energy)
+                        val proteinStr = stringResource(R.string.protein)
+                        val fatStr = stringResource(R.string.fat)
+                        val carbohydrateStr = stringResource(R.string.carbohydrate)
+                        BasicText(
+                            text = "$energyStr\n$proteinStr\n$fatStr\n$carbohydrateStr",
+                            style = styleText,
+                            color = { colorText },
+                        )
+                        val portion: Int = recipe.portion ?: 1
+                        val df = DecimalFormat("#.#")
+                        val energy = df.format(recipe.energy / portion)
+                        val protein = df.format(recipe.protein / portion)
+                        val fat = df.format(recipe.fat / portion)
+                        val carbohydrate = df.format(recipe.carbohydrate / portion)
+                        val kcal = stringResource(R.string.kcal)
+                        val g = stringResource(R.string.g)
+                        BasicText(
+                            text = "$energy $kcal\n$protein $g\n$fat $g\n$carbohydrate $g",
+                            style = styleEnergy,
+                            color = { colorText },
+                        )
+                    }
+                    Divider()
                 }
 
-                Divider()
-
-                Row(
-                    modifier = Modifier
-                        .padding(padding)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    val portionStr = stringResource(R.string.portion)
-                    val durationStr = stringResource(R.string.duration)
-                    BasicText(
-                        text = "$portionStr\n$durationStr",
-                        style = styleText,
-                        color = { colorText },
-                    )
-                    val portion = recipe.portion
-                    val duration = recipe.duration
-                    val persons = stringResource(R.string.person)
-                    val minute = stringResource(R.string.minute)
-                    BasicText(
-                        text = "$portion $persons\n$duration $minute",
-                        style = styleEnergy,
-                        color = { colorText },
-                    )
+                if (recipe.portion != null) {
+                    Row(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        val portionStr = stringResource(R.string.portion)
+                        val portion = recipe.portion
+                        val persons = stringResource(R.string.person)
+                        BasicText(
+                            text = portionStr,
+                            style = styleText,
+                            color = { colorText },
+                        )
+                        BasicText(
+                            text = "$portion $persons",
+                            style = styleEnergy,
+                            color = { colorText },
+                        )
+                    }
+                    Divider()
                 }
-
-                Divider()
+                if (recipe.duration != null) {
+                    Row(
+                        modifier = Modifier
+                            .padding(padding)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        val durationStr = stringResource(R.string.duration)
+                        val duration = recipe.duration
+                        val minute = stringResource(R.string.minute)
+                        BasicText(
+                            text = durationStr,
+                            style = styleText,
+                            color = { colorText },
+                        )
+                        BasicText(
+                            text = "$duration $minute",
+                            style = styleEnergy,
+                            color = { colorText },
+                        )
+                    }
+                    Divider()
+                }
 
                 Column(
                     modifier = Modifier
@@ -208,7 +238,7 @@ fun ShowRecipeScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             val colorName =
-                                if (ingredient.isSynonym) colorInputtedIngredients else colorText
+                                if (ingredient.isSynonym > 0) colorInputtedIngredients else colorText
                             BasicText(
                                 modifier = Modifier
                                     .width(widthIngredientName),
@@ -217,11 +247,12 @@ fun ShowRecipeScreen(
                                 color = { colorName },
                             )
                             val df = DecimalFormat("#.##")
-                            val amount: Double = if (ingredient.quantity != null && ingredient.density != null) {
+                            val amount: Double = if (ingredient.quantity >= 0 && ingredient.density >= 0) {
                                 ingredient.quantity * ingredient.density
                             } else -1.0
                             val colorAmount =
-                                if (ingredient.weight != null && ingredient.weight >= amount) colorInputtedIngredients else colorText
+                                if (ingredient.weight != null && ingredient.weight >= amount) colorInputtedIngredients
+                                else colorText
                             val amountStr = when (amount) {
                                 -1.0 -> ""
                                 0.0 -> stringResource(R.string.to_taste)
@@ -244,8 +275,8 @@ fun ShowRecipeScreen(
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val stepsText: List<String> = recipe.details.split("(^_^)")
-                    val stepsImg: List<String> = recipe.detailsImage.split(";")
+                    val stepsText: List<String> = recipe.details?.split("(^_^)") ?: emptyList()
+                    val stepsImg: List<String> = recipe.detailsImage?.split(";") ?: emptyList()
                     val maxSize = maxOf(stepsText.size, stepsImg.size)
 
                     for (i in 0 until maxSize) {
@@ -310,7 +341,7 @@ fun ImageShow(imageName: String) {
         modifier = Modifier
             .padding(top = padding, bottom = padding)
             .fillMaxSize(),
-        contentAlignment = Alignment.Center // Расположение текста
+        contentAlignment = Alignment.Center
     ) {
         var bitmapState by remember { mutableStateOf<Bitmap?>(null) }
         val context = LocalContext.current

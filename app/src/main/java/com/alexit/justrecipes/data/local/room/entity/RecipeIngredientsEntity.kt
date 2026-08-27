@@ -30,7 +30,7 @@ import androidx.room.Index
 data class RecipeIngredientsEntity(
     @ColumnInfo(name = "recipe_id") val recipeId: Int,
     @ColumnInfo(name = "ingredient_id") val ingredientId: Int,
-    val quantity: Float?,
+    val quantity: Double,
     val unit: String?,
-    val density: Float?
+    val density: Double
 )

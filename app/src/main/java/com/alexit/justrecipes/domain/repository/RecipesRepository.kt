@@ -3,6 +3,8 @@ package com.alexit.justrecipes.domain.repository
 import androidx.paging.PagingData
 import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
+import com.alexit.justrecipes.data.local.room.entity.RecipeEntity
+import com.alexit.justrecipes.data.local.room.entity.RecipeIngredientsEntity
 import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.database.IngredientModelFull
@@ -16,6 +18,8 @@ interface RecipesRepository {
     fun getIngredientsName(): Flow<SourceState<List<String>>>
     fun getInputtedIngredients(): Flow<SourceState<List<IngredientInputedModel>>>
     suspend fun getCategories(): List<String>
+    suspend fun checkExistIngredient(ingredientName: String): Boolean
+    suspend fun getIngredientId(ingredientName: String): Int
     suspend fun addNewIngredient(ingredient: IngredientEntity)
     suspend fun addInputtedIngredient(ingredientId: Int, synonym: String)
     suspend fun removeInputtedIngredient(ingredientId: Int)
@@ -25,8 +29,10 @@ interface RecipesRepository {
     suspend fun getAVGFat(category: String): Double
     suspend fun getAVGCarbohydrate(category: String): Double
     suspend fun getMAXIdIngredients(): Int
+    suspend fun getMAXIdRecipes(): Int
     fun getRecipesCardData(query: String): Flow<PagingData<RecipeCardModel>>
     suspend fun getIngredientsEnergy(recipeId: Int): List<IngredientModelEnergy>
     suspend fun getRecipeData(recipeId: Int): RecipeDataModel
     suspend fun getIngredientsData(recipeId: Int): List<IngredientModelFull>
+    suspend fun addNewRecipe(recipe: RecipeEntity, recipeIngredients: List<RecipeIngredientsEntity>)
 }

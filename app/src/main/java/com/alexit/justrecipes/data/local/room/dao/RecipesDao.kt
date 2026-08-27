@@ -5,7 +5,10 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
+import com.alexit.justrecipes.data.local.room.entity.RecipeEntity
+import com.alexit.justrecipes.data.local.room.entity.RecipeIngredientsEntity
 import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.database.IngredientModelFull
@@ -16,7 +19,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipesDao {
-    @Query("SELECT id, name, synonym, is_inputted FROM ingredients WHERE name = :ingredientName")
+    @Query("SELECT id, name, synonym, is_inputted AS isInputted " +
+            "FROM ingredients WHERE name = :ingredientName")
     suspend fun getIngredient(ingredientName: String): IngredientModelShort?
 
     @Query("SELECT name FROM ingredients")
@@ -28,6 +32,12 @@ interface RecipesDao {
 
     @Query("SELECT DISTINCT category FROM ingredients ORDER BY category")
     suspend fun getCategories(): List<String>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM ingredients WHERE name = :ingredientName)")
+    suspend fun checkExistIngredient(ingredientName: String): Boolean
+
+    @Query("SELECT id FROM ingredients WHERE name = :ingredientName")
+    suspend fun getIngredientId(ingredientName: String): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOwnIngredient(ingredient: IngredientEntity)
@@ -79,6 +89,9 @@ interface RecipesDao {
     @Query("SELECT MAX(id) FROM ingredients")
     suspend fun getMAXIdIngredients(): Int
 
+    @Query("SELECT MAX(id) FROM recipes")
+    suspend fun getMAXIdRecipes(): Int
+
     @Query("SELECT " +
             "recipes.id, recipes.name, recipes.duration, recipes.portion, recipes.image, " +
             "SUM(ingredients.is_synonym) AS ingredientsOk, " +
@@ -119,9 +132,18 @@ interface RecipesDao {
             "WHERE recipe_ingredients.recipe_id = :recipeId")
     suspend fun getIngredientsData(recipeId: Int): List<IngredientModelFull>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOwnRecipe(recipe: RecipeEntity)
 
-    //@Query("INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit, density)" +
-    //        "VALUES ()"
-    //)
-    //suspend fun insertRecipeAi(recipeAi: RecipeAi)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecipeIngredients(recipeIngredients: List<RecipeIngredientsEntity>)
+
+    @Transaction
+    suspend fun addNewRecipe(
+        recipe: RecipeEntity,
+        recipeIngredients: List<RecipeIngredientsEntity>
+    ) {
+        insertOwnRecipe(recipe)
+        insertRecipeIngredients(recipeIngredients)
+    }
 }

@@ -4,6 +4,7 @@ import com.alexit.justrecipes.domain.remote.KtorApiService
 import com.alexit.justrecipes.domain.usecase.AddNewIngredientUseCase
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import com.alexit.justrecipes.domain.usecase.AddInputtedIngredientUseCase
+import com.alexit.justrecipes.domain.usecase.AddAiRecipeUseCase
 import com.alexit.justrecipes.domain.usecase.ChangeWeightIngredientUseCase
 import com.alexit.justrecipes.domain.usecase.GetCategoriesUseCase
 import com.alexit.justrecipes.domain.usecase.GetIngredientUseCase
@@ -94,5 +95,11 @@ object UseCaseModule {
     @Singleton
     fun provideGetRecipeAiUseCase(ktorApiService: KtorApiService): GetRecipeAiUseCase {
         return GetRecipeAiUseCase(ktorApiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddAiRecipeUseCase(recipesRepository: RecipesRepository): AddAiRecipeUseCase {
+        return AddAiRecipeUseCase(recipesRepository)
     }
 }

@@ -6,6 +6,6 @@ data class IngredientModelEnergy(
     val protein: Double,
     val fat: Double,
     val carbohydrate: Double,
-    val quantity: Double?,
-    val density: Double?,
+    val quantity: Double,
+    val density: Double,
 )

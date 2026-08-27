@@ -6,5 +6,5 @@ data class IngredientModelShort(
     val id: Int,
     val name: String,
     val synonym: String?,
-    @ColumnInfo(name = "is_inputted") val isInputted: Boolean
+    val isInputted: Boolean
 )

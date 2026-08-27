@@ -12,6 +12,7 @@ import io.ktor.client.statement.HttpResponse
 import javax.inject.Inject
 
 const val MODEL_GPT = "deepseek-v4-flash"
+const val REASONING_EFFORT = "high"
 
 class GetRecipeAiUseCase @Inject constructor(
     private val ktorApiService: KtorApiService
@@ -28,7 +29,7 @@ class GetRecipeAiUseCase @Inject constructor(
         )
         val messages: List<Message> = listOf(messageSystem, messageUser)
         val thinking = Thinking(ThinkingType.ENABLED)
-        val reasoningEffort = "high"
+        val reasoningEffort = REASONING_EFFORT
         val maxTokens = 4096
         val responseFormat = ResponseFormat(ResponseFormatType.JSON_OBJECT)
         val stream = false

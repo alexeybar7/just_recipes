@@ -22,8 +22,11 @@ class AddNewIngredientUseCase @Inject constructor(
                 protein = protein.toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble(),
                 fat = fat.toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble(),
                 carbohydrate = carbohydrate.toBigDecimal().setScale(2, RoundingMode.HALF_EVEN).toDouble(),
+                synonym = null,
                 category = ingredientCategory,
-                isInputted = true
+                weight = null,
+                isInputted = true,
+                isSynonym = 0
             )
         )
     }

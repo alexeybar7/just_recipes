@@ -7,6 +7,8 @@ import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.common.asSourceState
 import com.alexit.justrecipes.data.local.room.dao.RecipesDao
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
+import com.alexit.justrecipes.data.local.room.entity.RecipeEntity
+import com.alexit.justrecipes.data.local.room.entity.RecipeIngredientsEntity
 import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.database.IngredientModelFull
@@ -37,6 +39,14 @@ class RecipesRepositoryImpl @Inject constructor(
 
     override suspend fun getCategories(): List<String> {
         return recipesDao.getCategories()
+    }
+
+    override suspend fun checkExistIngredient(ingredientName: String): Boolean {
+        return recipesDao.checkExistIngredient(ingredientName)
+    }
+
+    override suspend fun getIngredientId(ingredientName: String): Int {
+        return recipesDao.getIngredientId(ingredientName)
     }
 
     override suspend fun addNewIngredient(ingredient: IngredientEntity) {
@@ -75,6 +85,10 @@ class RecipesRepositoryImpl @Inject constructor(
         return recipesDao.getMAXIdIngredients()
     }
 
+    override suspend fun getMAXIdRecipes(): Int {
+        return recipesDao.getMAXIdRecipes()
+    }
+
     override fun getRecipesCardData(query: String): Flow<PagingData<RecipeCardModel>> {
         val formattedQuery = "%$query%"
         return Pager(
@@ -98,5 +112,12 @@ class RecipesRepositoryImpl @Inject constructor(
 
     override suspend fun getIngredientsData(recipeId: Int): List<IngredientModelFull> {
         return recipesDao.getIngredientsData(recipeId)
+    }
+
+    override suspend fun addNewRecipe(
+        recipe: RecipeEntity,
+        recipeIngredients: List<RecipeIngredientsEntity>
+    ) {
+        recipesDao.addNewRecipe(recipe, recipeIngredients)
     }
 }

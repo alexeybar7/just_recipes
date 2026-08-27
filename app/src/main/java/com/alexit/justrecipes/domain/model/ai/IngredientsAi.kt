@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class IngredientsAi(
     val name: String,
-    val quantity: Int
+    val quantity: Double
 )

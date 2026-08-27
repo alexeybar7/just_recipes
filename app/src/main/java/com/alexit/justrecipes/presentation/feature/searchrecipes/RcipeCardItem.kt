@@ -61,13 +61,17 @@ fun RecipeCardItem (
     val textIconStyle = JustRecipesTheme.typography.text5
     val colorIconOk = JustRecipesTheme.colors.iconOk
     val widthIconInfo = JustRecipesTheme.dimensions.widthIconInfoRecipeCard
+    val imageAi = R.drawable.psychology_24px
+    val imageOwn = R.drawable.note_stack_24px
 
     var bitmapState by remember { mutableStateOf<Bitmap?>(null) }
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        bitmapState =
-            BitmapFactory.decodeStream(context.assets.open("recipeimg/${recipe.image}"))
+        if (recipe.image != "ai" && recipe.image != "own" ) {
+            bitmapState =
+                BitmapFactory.decodeStream(context.assets.open("recipeimg/${recipe.image}"))
+        }
     }
 
     Column(
@@ -115,6 +119,36 @@ fun RecipeCardItem (
                 text = recipe.name
             )
 
+            if (recipe.image == "ai") {
+                Image(
+                    modifier = Modifier
+                        .padding(end = padding)
+                        .size(sizeImage)
+                        .clip(
+                            shape = RoundedCornerShape(
+                                size = roundedCorner
+                            )
+                        ),
+                    imageVector = ImageVector.vectorResource(imageAi),
+                    contentDescription = recipe.name,
+                    colorFilter = ColorFilter.tint(borderColor)
+                )
+            }
+            if (recipe.image == "own") {
+                Image(
+                    modifier = Modifier
+                        .padding(end = padding)
+                        .size(sizeImage)
+                        .clip(
+                            shape = RoundedCornerShape(
+                                size = roundedCorner
+                            )
+                        ),
+                    imageVector = ImageVector.vectorResource(imageOwn),
+                    contentDescription = recipe.name,
+                    colorFilter = ColorFilter.tint(borderColor)
+                )
+            }
             if (bitmapState != null) {
                 val bitmap = bitmapState!!.asImageBitmap()
                 Image(

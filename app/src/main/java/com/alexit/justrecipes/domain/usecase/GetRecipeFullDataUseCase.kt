@@ -17,24 +17,32 @@ class GetRecipeFullDataUseCase @Inject constructor(
     suspend operator fun invoke(recipeId: Int): RecipeModelFull {
         val recipeData: RecipeDataModel = recipesRepository.getRecipeData(recipeId)
         val ingredientsFullData: List<IngredientModelFull> = recipesRepository.getIngredientsData(recipeId)
-        val healthyFoodData: HealthyFoodModel = getHealthyFoodData(ingredientsFullData.map {
-            IngredientModelEnergy(
-                id = it.id,
-                energy = it.energy,
-                protein = it.protein,
-                fat = it.fat,
-                carbohydrate = it.carbohydrate,
-                quantity = it.quantity,
-                density = it.density,
-            )
-        })
+        val healthyFoodData: HealthyFoodModel = if (ingredientsFullData.any { it.energy < 0 ||
+                    it.protein < 0 ||
+                    it.fat < 0 ||
+                    it.carbohydrate < 0 ||
+                    it.quantity < 0
+            }) HealthyFoodModel(-1.0, -1.0, -1.0, -1.0)
+        else {
+            getHealthyFoodData(ingredientsFullData.map {
+                IngredientModelEnergy(
+                    id = it.id,
+                    energy = it.energy,
+                    protein = it.protein,
+                    fat = it.fat,
+                    carbohydrate = it.carbohydrate,
+                    quantity = it.quantity,
+                    density = it.density,
+                )
+            })
+        }
         val recipe = RecipeModelFull (
             id = recipeData.id,
             name = recipeData.name,
             image = recipeData.image,
             portion = recipeData.portion,
             duration = recipeData.duration,
-            energy = healthyFoodData.energy,
+            energy = healthyFoodData.energy ,
             protein = healthyFoodData.protein,
             fat = healthyFoodData.fat,
             carbohydrate = healthyFoodData.carbohydrate,

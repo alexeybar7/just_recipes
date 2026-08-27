@@ -4,13 +4,13 @@ data class RecipeModelFull(
     val id: Int,
     val name: String,
     val image: String,
-    val portion: Int,
-    val duration: Int,
+    val portion: Int?,
+    val duration: Int?,
     val energy: Double,
     val protein: Double,
     val fat: Double,
     val carbohydrate: Double,
-    val details: String,
-    val detailsImage: String,
+    val details: String?,
+    val detailsImage: String?,
     val ingredients: List<IngredientDataModel>
 )

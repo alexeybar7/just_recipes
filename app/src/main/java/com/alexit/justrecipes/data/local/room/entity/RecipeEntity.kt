@@ -9,9 +9,8 @@ data class RecipeEntity(
     @PrimaryKey(autoGenerate = false) val id: Int,
     val name: String,
     val portion: Int?,
-    val image: String?,
+    val image: String,
     val details: String?,
     @ColumnInfo(name = "details_img") val detailsImg: String?,
     val duration: Int?,
-    @ColumnInfo(name = "is_own") val isOwn: Boolean
 )
