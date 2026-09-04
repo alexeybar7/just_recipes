@@ -80,7 +80,7 @@ fun AnswerAiScreen(
         )
     }
 
-    if (answerAiUiState.isRecipeAiOk) {
+    if (answerAiUiState.isRecipeAiOk && !answerAiUiState.isSaved) {
         answerAiViewModel.saveRecipeAi()
         answerAiViewModel.changeRecipeAiTask()
     }

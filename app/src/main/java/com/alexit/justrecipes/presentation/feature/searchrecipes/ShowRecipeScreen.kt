@@ -172,6 +172,7 @@ fun ShowRecipeScreen(
                     Divider()
                 }
 
+                //-----Portion-----
                 if (recipe.portion != null) {
                     Row(
                         modifier = Modifier
@@ -193,8 +194,9 @@ fun ShowRecipeScreen(
                             color = { colorText },
                         )
                     }
-                    Divider()
                 }
+
+                //-----Duration-----
                 if (recipe.duration != null) {
                     Row(
                         modifier = Modifier
@@ -216,9 +218,10 @@ fun ShowRecipeScreen(
                             color = { colorText },
                         )
                     }
-                    Divider()
                 }
+                Divider()
 
+                //-----Ingredients-----
                 Column(
                     modifier = Modifier
                         .padding(padding)
@@ -269,6 +272,7 @@ fun ShowRecipeScreen(
 
                 Divider()
 
+                //-----Steps-----
                 Column(
                     modifier = Modifier
                         .padding(padding)

@@ -5,6 +5,7 @@ import com.alexit.justrecipes.common.SourceState
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.data.local.room.entity.RecipeEntity
 import com.alexit.justrecipes.data.local.room.entity.RecipeIngredientsEntity
+import com.alexit.justrecipes.domain.model.database.IngredientIdNameModel
 import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.database.IngredientModelFull
@@ -19,7 +20,7 @@ interface RecipesRepository {
     fun getInputtedIngredients(): Flow<SourceState<List<IngredientInputedModel>>>
     suspend fun getCategories(): List<String>
     suspend fun checkExistIngredient(ingredientName: String): Boolean
-    suspend fun getIngredientId(ingredientName: String): Int
+    suspend fun getIngredientIdName(): List<IngredientIdNameModel>
     suspend fun addNewIngredient(ingredient: IngredientEntity)
     suspend fun addInputtedIngredient(ingredientId: Int, synonym: String)
     suspend fun removeInputtedIngredient(ingredientId: Int)

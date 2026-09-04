@@ -44,7 +44,9 @@
     <string name="exist_ing">В списке уже есть ингредиент</string>
     <string name="hardware_error_get_cat">Аппаратная ошибка.\nНе удалось получить список категорий</string>
     <string name="added_new_ingredient">Добавлен новый ингредиент</string>
+    <string name="added_new_recipe">Добавлен новый рецепт</string>
     <string name="hardware_error_add_new_ing">Аппаратная ошибка.\nНе удалось добавить новый ингредиент</string>
+    <string name="hardware_error_add_new_recipe">Аппаратная ошибка.\nНе удалось добавить новый рецепт</string>
     <string name="remove_ingredient">Удален ингредиент</string>
     <string name="hardware_error_remove_ing">Аппаратная ошибка.\nНе удалось удалить ингредиент</string>
     <string name="change_weight_ingredient">Изменено количество ингредиента</string>

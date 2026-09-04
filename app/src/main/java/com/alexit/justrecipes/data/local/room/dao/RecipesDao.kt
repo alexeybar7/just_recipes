@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.data.local.room.entity.RecipeEntity
 import com.alexit.justrecipes.data.local.room.entity.RecipeIngredientsEntity
+import com.alexit.justrecipes.domain.model.database.IngredientIdNameModel
 import com.alexit.justrecipes.domain.model.database.IngredientInputedModel
 import com.alexit.justrecipes.domain.model.database.IngredientModelEnergy
 import com.alexit.justrecipes.domain.model.database.IngredientModelFull
@@ -36,8 +37,8 @@ interface RecipesDao {
     @Query("SELECT EXISTS(SELECT 1 FROM ingredients WHERE name = :ingredientName)")
     suspend fun checkExistIngredient(ingredientName: String): Boolean
 
-    @Query("SELECT id FROM ingredients WHERE name = :ingredientName")
-    suspend fun getIngredientId(ingredientName: String): Int
+    @Query("SELECT id, name FROM ingredients")
+    suspend fun getIngredientIdName(): List<IngredientIdNameModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOwnIngredient(ingredient: IngredientEntity)

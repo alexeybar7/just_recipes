@@ -32,8 +32,6 @@ class AnswerAiViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AnswerAiUiState())
     val uiState: StateFlow<AnswerAiUiState> = _uiState.asStateFlow()
-    //private val _responseAiState = mutableStateOf<ResponseAi?>(null)
-    //val responseAiState: MutableState<ResponseAi?> = _responseAiState
 
     private val _sideEffect = Channel<NotifySideEffect>()
     val sideEffect: Flow<NotifySideEffect> = _sideEffect.receiveAsFlow()
@@ -90,8 +88,30 @@ class AnswerAiViewModel @Inject constructor(
     }
 
     fun saveRecipeAi() {
-        viewModelScope.launch {
-            addAiRecipeUseCase(uiState.value.recipeAi!!)
+        uiState.value.recipeAi?.let {
+            viewModelScope.launch {
+                try {
+                    addAiRecipeUseCase(it)
+                    _sideEffect.send(
+                        NotifySideEffect.ShowNotify(
+                            message = StringResourceHolder.StringResource(R.string.added_new_recipe),
+                            addition = it.name,
+                            state = NotifyState.INFO
+                        )
+                    )
+                    _uiState.update { currentState ->
+                        currentState.copy(isSaved = true)
+                    }
+                } catch (_: Exception) {
+                    _sideEffect.send(
+                        NotifySideEffect.ShowNotify(
+                            message = StringResourceHolder.StringResource(R.string.hardware_error_add_new_recipe),
+                            addition = it.name,
+                            state = NotifyState.DANGER
+                        )
+                    )
+                }
+            }
         }
     }
 }

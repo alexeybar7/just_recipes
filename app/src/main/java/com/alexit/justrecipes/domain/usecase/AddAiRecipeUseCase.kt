@@ -4,6 +4,7 @@ import com.alexit.justrecipes.data.local.room.entity.IngredientEntity
 import com.alexit.justrecipes.data.local.room.entity.RecipeEntity
 import com.alexit.justrecipes.data.local.room.entity.RecipeIngredientsEntity
 import com.alexit.justrecipes.domain.model.ai.RecipeAi
+import com.alexit.justrecipes.domain.model.database.IngredientIdNameModel
 import com.alexit.justrecipes.domain.repository.RecipesRepository
 import javax.inject.Inject
 
@@ -26,12 +27,19 @@ class AddAiRecipeUseCase @Inject constructor(
             detailsImg = null,
             duration = recipeAi.cookingTime
         )
-        recipeAi.ingredients.forEach { ingredient ->
-            if (!recipesRepository.checkExistIngredient(ingredient.name)) {
+
+        val listIngredients: List<IngredientIdNameModel> = recipesRepository.getIngredientIdName()
+        val recipeIngredients = recipeAi.ingredients.map { ingredient ->
+            var ingredientId = getIngredientId(
+                ingredient.name.replaceFirstChar { it.lowercase() }.replace('ё', 'е'),
+                listIngredients
+            )
+            if (ingredientId == -1) {
+                ingredientId = recipesRepository.getMAXIdIngredients() + 1
                 recipesRepository.addNewIngredient(
                     IngredientEntity(
-                        id = recipesRepository.getMAXIdIngredients() + 1,
-                        name = ingredient.name,
+                        id = ingredientId,
+                        name = ingredient.name.replaceFirstChar { it.lowercase() },
                         energy = -1.0,
                         protein = -1.0,
                         fat = -1.0,
@@ -44,9 +52,6 @@ class AddAiRecipeUseCase @Inject constructor(
                     )
                 )
             }
-        }
-        val recipeIngredients = recipeAi.ingredients.map { ingredient ->
-            val ingredientId = recipesRepository.getIngredientId(ingredient.name)
             RecipeIngredientsEntity(
                 recipeId = recipeId,
                 ingredientId = ingredientId,
@@ -57,4 +62,18 @@ class AddAiRecipeUseCase @Inject constructor(
         }
         recipesRepository.addNewRecipe(recipe, recipeIngredients)
     }
+}
+
+private fun getIngredientId(name: String, listIngredients: List<IngredientIdNameModel>): Int {
+    val nameCleaned = name.replace(Regex("\\([^)]*\\)"), "").trim()
+    val ingredient: IngredientIdNameModel? = listIngredients.find { it.name == nameCleaned }
+    if (ingredient != null) return ingredient.id
+    else {
+        listIngredients.forEach {
+            val wordsIngredient = it.name.split(" ").toSet()
+            val wordsName = name.split(" ").toSet()
+            if (wordsIngredient == wordsName)  return it.id
+        }
+    }
+    return -1
 }
