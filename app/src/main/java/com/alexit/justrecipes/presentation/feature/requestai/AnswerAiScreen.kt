@@ -93,8 +93,8 @@ fun AnswerAiScreen(
             text = stringResource(R.string.title_answer_ai),
             onLeftClick = onBackClick,
             textLeft = stringResource(R.string.go_back),
-            onRightClick = { answerAiViewModel.changeRecipeAiTask() },
-            textRight = stringResource(R.string.save)
+            onRightClick = { if (!answerAiUiState.isSaved) answerAiViewModel.changeRecipeAiTask() },
+            textRight = if (!answerAiUiState.isSaved) stringResource(R.string.save) else ""
         )
         Column(
             modifier = Modifier
